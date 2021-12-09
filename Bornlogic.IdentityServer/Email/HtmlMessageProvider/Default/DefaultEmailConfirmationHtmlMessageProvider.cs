@@ -7,8 +7,18 @@ namespace Bornlogic.IdentityServer.Email.HtmlMessageProvider.Default
     {
         public Task<KeyValuePair<string, string>> GetSubjectAndHtmlMessage(string userName, string callbackUrl)
         {
-            return Task.FromResult(new KeyValuePair<string, string>("Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."));
+            var hasUserName = !string.IsNullOrEmpty(userName);
+
+            return Task.FromResult(
+                new KeyValuePair<string, string>
+                (
+                    hasUserName 
+                        ? $"{userName}, confirm your email" 
+                        : "Confirm your email",
+                    hasUserName 
+                        ? $"Hi, {userName}! <br/> Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>." 
+                        : $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.")
+                );
         }
     }
 }
