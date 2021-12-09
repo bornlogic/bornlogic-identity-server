@@ -1,9 +1,9 @@
-﻿//using Bornlogic.IdentityServer.Tests.Host.Repositories.Entities;
+﻿//using Bornlogic.IdentityServer.Host.Repositories.Entities;
 //using Bornlogic.Repositories.MongoDB;
 //using Bornlogic.Repositories.MongoDB.Entities;
 //using MongoDB.Driver;
 
-//namespace Bornlogic.IdentityServer.Tests.Host.Repositories.UpdateBuilder
+//namespace Bornlogic.IdentityServer.Host.Repositories.UpdateBuilder
 //{
 //    internal class MongoApplicationUserUpdateBuilder : MongoUpdateDefinitionBuilder<MongoApplicationUser>
 //    {

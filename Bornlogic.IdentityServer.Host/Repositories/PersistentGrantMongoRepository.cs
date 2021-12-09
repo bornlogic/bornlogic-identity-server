@@ -1,9 +1,9 @@
 ﻿//using Bornlogic.Common.Repository.Mongo.Contracts;
 //using Bornlogic.IdentityServer.Storage.Models;
 //using Bornlogic.IdentityServer.Storage.Stores;
-//using Bornlogic.IdentityServer.Tests.Host.Repositories.Entities;
+//using Bornlogic.IdentityServer.Host.Repositories.Entities;
 
-//namespace Bornlogic.IdentityServer.Tests.Host.Repositories
+//namespace Bornlogic.IdentityServer.Host.Repositories
 //{
 //    internal class PersistentGrantMongoRepository : IPersistentGrantRepository
 //    {

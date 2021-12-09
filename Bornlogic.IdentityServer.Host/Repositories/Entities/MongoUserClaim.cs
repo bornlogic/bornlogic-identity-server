@@ -1,6 +1,6 @@
 ﻿//using System.Security.Claims;
 
-//namespace Bornlogic.IdentityServer.Tests.Host.Repositories.Entities
+//namespace Bornlogic.IdentityServer.Host.Repositories.Entities
 //{
 //    internal class MongoUserClaim
 //    {

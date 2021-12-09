@@ -1,10 +1,10 @@
 ﻿//using System.Security.Claims;
 //using Bornlogic.Common.Repository.Mongo.Contracts;
-//using Bornlogic.IdentityServer.Tests.Host.Repositories.Entities;
-//using Bornlogic.IdentityServer.Tests.Host.Repositories.UpdateBuilder;
+//using Bornlogic.IdentityServer.Host.Repositories.Entities;
+//using Bornlogic.IdentityServer.Host.Repositories.UpdateBuilder;
 //using Bornlogic.Repositories.MongoDB.Entities;
 
-//namespace Bornlogic.IdentityServer.Tests.Host.Repositories
+//namespace Bornlogic.IdentityServer.Host.Repositories
 //{
 //    internal class UserMongoRepository : IUserRepository
 //    {

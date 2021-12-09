@@ -4,7 +4,7 @@
 //using MongoDB.Bson.Serialization.Attributes;
 //using MongoDB.Driver;
 
-//namespace Bornlogic.IdentityServer.Tests.Host.Repositories.Entities
+//namespace Bornlogic.IdentityServer.Host.Repositories.Entities
 //{
 //    internal class MongoApiScope : ApiScope, IMongoEntity<MongoApiScope>
 //    {

@@ -1,8 +1,8 @@
 ﻿//using Bornlogic.Common.Repository.Mongo.Contracts;
-//using Bornlogic.IdentityServer.Tests.Host.Repositories.Entities;
+//using Bornlogic.IdentityServer.Host.Repositories.Entities;
 //using Microsoft.AspNetCore.Identity;
 
-//namespace Bornlogic.IdentityServer.Tests.Host.Repositories
+//namespace Bornlogic.IdentityServer.Host.Repositories
 //{
 //    internal class UserLoginsMongoRepository : IUserLoginsRepository
 //    {
