@@ -66,14 +66,7 @@ namespace Bornlogic.IdentityServer.Host
             services.AddTransient<IEmailSender, EmailSender>();
 
             services
-                //.AddMongoRepositoryOptions
-                //(
-                //    _environmentConfiguration.AuthServerMongo.ConnectionString,
-                //    _environmentConfiguration.AuthServerMongo.DatabaseName,
-                //    null,
-                //    TimeSpan.FromSeconds(60)
-                //)
-                .RegisterMongoStoreRepositories();
+                .RegisterStoreRepositories();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
