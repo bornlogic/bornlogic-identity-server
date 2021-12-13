@@ -14,14 +14,14 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        private readonly IEmailConfirmationProvider _emailConfirmationProvider;
+        private readonly IEmailConfirmationHtmlMessageProvider _emailConfirmationProvider;
 
         public EmailModel
         (
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            IEmailConfirmationProvider emailConfirmationProvider
+            IEmailConfirmationHtmlMessageProvider emailConfirmationProvider
         )
         {
             _userManager = userManager;

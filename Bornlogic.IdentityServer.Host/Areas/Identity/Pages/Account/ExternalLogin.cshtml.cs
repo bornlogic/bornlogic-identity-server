@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Encodings.Web;
+using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -17,19 +17,24 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IEmailConfirmationHtmlMessageProvider _emailConfirmationProvider;
         private readonly ILogger<ExternalLoginModel> _logger;
 
 
-        public ExternalLoginModel(
+        public ExternalLoginModel
+        (
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IEmailConfirmationHtmlMessageProvider emailConfirmationProvider
+        )
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
+            _emailConfirmationProvider = emailConfirmationProvider;
         }
 
         [BindProperty]
@@ -142,8 +147,12 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId = userId, code = code },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        var (emailSubject, emailHtmlMessage) = await _emailConfirmationProvider.GetSubjectAndHtmlMessage(null, callbackUrl);
+                        
+                        await _emailSender.SendEmailAsync(
+                            Input.Email,
+                            emailSubject,
+                            emailHtmlMessage);
 
                         return LocalRedirect(returnUrl);
                     }

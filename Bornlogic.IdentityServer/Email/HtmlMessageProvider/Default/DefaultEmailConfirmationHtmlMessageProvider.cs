@@ -3,7 +3,7 @@ using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Contracts;
 
 namespace Bornlogic.IdentityServer.Email.HtmlMessageProvider.Default
 {
-    public class DefaultEmailConfirmationProvider : IEmailConfirmationProvider
+    public class DefaultEmailConfirmationProvider : IEmailConfirmationHtmlMessageProvider
     {
         public Task<KeyValuePair<string, string>> GetSubjectAndHtmlMessage(string userName, string callbackUrl)
         {
@@ -12,13 +12,13 @@ namespace Bornlogic.IdentityServer.Email.HtmlMessageProvider.Default
             return Task.FromResult(
                 new KeyValuePair<string, string>
                 (
-                    hasUserName 
-                        ? $"{userName}, confirm your email" 
+                    hasUserName
+                        ? $"{userName}, confirm your email"
                         : "Confirm your email",
-                    hasUserName 
-                        ? $"Hi, {userName}! <br/> Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>." 
+                    hasUserName
+                        ? $"Hi, {userName}! <br/> Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."
                         : $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.")
-                );
+            );
         }
     }
 }

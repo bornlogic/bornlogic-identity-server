@@ -77,7 +77,8 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
 
         public static IIdentityServerBuilder AddDefaultEmailProviders(this IIdentityServerBuilder builder)
         {
-            builder.Services.AddSingleton<IEmailConfirmationProvider, DefaultEmailConfirmationProvider>();
+            builder.Services.AddSingleton<IEmailConfirmationHtmlMessageProvider, DefaultEmailConfirmationProvider>();
+            builder.Services.AddScoped<IForgotPasswordEmailHtmlMessageProvider, DefaultForgotPasswordEmailHtmlMessageProvider>();
 
             return builder;
         }

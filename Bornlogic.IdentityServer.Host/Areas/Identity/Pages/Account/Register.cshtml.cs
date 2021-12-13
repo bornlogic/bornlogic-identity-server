@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
+using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,17 +19,22 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IEmailConfirmationHtmlMessageProvider _emailConfirmationHtmlMessageProvider;
 
-        public RegisterModel(
+        public RegisterModel
+        (
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IEmailConfirmationHtmlMessageProvider emailConfirmationHtmlMessageProvider
+        )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _emailConfirmationHtmlMessageProvider = emailConfirmationHtmlMessageProvider;
         }
 
         [BindProperty]
@@ -83,8 +89,9 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    var (emailSubject, emailHtmlMessage) = await _emailConfirmationHtmlMessageProvider.GetSubjectAndHtmlMessage(null, callbackUrl);
+
+                    await _emailSender.SendEmailAsync(Input.Email, emailSubject, emailHtmlMessage);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
