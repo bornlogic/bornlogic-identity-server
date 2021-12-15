@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace Bornlogic.IdentityServer.Extensions
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         [DebuggerStepThrough]
         public static string ToSpaceSeparatedString(this IEnumerable<string> list)
