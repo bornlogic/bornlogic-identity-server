@@ -8,7 +8,7 @@ using IdentityModel;
 
 namespace Bornlogic.IdentityServer.Extensions
 {
-    internal static class ClaimsExtensions
+    public static class ClaimsExtensions
     {
         public static Dictionary<string, object> ToClaimsDictionary(this IEnumerable<Claim> claims)
         {
