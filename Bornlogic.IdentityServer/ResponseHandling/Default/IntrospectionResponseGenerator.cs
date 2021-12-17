@@ -82,6 +82,9 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             // calculate scopes the caller is allowed to see
             var allowedScopes = validationResult.Api.Scopes;
             var scopes = validationResult.Claims.Where(c => c.Type == JwtClaimTypes.Scope).Select(x => x.Value);
+
+            response.Add("given_scopes", scopes.ToSpaceSeparatedString());
+
             scopes = scopes.Where(x => allowedScopes.Contains(x));
             response.Add("scope", scopes.ToSpaceSeparatedString());
 
