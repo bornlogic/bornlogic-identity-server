@@ -9,7 +9,7 @@ namespace Bornlogic.IdentityServer
 {
     internal static class Constants
     {
-        public const string IdentityServerName               = "IdentityServer4";
+        public const string IdentityServerName               = "BornlogicAuthServer";
         public const string IdentityServerAuthenticationType = IdentityServerName;
         public const string ExternalAuthenticationMethod     = "external";
         public const string DefaultHashAlgorithm             = "SHA256";

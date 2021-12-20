@@ -53,8 +53,8 @@ namespace Bornlogic.IdentityServer.Configuration
             var loggerFactory = app.ApplicationServices.GetService(typeof(ILoggerFactory)) as ILoggerFactory;
             if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
-            var logger = loggerFactory.CreateLogger("IdentityServer4.Startup");
-            logger.LogInformation("Starting IdentityServer4 version {version}", typeof(IdentityServerMiddleware).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
+            var logger = loggerFactory.CreateLogger("BornlogicAuthServer.Startup");
+            logger.LogInformation("Starting Bornlogic Auth Server version {version}", typeof(IdentityServerMiddleware).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
 
             var scopeFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
 

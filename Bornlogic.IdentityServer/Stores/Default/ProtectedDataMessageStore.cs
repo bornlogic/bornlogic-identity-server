@@ -17,7 +17,7 @@ namespace Bornlogic.IdentityServer.Stores.Default
     /// <typeparam name="TModel"></typeparam>
     public class ProtectedDataMessageStore<TModel> : IMessageStore<TModel>
     {
-        private const string Purpose = "IdentityServer4.Stores.ProtectedDataMessageStore";
+        private const string Purpose = "BornlogicAuthServer.Stores.ProtectedDataMessageStore";
 
         /// <summary>
         /// The data protector.

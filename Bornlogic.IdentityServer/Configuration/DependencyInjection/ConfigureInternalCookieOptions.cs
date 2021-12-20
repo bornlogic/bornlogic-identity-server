@@ -84,7 +84,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection
         {
             _idsrv = idsrv;
             _authOptions = authOptions;
-            _logger = loggerFactory.CreateLogger("IdentityServer4.Startup");
+            _logger = loggerFactory.CreateLogger("BornlogicAuthServer.Startup");
         }
 
         public void PostConfigure(string name, CookieAuthenticationOptions options)
