@@ -32,5 +32,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options
         /// The cors paths.
         /// </value>
         public ICollection<PathString> CorsPaths { get; set; } = Constants.ProtocolRoutePaths.CorsPaths.Select(x => new PathString(x.EnsureLeadingSlash())).ToList();
+
+        public ICollection<Uri> AllowedOrigins { get; set; } = new List<Uri>();
     }
 }
