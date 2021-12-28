@@ -19,6 +19,7 @@ namespace Bornlogic.IdentityServer.Services.Default
         private readonly IMessageStore<LogoutMessage> _logoutMessageStore;
         private readonly IMessageStore<ErrorMessage> _errorMessageStore;
         private readonly IConsentMessageStore _consentMessageStore;
+        private readonly ISavedConsentStore _savedConsentStore;
         private readonly IPersistedGrantService _grants;
         private readonly IUserSession _userSession;
         private readonly ILogger _logger;
@@ -30,6 +31,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             IMessageStore<LogoutMessage> logoutMessageStore,
             IMessageStore<ErrorMessage> errorMessageStore,
             IConsentMessageStore consentMessageStore,
+            ISavedConsentStore savedConsentStore,
             IPersistedGrantService grants,
             IUserSession userSession,
             ReturnUrlParser returnUrlParser,
@@ -40,6 +42,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             _logoutMessageStore = logoutMessageStore;
             _errorMessageStore = errorMessageStore;
             _consentMessageStore = consentMessageStore;
+            _savedConsentStore = savedConsentStore;
             _grants = grants;
             _userSession = userSession;
             _returnUrlParser = returnUrlParser;
@@ -114,7 +117,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             return null;
         }
 
-        public async Task GrantConsentAsync(AuthorizationRequest request, ConsentResponse consent, string subject = null)
+        public async Task GrantConsentAsync(AuthorizationRequest request, ConsentResponse consent, bool persistConsent, string subject = null)
         {
             if (subject == null)
             {
@@ -129,6 +132,16 @@ namespace Bornlogic.IdentityServer.Services.Default
 
             var consentRequest = new ConsentRequest(request, subject);
             await _consentMessageStore.WriteAsync(consentRequest.Id, new Message<ConsentResponse>(consent, _clock.UtcNow.UtcDateTime));
+
+            if (persistConsent && consent.RememberConsent)
+            {
+                await _savedConsentStore.Store(new UserSavedConsent
+                {
+                    UserID = subject,
+                    ClientID = request.Client.ClientId,
+                    Scopes = consent.ScopesValuesConsented
+                });
+            }
         }
 
         public Task DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, string errorDescription = null)
@@ -138,7 +151,7 @@ namespace Bornlogic.IdentityServer.Services.Default
                 Error = error,
                 ErrorDescription = errorDescription
             };
-            return GrantConsentAsync(request, response);
+            return GrantConsentAsync(request, response, false);
         }
 
         public bool IsValidReturnUrl(string returnUrl)
@@ -176,6 +189,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             {
                 var subject = user.GetSubjectId();
                 await _grants.RemoveAllGrantsAsync(subject, clientId);
+                await _savedConsentStore.DeleteFromFilters(subject, clientId);
             }
         }
 

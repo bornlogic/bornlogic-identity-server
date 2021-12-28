@@ -173,6 +173,14 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
             return builder;
         }
 
+        public static IIdentityServerBuilder AddSavedConsentStore<T>(this IIdentityServerBuilder builder)
+            where T : class, ISavedConsentStore
+        {
+            builder.Services.AddTransient<ISavedConsentStore, T>();
+
+            return builder;
+        }
+
         /// <summary>
         /// Adds a CORS policy service.
         /// </summary>

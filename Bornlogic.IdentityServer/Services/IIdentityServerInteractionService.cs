@@ -48,7 +48,7 @@ namespace Bornlogic.IdentityServer.Services
         /// <param name="request">The request.</param>
         /// <param name="consent">The consent.</param>
         /// <param name="subject">The subject.</param>
-        Task GrantConsentAsync(AuthorizationRequest request, ConsentResponse consent, string subject = null);
+        Task GrantConsentAsync(AuthorizationRequest request, ConsentResponse consent, bool persistConsent, string subject = null);
 
         /// <summary>
         /// Triggers error back to the client for the authorization request.
