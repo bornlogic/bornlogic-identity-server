@@ -64,7 +64,12 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 Subject = subject ?? Principal.Anonymous,
                 Raw = parameters ?? throw new ArgumentNullException(nameof(parameters))
             };
-            
+
+            if (subject?.Claims != null && subject.HasClaim("email_confirmed", "false"))
+            {
+                return Invalid(request, description: "Email is not verified");
+            }
+
             // load client_id
             // client_id must always be present on the request
             var loadClientResult = await LoadClientAsync(request);
