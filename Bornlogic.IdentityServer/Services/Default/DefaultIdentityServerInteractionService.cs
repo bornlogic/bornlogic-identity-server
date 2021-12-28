@@ -5,6 +5,7 @@
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models;
 using Bornlogic.IdentityServer.Models.Messages;
+using Bornlogic.IdentityServer.Storage;
 using Bornlogic.IdentityServer.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;

@@ -1,4 +1,4 @@
-﻿namespace Bornlogic.IdentityServer.Models
+﻿namespace Bornlogic.IdentityServer.Storage
 {
     public class UserSavedConsent
     {

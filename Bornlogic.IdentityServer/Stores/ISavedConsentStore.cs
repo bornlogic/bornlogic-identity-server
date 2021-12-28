@@ -1,4 +1,4 @@
-﻿using Bornlogic.IdentityServer.Models;
+﻿using Bornlogic.IdentityServer.Storage;
 
 namespace Bornlogic.IdentityServer.Stores
 {
