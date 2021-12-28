@@ -67,7 +67,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             if (subject?.Claims != null && subject.HasClaim("email_verified", "false"))
             {
-                return Invalid(request, description: "Email is not verified");
+                return Invalid(request, "Email is not verified", "The user must have a verified email");
             }
 
             // load client_id
