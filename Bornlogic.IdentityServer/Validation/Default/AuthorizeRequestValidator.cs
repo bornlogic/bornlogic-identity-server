@@ -65,7 +65,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 Raw = parameters ?? throw new ArgumentNullException(nameof(parameters))
             };
 
-            if (subject?.Claims != null && subject.HasClaim("email_confirmed", "false"))
+            if (subject?.Claims != null && subject.HasClaim("email_verified", "false"))
             {
                 return Invalid(request, description: "Email is not verified");
             }
