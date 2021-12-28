@@ -78,7 +78,17 @@ namespace Bornlogic.IdentityServer.Endpoints
                     result.ErrorDescription);
             }
 
+            if (user.HasClaim("email_confirmed", "false"))
+            {
+                return await CreateErrorResultAsync(
+                    "Request validation failed",
+                    result.ValidatedRequest,
+                    "Email is not verified",
+                    "The email must be confirmed before staring the authorization flow");
+            }
+
             var request = result.ValidatedRequest;
+
             LogRequest(request);
 
             // determine user interaction
