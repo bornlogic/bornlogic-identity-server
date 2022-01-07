@@ -12,6 +12,7 @@
 	<ItemGroup>
 		<PackageReference Include="IdentityModel" Version="6.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
 	</ItemGroup>
 
 </Project>

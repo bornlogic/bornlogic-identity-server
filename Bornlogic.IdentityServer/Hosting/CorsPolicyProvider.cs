@@ -58,7 +58,7 @@ namespace Bornlogic.IdentityServer.Hosting
                     // https://github.com/aspnet/CORS/issues/105
                     var corsPolicyService = _httpContext.HttpContext.RequestServices.GetRequiredService<ICorsPolicyService>();
 
-                    if (await corsPolicyService.IsOriginAllowedAsync(origin))
+                    if (await corsPolicyService.IsOriginAllowedAsync(context))
                     {
                         _logger.LogDebug("CorsPolicyService allowed origin: {origin}", origin);
                         return Allow(origin);

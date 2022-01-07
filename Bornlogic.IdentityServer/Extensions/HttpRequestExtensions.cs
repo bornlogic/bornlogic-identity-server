@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Net;
+using Bornlogic.IdentityServer.Endpoints.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 
@@ -26,7 +28,22 @@ namespace Bornlogic.IdentityServer.Extensions
 
             return null;
         }
-        
+
+        public static bool TryGetClientID(this HttpRequest request, out string? clientID)
+        {
+            if (!request.HasApplicationFormContentType())
+            {
+                clientID = null;
+                return false;
+            }
+
+            var formValues = request.Form.AsNameValueCollection();
+
+            clientID = formValues.Get("client_id");
+
+            return !string.IsNullOrEmpty(clientID);
+        }
+
         internal static bool HasApplicationFormContentType(this HttpRequest request)
         {
             if (request.ContentType is null) return false;

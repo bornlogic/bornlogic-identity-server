@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using Microsoft.AspNetCore.Http;
+
 namespace Bornlogic.IdentityServer.Storage.Services
 {
     /// <summary>
@@ -12,8 +14,8 @@ namespace Bornlogic.IdentityServer.Storage.Services
         /// <summary>
         /// Determines whether origin is allowed.
         /// </summary>
-        /// <param name="origin">The origin.</param>
+        /// <param name="httpContext">The http context</param>
         /// <returns></returns>
-        Task<bool> IsOriginAllowedAsync(string origin);
+        Task<bool> IsOriginAllowedAsync(HttpContext httpContext);
     }
 }

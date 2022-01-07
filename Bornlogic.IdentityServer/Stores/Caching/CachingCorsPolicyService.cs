@@ -6,6 +6,7 @@ using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Storage.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Bornlogic.IdentityServer.Stores.Caching
@@ -64,11 +65,11 @@ namespace Bornlogic.IdentityServer.Stores.Caching
         /// </summary>
         /// <param name="origin">The origin.</param>
         /// <returns></returns>
-        public virtual async Task<bool> IsOriginAllowedAsync(string origin)
+        public virtual async Task<bool> IsOriginAllowedAsync(HttpContext httpContext)
         {
-            var entry = await CorsCache.GetAsync(origin,
+            var entry = await CorsCache.GetAsync(httpContext.Request.GetCorsOrigin(),
                           Options.Caching.CorsExpiration,
-                          async () => new CorsCacheEntry(await Inner.IsOriginAllowedAsync(origin)),
+                          async () => new CorsCacheEntry(await Inner.IsOriginAllowedAsync(httpContext)),
                           Logger);
 
             return entry.Allowed;

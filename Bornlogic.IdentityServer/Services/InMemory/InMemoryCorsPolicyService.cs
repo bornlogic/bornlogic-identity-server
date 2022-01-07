@@ -5,6 +5,7 @@
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Storage.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Bornlogic.IdentityServer.Services.InMemory
@@ -39,8 +40,10 @@ namespace Bornlogic.IdentityServer.Services.InMemory
         /// </summary>
         /// <param name="origin">The origin.</param>
         /// <returns></returns>
-        public virtual Task<bool> IsOriginAllowedAsync(string origin)
+        public virtual Task<bool> IsOriginAllowedAsync(HttpContext httpContext)
         {
+            var origin = httpContext.Request.GetCorsOrigin();
+
             var query =
                 from client in Clients
                 from url in client.AllowedCorsOrigins
