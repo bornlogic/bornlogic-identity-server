@@ -9,7 +9,7 @@ namespace Bornlogic.IdentityServer.Host.Repositories
             new Client
             {
                 Enabled = true,
-                ClientId = "mvc",
+                ClientId = "mandrake",
                 ProtocolType = "oidc",
                 ClientSecrets = new List<Secret>
                 {
@@ -19,31 +19,37 @@ namespace Bornlogic.IdentityServer.Host.Repositories
                         Type = "SharedSecret"
                     }
                 },
-                RequireClientSecret = true,
+                RequireClientSecret = false,
                 RequireConsent = true,
                 AllowRememberConsent = true,
                 AllowedGrantTypes = new List<string>
                 {
                     "authorization_code"
                 },
+                AllowedCorsOrigins = new List<string>
+                {
+                    "http://localhost:8080"
+                },
                 RequirePkce = true,
                 RedirectUris = new List<string>
                 {
-                    "https://localhost:5002/signin-oidc"
+                    "http://localhost:8080"
                 },
                 PostLogoutRedirectUris = new List<string>
                 {
-                    "https://localhost:5002/signout-callback-oidc"
+                    "http://localhost:8080/signout"
                 },
                 FrontChannelLogoutSessionRequired = true,
                 BackChannelLogoutSessionRequired = true,
                 AllowOfflineAccess = true,
                 AllowedScopes = new List<string>
                 {
+                    "graph_api_access",
                     "openid",
                     "profile",
                     "api1",
-                    "api2"
+                    "api2",
+                    "offline_access"
                 },
                 IdentityTokenLifetime = 300,
                 AccessTokenLifetime = 3000,

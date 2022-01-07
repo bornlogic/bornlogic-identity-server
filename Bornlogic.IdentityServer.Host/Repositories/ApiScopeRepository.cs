@@ -7,8 +7,16 @@ namespace Bornlogic.IdentityServer.Host.Repositories
     {
         public async Task<IEnumerable<ApiScope>> GetAll()
         {
+            
             return new[]
             {
+                new ApiScope
+                {
+                    Enabled = true,
+                    Name = "graph_api_access",
+                    DisplayName = "graph_api_access",
+                    ShowInDiscoveryDocument = true
+                },
                 new ApiScope
                 {
                     Enabled = true,
