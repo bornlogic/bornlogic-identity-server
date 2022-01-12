@@ -79,7 +79,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
                 if (emailIsConfirmed)
                 {
-                    await _userManagerService.UpsertClaim(new Claim("email_verified", "true"));
+                    await _userManagerService.UpsertClaim(subject, new Claim("email_verified", "true"));
                 }
                 else
                 {
