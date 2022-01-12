@@ -124,10 +124,18 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
         public static IIdentityServerBuilder AddClientStore<T>(this IIdentityServerBuilder builder)
-           where T : class, IClientStore
+            where T : class, IClientStore
         {
             builder.Services.TryAddTransient(typeof(T));
             builder.Services.AddTransient<IClientStore, ValidatingClientStore<T>>();
+
+            return builder;
+        }
+
+        public static IIdentityServerBuilder AddUserEmailStore<T>(this IIdentityServerBuilder builder)
+            where T : class, IUserEmailStore
+        {
+            builder.Services.AddTransient<IUserEmailStore, T>();
 
             return builder;
         }

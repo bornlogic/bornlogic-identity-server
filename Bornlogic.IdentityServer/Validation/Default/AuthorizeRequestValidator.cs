@@ -28,6 +28,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
         private readonly JwtRequestValidator _jwtRequestValidator;
         private readonly IJwtRequestUriHttpClient _jwtRequestUriHttpClient;
         private readonly ILogger _logger;
+        private readonly IUserEmailStore _userEmailStore;
 
         private readonly ResponseTypeEqualityComparer
             _responseTypeEqualityComparer = new ResponseTypeEqualityComparer();
@@ -41,7 +42,9 @@ namespace Bornlogic.IdentityServer.Validation.Default
             IUserSession userSession,
             JwtRequestValidator jwtRequestValidator,
             IJwtRequestUriHttpClient jwtRequestUriHttpClient,
-            ILogger<AuthorizeRequestValidator> logger)
+            ILogger<AuthorizeRequestValidator> logger,
+            IUserEmailStore userEmailStore
+            )
         {
             _options = options;
             _clients = clients;
@@ -52,6 +55,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             _userSession = userSession;
             _jwtRequestUriHttpClient = jwtRequestUriHttpClient;
             _logger = logger;
+            _userEmailStore = userEmailStore;
         }
 
         public async Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject = null)
@@ -67,7 +71,20 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             if (subject?.Claims != null && subject.HasClaim("email_verified", "false"))
             {
-                return Invalid(request, "Email is not verified", "The user must have a verified email");
+                var emailIsConfirmed = await _userEmailStore.UserEmailIsConfirmedAsync(subject.GetSubjectId());
+
+                if (emailIsConfirmed)
+                {
+                    if(subject.Identity is not ClaimsIdentity subjectIdentity)
+                        return Invalid(request, "Email is not verified", "The user must have a verified email");
+
+                    subjectIdentity.RemoveClaim(new Claim("email_verified", "false"));
+                    subjectIdentity.AddClaim(new Claim("email_verified", "true"));
+                }
+                else
+                {
+                    return Invalid(request, "Email is not verified", "The user must have a verified email");
+                }
             }
 
             // load client_id
