@@ -9,6 +9,7 @@ using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Logging.Models;
 using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Storage.Models;
+using Bornlogic.IdentityServer.Storage.Services;
 using Bornlogic.IdentityServer.Storage.Stores;
 using Bornlogic.IdentityServer.Validation.Contexts;
 using Bornlogic.IdentityServer.Validation.Models;
@@ -29,6 +30,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
         private readonly IJwtRequestUriHttpClient _jwtRequestUriHttpClient;
         private readonly ILogger _logger;
         private readonly IUserEmailStore _userEmailStore;
+        private readonly IUserManagerService _userManagerService;
 
         private readonly ResponseTypeEqualityComparer
             _responseTypeEqualityComparer = new ResponseTypeEqualityComparer();
@@ -43,7 +45,8 @@ namespace Bornlogic.IdentityServer.Validation.Default
             JwtRequestValidator jwtRequestValidator,
             IJwtRequestUriHttpClient jwtRequestUriHttpClient,
             ILogger<AuthorizeRequestValidator> logger,
-            IUserEmailStore userEmailStore
+            IUserEmailStore userEmailStore,
+            IUserManagerService userManagerService
             )
         {
             _options = options;
@@ -56,6 +59,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             _jwtRequestUriHttpClient = jwtRequestUriHttpClient;
             _logger = logger;
             _userEmailStore = userEmailStore;
+            _userManagerService = userManagerService;
         }
 
         public async Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject = null)
@@ -75,11 +79,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
                 if (emailIsConfirmed)
                 {
-                    if(subject.Identity is not ClaimsIdentity subjectIdentity)
-                        return Invalid(request, "Email is not verified", "The user must have a verified email");
-
-                    subjectIdentity.RemoveClaim(new Claim("email_verified", "false"));
-                    subjectIdentity.AddClaim(new Claim("email_verified", "true"));
+                    await _userManagerService.UpsertClaim(new Claim("email_verified", "true"));
                 }
                 else
                 {

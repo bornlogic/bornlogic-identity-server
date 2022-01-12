@@ -159,6 +159,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
         public static IIdentityServerBuilder AddPluggableServices(this IIdentityServerBuilder builder)
         {
             builder.Services.TryAddTransient<IPersistedGrantService, DefaultPersistedGrantService>();
+            builder.Services.TryAddTransient<IUserManagerService, DefaultUserManagerService>();
             builder.Services.TryAddTransient<IKeyMaterialService, DefaultKeyMaterialService>();
             builder.Services.TryAddTransient<ITokenService, DefaultTokenService>();
             builder.Services.TryAddTransient<ITokenCreationService, DefaultTokenCreationService>();
