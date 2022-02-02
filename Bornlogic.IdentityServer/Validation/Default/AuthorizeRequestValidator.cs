@@ -89,7 +89,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 {
                     await _userManagerService.UpsertClaim(subject, new Claim("email_verified", "true"));
                 }
-                else if (!request.Client.AcceptUnverifiedUsers)
+                else if (request.Client.AcceptVerifiedUsersOnly)
                 {
                     return Invalid(request, "Email is not verified", "The user must have a verified email");
                 }

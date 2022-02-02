@@ -309,9 +309,9 @@ namespace Bornlogic.IdentityServer.Storage.Models
         public IDictionary<string, string> Properties { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
-        /// If set to true, the authorization flow will result in error if the user does not have the email confirmed
+        /// If set to true, the authorization flow will result in error if the user does not have the credentials confirmed
         /// </summary>
-        public bool AcceptUnverifiedUsers { get; set; }
+        public bool AcceptVerifiedUsersOnly { get; set; }
 
         /// <summary>
         /// Validates the grant types.
