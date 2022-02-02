@@ -73,6 +73,14 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 Raw = parameters ?? throw new ArgumentNullException(nameof(parameters))
             };
 
+            // load client_id
+            // client_id must always be present on the request
+            var loadClientResult = await LoadClientAsync(request);
+            if (loadClientResult.IsError)
+            {
+                return loadClientResult;
+            }
+
             if (subject?.Claims != null && subject.HasClaim("email_verified", "false"))
             {
                 var emailIsConfirmed = await _userEmailStore.UserEmailIsConfirmedAsync(subject.GetSubjectId());
@@ -81,18 +89,10 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 {
                     await _userManagerService.UpsertClaim(subject, new Claim("email_verified", "true"));
                 }
-                else
+                else if (!request.Client.AcceptUnverifiedUsers)
                 {
                     return Invalid(request, "Email is not verified", "The user must have a verified email");
                 }
-            }
-
-            // load client_id
-            // client_id must always be present on the request
-            var loadClientResult = await LoadClientAsync(request);
-            if (loadClientResult.IsError)
-            {
-                return loadClientResult;
             }
 
             // load request object
@@ -293,9 +293,9 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 foreach (var key in jwtRequestValidationResult.Payload.Keys)
                 {
                     if (ignoreKeys.Contains(key)) continue;
-                    
+
                     var value = jwtRequestValidationResult.Payload[key];
-                    
+
                     var qsValue = request.Raw.Get(key);
                     if (qsValue != null)
                     {
