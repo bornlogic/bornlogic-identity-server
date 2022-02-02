@@ -198,7 +198,7 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
             var url = errorUrl.AddQueryString(_options.UserInteraction.ErrorIdParameter, id);
 
             if (context.Request?.Query?.ContainsKey("redirect_uri") ?? false)
-                url = url.AddQueryString("redirect_uri", context.Request.Query["redirect_uri"]);
+                url = url.AddQueryString("redirectUri", context.Request.Query["redirect_uri"]);
 
             context.Response.RedirectToAbsoluteUrl(url);
         }
