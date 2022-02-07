@@ -277,6 +277,11 @@ namespace Bornlogic.IdentityServer.Storage.Models
         public int? UserSsoLifetime { get; set; }
 
         /// <summary>
+        /// The maximum duration (in seconds) since the last time the user authenticated in a external Idp.
+        /// </summary>
+        public int? UserSsoExternalIdpLifetime { get; set; }
+
+        /// <summary>
         /// Gets or sets the type of the device flow user code.
         /// </summary>
         /// <value>

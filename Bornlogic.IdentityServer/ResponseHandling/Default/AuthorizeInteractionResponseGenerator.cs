@@ -217,6 +217,19 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 }
             }
 
+            if (request.Client.UserSsoExternalIdpLifetime.HasValue && currentIdp != IdentityServerConstants.LocalIdentityProvider)
+            {
+                var authTimeEpoch = request.Subject.GetAuthenticationTimeEpoch();
+                var nowEpoch = Clock.UtcNow.ToUnixTimeSeconds();
+
+                var diff = nowEpoch - authTimeEpoch;
+                if (diff > request.Client.UserSsoExternalIdpLifetime.Value)
+                {
+                    Logger.LogInformation("Showing login: User's external auth session duration: {sessionDuration} exceeds client's user SSO lifetime: {userSsoLifetime}.", diff, request.Client.UserSsoExternalIdpLifetime);
+                    return new InteractionResponse { IsLogin = true };
+                }
+            }
+
             return new InteractionResponse();
         }
 
