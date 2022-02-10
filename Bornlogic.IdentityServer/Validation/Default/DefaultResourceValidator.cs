@@ -189,7 +189,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     var apiScope = resourcesFromStore.FindApiScope(requestedScope.ParsedName);
                     if (apiScope != null)
                     {
-                        if (!(await IsClientAllowedIdentityResourceAsync(client, identity)))
+                        if (!(await IsClientAllowedApiScopeAsync(client, apiScope)))
                         {
                             result.InvalidScopes.Add(requestedScope.RawValue);
                         }
