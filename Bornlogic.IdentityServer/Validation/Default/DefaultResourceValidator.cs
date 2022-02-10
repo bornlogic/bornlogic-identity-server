@@ -52,12 +52,33 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 return result;
             }
 
+            var parsedRequiredRequestScopesResult = _scopeParser.ParseScopeValues(request.RequiredRequestScopes);
+
+            if (!parsedRequiredRequestScopesResult.Succeeded)
+            {
+                foreach (var invalidScope in parsedRequiredRequestScopesResult.Errors)
+                {
+                    _logger.LogError("Invalid parsed scope {scope}, message: {error}", invalidScope.RawValue, invalidScope.Error);
+                    result.InvalidScopes.Add(invalidScope.RawValue);
+                }
+
+                return result;
+            }
+
             var scopeNames = parsedScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
             var resourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(scopeNames);
 
             foreach (var scope in parsedScopesResult.ParsedScopes)
             {
-                await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes);
+                await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes.Any(a => a == scope.ParsedName));
+            }
+
+            var requiredRequestScopeNames = parsedRequiredRequestScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
+            var requiredRequestResourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(requiredRequestScopeNames);
+
+            foreach (var scope in parsedRequiredRequestScopesResult.ParsedScopes)
+            {
+                await ValidateRequestRequiredScopeAsync(request.Client, requiredRequestResourcesFromStore, scope, result);
             }
 
             if (result.InvalidScopes.Count > 0)
@@ -84,7 +105,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             Resources resourcesFromStore,
             ParsedScopeValue requestedScope,
             ResourceValidationResult result,
-            IEnumerable<string> requiredRequestScopes)
+            bool forceRequired)
         {
             if (requestedScope.ParsedName == IdentityServerConstants.StandardScopes.OfflineAccess)
             {
@@ -122,7 +143,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                         {
                             result.ParsedScopes.Add(requestedScope);
 
-                            if (requiredRequestScopes?.Any(a => a == apiScope.Name) ?? false)
+                            if (forceRequired)
                                 apiScope.Required = true;
 
                             result.Resources.ApiScopes.Add(apiScope);
@@ -134,6 +155,41 @@ namespace Bornlogic.IdentityServer.Validation.Default
                             }
                         }
                         else
+                        {
+                            result.InvalidScopes.Add(requestedScope.RawValue);
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogError("Scope {scope} not found in store.", requestedScope.ParsedName);
+                        result.InvalidScopes.Add(requestedScope.RawValue);
+                    }
+                }
+            }
+        }
+
+        protected virtual async Task ValidateRequestRequiredScopeAsync(Client client, Resources resourcesFromStore, ParsedScopeValue requestedScope, ResourceValidationResult result)
+        {
+            if (requestedScope.ParsedName == IdentityServerConstants.StandardScopes.OfflineAccess)
+            {
+                result.InvalidScopes.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
+            }
+            else
+            {
+                var identity = resourcesFromStore.FindIdentityResourcesByScope(requestedScope.ParsedName);
+                if (identity != null)
+                {
+                    if (!(await IsClientAllowedIdentityResourceAsync(client, identity)))
+                    {
+                        result.InvalidScopes.Add(requestedScope.RawValue);
+                    }
+                }
+                else
+                {
+                    var apiScope = resourcesFromStore.FindApiScope(requestedScope.ParsedName);
+                    if (apiScope != null)
+                    {
+                        if (!(await IsClientAllowedIdentityResourceAsync(client, identity)))
                         {
                             result.InvalidScopes.Add(requestedScope.RawValue);
                         }
