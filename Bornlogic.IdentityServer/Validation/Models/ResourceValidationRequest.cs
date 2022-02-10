@@ -21,10 +21,6 @@ namespace Bornlogic.IdentityServer.Validation.Models
         /// </summary>
         public IEnumerable<string> Scopes { get; set; }
 
-        // /// <summary>
-        // /// The requested resource indicators.
-        // /// </summary>
-        //  todo: add back when we support resource indicators
-        // public IEnumerable<string> ResourceIndicators { get; set; }
+        public IEnumerable<string> RequiredRequestScopes { get; set; }
     }
 }

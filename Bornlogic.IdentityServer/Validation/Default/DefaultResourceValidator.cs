@@ -40,7 +40,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             var parsedScopesResult = _scopeParser.ParseScopeValues(request.Scopes);
 
             var result = new ResourceValidationResult();
-            
+
             if (!parsedScopesResult.Succeeded)
             {
                 foreach (var invalidScope in parsedScopesResult.Errors)
@@ -57,7 +57,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             foreach (var scope in parsedScopesResult.ParsedScopes)
             {
-                await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result);
+                await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes);
             }
 
             if (result.InvalidScopes.Count > 0)
@@ -80,10 +80,11 @@ namespace Bornlogic.IdentityServer.Validation.Default
         /// <param name="result"></param>
         /// <returns></returns>
         protected virtual async Task ValidateScopeAsync(
-            Client client, 
-            Resources resourcesFromStore, 
-            ParsedScopeValue requestedScope, 
-            ResourceValidationResult result)
+            Client client,
+            Resources resourcesFromStore,
+            ParsedScopeValue requestedScope,
+            ResourceValidationResult result,
+            IEnumerable<string> requiredRequestScopes)
         {
             if (requestedScope.ParsedName == IdentityServerConstants.StandardScopes.OfflineAccess)
             {
@@ -120,6 +121,10 @@ namespace Bornlogic.IdentityServer.Validation.Default
                         if (await IsClientAllowedApiScopeAsync(client, apiScope))
                         {
                             result.ParsedScopes.Add(requestedScope);
+
+                            if (requiredRequestScopes?.Any(a => a == apiScope.Name) ?? false)
+                                apiScope.Required = true;
+
                             result.Resources.ApiScopes.Add(apiScope);
 
                             var apis = resourcesFromStore.FindApiResourcesByScope(apiScope.Name);

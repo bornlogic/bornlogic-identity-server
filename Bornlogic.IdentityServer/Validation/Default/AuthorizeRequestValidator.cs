@@ -605,7 +605,8 @@ namespace Bornlogic.IdentityServer.Validation.Default
             var validatedResources = await _resourceValidator.ValidateRequestedResourcesAsync(new ResourceValidationRequest
             {
                 Client = request.Client,
-                Scopes = request.RequestedScopes
+                Scopes = request.RequestedScopes,
+                RequiredRequestScopes = request.Raw.Get("required_scope")?.Split(' ')
             });
 
             if (!validatedResources.Succeeded)
