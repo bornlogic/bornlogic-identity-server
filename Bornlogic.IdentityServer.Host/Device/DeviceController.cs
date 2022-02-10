@@ -87,7 +87,7 @@ namespace Bornlogic.IdentityServer.Host.Device
                 grantedConsent = new ConsentResponse();
 
                 // emit event
-                await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.Client.AllowedScopes));
+                await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.Client.AllowedScopes.Select(a => a.Name)));
             }
             // user clicked 'yes' - validate the data
             else if (model.Button == "yes")
@@ -107,7 +107,7 @@ namespace Bornlogic.IdentityServer.Host.Device
                     };
 
                     // emit event
-                    await _events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.Client.ClientId, request.Client.AllowedScopes, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent));
+                    await _events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.Client.ClientId, request.Client.AllowedScopes.Select(a => a.Name), grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent));
                 }
                 else
                 {
@@ -145,14 +145,14 @@ namespace Bornlogic.IdentityServer.Host.Device
                 var client = await _clientStore.FindEnabledClientByIdAsync(request.Client.ClientId);
                 if (client != null)
                 {
-                    var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.Client.AllowedScopes);
+                    var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.Client.AllowedScopes.Select(a => a.Name));
                     if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
                     {
                         return CreateConsentViewModel(userCode, model, client, resources);
                     }
                     else
                     {
-                        _logger.LogError("No scopes matching: {0}", request.Client.AllowedScopes.Aggregate((x, y) => x + ", " + y));
+                        _logger.LogError("No scopes matching: {0}", request.Client.AllowedScopes.Aggregate((x, y) => new ClientScope{Name = x + ", " + y }).Name);
                     }
                 }
                 else

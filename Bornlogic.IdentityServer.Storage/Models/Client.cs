@@ -151,7 +151,7 @@ namespace Bornlogic.IdentityServer.Storage.Models
         /// <summary>
         /// Specifies the api scopes that the client is allowed to request. If empty, the client can't access any scope
         /// </summary>
-        public ICollection<string> AllowedScopes { get; set; } = new HashSet<string>();
+        public ICollection<ClientScope> AllowedScopes { get; set; } = new HashSet<ClientScope>();
 
         /// <summary>
         /// When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint.

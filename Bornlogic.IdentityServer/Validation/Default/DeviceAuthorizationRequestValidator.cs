@@ -118,7 +118,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
                 if (!request.Client.AllowedScopes.IsNullOrEmpty())
                 {
-                    var clientAllowedScopes = new List<string>(request.Client.AllowedScopes);
+                    var clientAllowedScopes = new List<string>(request.Client.AllowedScopes.Select(a => a.Name));
                     if (request.Client.AllowOfflineAccess)
                     {
                         clientAllowedScopes.Add(IdentityServerConstants.StandardScopes.OfflineAccess);

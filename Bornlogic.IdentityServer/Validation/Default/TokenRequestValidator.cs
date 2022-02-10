@@ -669,12 +669,12 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     var clientAllowedScopes = new List<string>();
                     if (!ignoreImplicitIdentityScopes)
                     {
-                        var resources = await _resourceStore.FindResourcesByScopeAsync(_validatedRequest.Client.AllowedScopes);
-                        clientAllowedScopes.AddRange(resources.ToScopeNames().Where(x => _validatedRequest.Client.AllowedScopes.Contains(x)));
+                        var resources = await _resourceStore.FindResourcesByScopeAsync(_validatedRequest.Client.AllowedScopes.Select(a => a.Name));
+                        clientAllowedScopes.AddRange(resources.ToScopeNames().Where(x => _validatedRequest.Client.AllowedScopes.Any(a => a.Name == x)));
                     }
                     else
                     {
-                        var apiScopes = await _resourceStore.FindApiScopesByNameAsync(_validatedRequest.Client.AllowedScopes);
+                        var apiScopes = await _resourceStore.FindApiScopesByNameAsync(_validatedRequest.Client.AllowedScopes.Select(a => a.Name));
                         clientAllowedScopes.AddRange(apiScopes.Select(x => x.Name));
                     }
 

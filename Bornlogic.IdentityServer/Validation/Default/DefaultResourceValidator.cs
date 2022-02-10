@@ -150,7 +150,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
         /// <returns></returns>
         protected virtual Task<bool> IsClientAllowedIdentityResourceAsync(Client client, IdentityResource identity)
         {
-            var allowed = client.AllowedScopes.Contains(identity.Name);
+            var allowed = client.AllowedScopes.Any(a => a.Name == identity.Name);
             if (!allowed)
             {
                 _logger.LogError("Client {client} is not allowed access to scope {scope}.", client.ClientId, identity.Name);
@@ -166,7 +166,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
         /// <returns></returns>
         protected virtual Task<bool> IsClientAllowedApiScopeAsync(Client client, ApiScope apiScope)
         {
-            var allowed = client.AllowedScopes.Contains(apiScope.Name);
+            var allowed = client.AllowedScopes.Any(a => a.Name == apiScope.Name);
             if (!allowed)
             {
                 _logger.LogError("Client {client} is not allowed access to scope {scope}.", client.ClientId, apiScope.Name);

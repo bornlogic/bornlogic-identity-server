@@ -42,14 +42,9 @@ namespace Bornlogic.IdentityServer.Host.Repositories
                 FrontChannelLogoutSessionRequired = true,
                 BackChannelLogoutSessionRequired = true,
                 AllowOfflineAccess = true,
-                AllowedScopes = new List<string>
+                AllowedScopes = new List<ClientScope>
                 {
-                    "graph_api_access",
-                    "openid",
-                    "profile",
-                    "api1",
-                    "api2",
-                    "offline_access"
+                    new ClientScope{Name = "graph_api_access", Required = true}
                 },
                 IdentityTokenLifetime = 300,
                 AccessTokenLifetime = 3000,
