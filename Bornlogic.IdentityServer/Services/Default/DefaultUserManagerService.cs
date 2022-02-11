@@ -10,5 +10,10 @@ namespace Bornlogic.IdentityServer.Services.Default
         {
             return Task.CompletedTask;
         }
+
+        public Task RemoveClaimByType(IPrincipal currentPrincipal, string type)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
