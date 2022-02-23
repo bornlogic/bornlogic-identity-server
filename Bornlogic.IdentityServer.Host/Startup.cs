@@ -51,6 +51,7 @@ namespace Bornlogic.IdentityServer.Host
                 })
                 .AddResourceStore<ResourcesStore>()
                 .AddClientStore<ClientStore>()
+                .AddUserEmailStore<UserEmailStore>()
                 .AddSavedConsentStore<SavedConsentStore>()
                 .AddPersistedGrantStore<PersistentGrantStore>()
                 .AddAspNetIdentity<ApplicationUser>()

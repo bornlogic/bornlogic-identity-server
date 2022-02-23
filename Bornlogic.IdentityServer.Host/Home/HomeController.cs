@@ -11,6 +11,7 @@ namespace Bornlogic.IdentityServer.Host.Home
 {
     [SecurityHeaders]
     [AllowAnonymous]
+    [Route("")]
     public class HomeController : Controller
     {
         private readonly IIdentityServerInteractionService _interaction;
@@ -24,6 +25,7 @@ namespace Bornlogic.IdentityServer.Host.Home
             _logger = logger;
         }
 
+        [Route("/")]
         public IActionResult Index()
         {
             if (_environment.IsDevelopment())
@@ -45,6 +47,8 @@ namespace Bornlogic.IdentityServer.Host.Home
         /// <summary>
         /// Shows the error page
         /// </summary>
+        [Route("/Error")]
+        [Route("/Home/Error")]
         public async Task<IActionResult> Error(string errorId)
         {
             var vm = new ErrorViewModel();
