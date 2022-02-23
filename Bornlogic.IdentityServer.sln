@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9D0A3589-5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bornlogic.IdentityServer.Host", "Bornlogic.IdentityServer.Host\Bornlogic.IdentityServer.Host.csproj", "{86A06169-1161-4E30-8149-7017EDCD7944}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bornlogic.IdentityServer.Culture", "Bornlogic.IdentityServer.Culture\Bornlogic.IdentityServer.Culture.csproj", "{B3537DCD-98B5-4641-8D1F-46A64C77B8AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{86A06169-1161-4E30-8149-7017EDCD7944}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86A06169-1161-4E30-8149-7017EDCD7944}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86A06169-1161-4E30-8149-7017EDCD7944}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3537DCD-98B5-4641-8D1F-46A64C77B8AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3537DCD-98B5-4641-8D1F-46A64C77B8AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3537DCD-98B5-4641-8D1F-46A64C77B8AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3537DCD-98B5-4641-8D1F-46A64C77B8AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
