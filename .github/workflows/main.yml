@@ -81,5 +81,4 @@ jobs:
         dotnet nuget push "output/*.nupkg" \
           --source https://nuget.pkg.github.com/bornlogic/index.json \
           --api-key ${{ secrets.GITHUB_TOKEN }} \
-          --skip-duplicate \
-          --no-symbols true
+          --skip-duplicate --no-symbols
