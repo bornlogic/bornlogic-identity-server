@@ -20,12 +20,12 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Models
         public string Error { get; set; } = OidcConstants.TokenErrors.InvalidRequest;
 
         /// <summary>
-        /// Gets or sets the error description.
+        /// Gets or sets the sub error.
         /// </summary>
         /// <value>
-        /// The error description.
+        /// The sub error.
         /// </value>
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
 
         /// <summary>
         /// Gets or sets the custom entries.

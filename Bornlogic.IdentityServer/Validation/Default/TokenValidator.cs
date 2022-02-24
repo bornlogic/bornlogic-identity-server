@@ -138,7 +138,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     {
                         IsError = true,
                         Error = OidcConstants.ProtectedResourceErrors.InvalidToken,
-                        ErrorDescription = "Token too long"
+                        SubError = "token_too_long"
                     };
                 }
 
@@ -157,7 +157,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     {
                         IsError = true,
                         Error = OidcConstants.ProtectedResourceErrors.InvalidToken,
-                        ErrorDescription = "Token too long"
+                        SubError = "token_too_long"
                     };
                 }
 
@@ -279,7 +279,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                             return new TokenValidationResult
                             {
                                 IsError = true,
-                                Error = "invalid JWT token type"
+                                Error = "invalid_jwt_token_type"
                             };
                         }
 

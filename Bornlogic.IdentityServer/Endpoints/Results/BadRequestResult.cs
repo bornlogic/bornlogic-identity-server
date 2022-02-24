@@ -11,12 +11,12 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
     internal class BadRequestResult : IEndpointResult
     {
         public string Error { get; set; }
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
 
-        public BadRequestResult(string error = null, string errorDescription = null)
+        public BadRequestResult(string error = null, string subError = null)
         {
             Error = error;
-            ErrorDescription = errorDescription;
+            SubError = subError;
         }
 
         public async Task ExecuteAsync(HttpContext context)
@@ -29,7 +29,7 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
                 var dto = new ResultDto
                 {
                     error = Error,
-                    error_description = ErrorDescription
+                    sub_error = SubError
                 };
 
                 await context.Response.WriteJsonAsync(dto);
@@ -39,7 +39,7 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
         internal class ResultDto
         {
             public string error { get; set; }
-            public string error_description { get; set; }
+            public string sub_error { get; set; }
         }    
     }
 }

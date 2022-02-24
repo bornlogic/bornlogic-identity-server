@@ -44,12 +44,12 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Models
         public string Error { get; set; }
 
         /// <summary>
-        /// Gets or sets the error description.
+        /// Gets or sets the sub error.
         /// </summary>
         /// <value>
-        /// The error description.
+        /// The sub error.
         /// </value>
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the user must be redirected to a custom page.

@@ -15,9 +15,9 @@ namespace Bornlogic.IdentityServer.Models.Messages
         public AuthorizationError? Error { get; set; }
 
         /// <summary>
-        /// Error description.
+        /// Sub Error.
         /// </summary>
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
 
         /// <summary>
         /// Gets if consent was granted.

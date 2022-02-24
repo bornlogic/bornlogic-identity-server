@@ -34,12 +34,12 @@ namespace Bornlogic.IdentityServer.Models.Messages
         public string Error { get; set; }
 
         /// <summary>
-        /// Gets or sets the error description.
+        /// Gets or sets the sub error.
         /// </summary>
         /// <value>
-        /// The error description.
+        /// The sub error.
         /// </value>
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
 
         /// <summary>
         /// The per-request identifier. This can be used to display to the end user and can be used in diagnostics.

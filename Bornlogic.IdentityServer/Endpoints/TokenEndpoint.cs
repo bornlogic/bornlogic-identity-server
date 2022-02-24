@@ -90,7 +90,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             if (requestResult.IsError)
             {
                 await _events.RaiseAsync(new TokenIssuedFailureEvent(requestResult));
-                return Error(requestResult.Error, requestResult.ErrorDescription, requestResult.CustomResponse);
+                return Error(requestResult.Error, requestResult.SubError, requestResult.CustomResponse);
             }
 
             // create response
@@ -105,12 +105,12 @@ namespace Bornlogic.IdentityServer.Endpoints
             return new TokenResult(response);
         }
 
-        private TokenErrorResult Error(string error, string errorDescription = null, Dictionary<string, object> custom = null)
+        private TokenErrorResult Error(string error, string subError = null, Dictionary<string, object> custom = null)
         {
             var response = new TokenErrorResponse
             {
                 Error = error,
-                ErrorDescription = errorDescription,
+                SubError = subError,
                 Custom = custom
             };
 

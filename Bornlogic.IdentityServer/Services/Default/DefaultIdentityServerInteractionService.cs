@@ -145,12 +145,12 @@ namespace Bornlogic.IdentityServer.Services.Default
             }
         }
 
-        public Task DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, string errorDescription = null)
+        public Task DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, string subError = null)
         {
             var response = new ConsentResponse 
             {
                 Error = error,
-                ErrorDescription = errorDescription
+                SubError = subError
             };
             return GrantConsentAsync(request, response, false);
         }

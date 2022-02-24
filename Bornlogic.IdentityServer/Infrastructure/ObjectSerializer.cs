@@ -3,6 +3,7 @@
 
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Bornlogic.IdentityServer.Infrastructure
 {
@@ -10,7 +11,7 @@ namespace Bornlogic.IdentityServer.Infrastructure
     {
         private static readonly JsonSerializerOptions Options = new JsonSerializerOptions
         {
-            IgnoreNullValues = true
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         };
         
         public static string ToString(object o)

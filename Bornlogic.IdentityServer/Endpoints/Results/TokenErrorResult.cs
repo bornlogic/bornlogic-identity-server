@@ -29,7 +29,7 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
             var dto = new ResultDto
             {
                 error = Response.Error,
-                error_description = Response.ErrorDescription,
+                sub_error = Response.SubError,
                 
                 custom = Response.Custom
             };
@@ -40,7 +40,7 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
         internal class ResultDto
         {
             public string error { get; set; }
-            public string error_description { get; set; }
+            public string sub_error { get; set; }
 
             [JsonExtensionData]
             public Dictionary<string, object> custom { get; set; }

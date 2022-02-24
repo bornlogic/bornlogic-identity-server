@@ -29,7 +29,7 @@ namespace Bornlogic.IdentityServer.Extensions
             return null;
         }
 
-        public static bool TryGetClientID(this HttpRequest request, out string? clientID)
+        public static bool TryGetClientID(this HttpRequest request, out string clientID)
         {
             if (!request.HasApplicationFormContentType())
             {

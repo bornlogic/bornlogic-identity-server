@@ -59,12 +59,12 @@ namespace Bornlogic.IdentityServer.Validation.Models
         /// Initializes a new instance of the <see cref="GrantValidationResult"/> class with an error and description.
         /// </summary>
         /// <param name="error">The error.</param>
-        /// <param name="errorDescription">The error description.</param>
+        /// <param name="subError">The sub error.</param>
         /// <param name="customResponse">Custom response elements</param>
-        public GrantValidationResult(TokenRequestErrors error, string errorDescription = null, Dictionary<string, object> customResponse = null)
+        public GrantValidationResult(TokenRequestErrors error, string subError = null, Dictionary<string, object> customResponse = null)
         {
             Error = ConvertTokenErrorEnumToString(error);
-            ErrorDescription = errorDescription;
+            SubError = subError;
             CustomResponse = customResponse;
         }
 

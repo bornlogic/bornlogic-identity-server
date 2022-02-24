@@ -149,7 +149,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (customResult.IsError)
             {
                 LogError("Error in custom validation", customResult.Error, request);
-                return Invalid(request, customResult.Error, customResult.ErrorDescription);
+                return Invalid(request, customResult.Error, customResult.SubError);
             }
 
             _logger.LogTrace("Authorize request protocol validation successful");
@@ -165,7 +165,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (jwtRequest.IsPresent() && jwtRequestUri.IsPresent())
             {
                 LogError("Both request and request_uri are present", request);
-                return Invalid(request, description: "Only one request parameter is allowed");
+                return Invalid(request, subError: "only_one_request_parameter_is_allowed");
             }
 
             if (_options.Endpoints.EnableJwtRequestUri)
@@ -176,14 +176,14 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     if (jwtRequestUri.Length > 512)
                     {
                         LogError("request_uri is too long", request);
-                        return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestUri, description: "request_uri is too long");
+                        return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestUri, subError: "request_uri_too_long");
                     }
 
                     var jwt = await _jwtRequestUriHttpClient.GetJwtAsync(jwtRequestUri, request.Client);
                     if (jwt.IsMissing())
                     {
                         LogError("no value returned from request_uri", request);
-                        return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestUri, description: "no value returned from request_uri");
+                        return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestUri, subError: "request_uri_empty");
                     }
 
                     jwtRequest = jwt;
@@ -201,7 +201,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (jwtRequest.Length >= _options.InputLengthRestrictions.Jwt)
                 {
                     LogError("request value is too long", request);
-                    return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestObject, description: "Invalid request value");
+                    return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestObject, subError: "invalid_request_value");
                 }
             }
 
@@ -219,7 +219,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (clientId.IsMissingOrTooLong(_options.InputLengthRestrictions.ClientId))
             {
                 LogError("client_id is missing or too long", request);
-                return Invalid(request, description: "Invalid client_id");
+                return Invalid(request, subError: "invalid_client_id");
             }
 
             request.ClientId = clientId;
@@ -251,7 +251,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (jwtRequestValidationResult.IsError)
                 {
                     LogError("request JWT validation failure", request);
-                    return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestObject, description: "Invalid JWT request");
+                    return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestObject, subError: "invalid_jwt_request");
                 }
 
                 // validate response_type match
@@ -263,7 +263,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                         if (payloadResponseType != responseType)
                         {
                             LogError("response_type in JWT payload does not match response_type in request", request);
-                            return Invalid(request, description: "Invalid JWT request");
+                            return Invalid(request, subError: "invalid_jwt_request");
                         }
                     }
                 }
@@ -274,13 +274,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     if (!string.Equals(request.Client.ClientId, payloadClientId, StringComparison.Ordinal))
                     {
                         LogError("client_id in JWT payload does not match client_id in request", request);
-                        return Invalid(request, description: "Invalid JWT request");
+                        return Invalid(request, subError: "invalid_jwt_request");
                     }
                 }
                 else
                 {
                     LogError("client_id is missing in JWT payload", request);
-                    return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestObject, description: "Invalid JWT request");
+                    return Invalid(request, error: OidcConstants.AuthorizeErrors.InvalidRequestObject, subError: "invalid_jwt_request");
                 }
 
                 var ignoreKeys = new[]
@@ -302,7 +302,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                         if (!string.Equals(value, qsValue, StringComparison.Ordinal))
                         {
                             LogError("parameter mismatch between request object and query string parameter.", request);
-                            return Invalid(request, description: "Parameter mismatch in JWT request");
+                            return Invalid(request, subError: "jwt_request_parameter_mismatch");
                         }
                     }
 
@@ -324,7 +324,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             {
                 if (!request.RequestObjectValues.Any())
                 {
-                    return Invalid(request, description: "Client must use request object, but no request or request_uri parameter present");
+                    return Invalid(request, subError: "missing_request_or_request_uri");
                 }
             }
 
@@ -336,13 +336,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (redirectUri.IsMissingOrTooLong(_options.InputLengthRestrictions.RedirectUri))
             {
                 LogError("redirect_uri is missing or too long", request);
-                return Invalid(request, description: "Invalid redirect_uri");
+                return Invalid(request, subError: "invalid_redirect_uri");
             }
 
             if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out _))
             {
                 LogError("malformed redirect_uri", redirectUri, request);
-                return Invalid(request, description: "Invalid redirect_uri");
+                return Invalid(request, subError: "invalid_redirect_uri");
             }
 
             //////////////////////////////////////////////////////////
@@ -351,7 +351,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (request.Client.ProtocolType != IdentityServerConstants.ProtocolTypes.OpenIdConnect)
             {
                 LogError("Invalid protocol type for OIDC authorize endpoint", request.Client.ProtocolType, request);
-                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, description: "Invalid protocol");
+                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, subError: "invalid_protocol");
             }
 
             //////////////////////////////////////////////////////////
@@ -424,7 +424,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (!Constants.AllowedGrantTypesForAuthorizeEndpoint.Contains(request.GrantType))
             {
                 LogError("Invalid grant type", request.GrantType, request);
-                return Invalid(request, description: "Invalid response_type");
+                return Invalid(request, subError: "invalid_response_type");
             }
 
             //////////////////////////////////////////////////////////
@@ -462,13 +462,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     else
                     {
                         LogError("Invalid response_mode for response_type", responseMode, request);
-                        return Invalid(request, OidcConstants.AuthorizeErrors.InvalidRequest, description: "Invalid response_mode for response_type");
+                        return Invalid(request, OidcConstants.AuthorizeErrors.InvalidRequest, subError: "invalid_response_mode_for_response_type");
                     }
                 }
                 else
                 {
                     LogError("Unsupported response_mode", responseMode, request);
-                    return Invalid(request, OidcConstants.AuthorizeErrors.UnsupportedResponseType, description: "Invalid response_mode");
+                    return Invalid(request, OidcConstants.AuthorizeErrors.UnsupportedResponseType, subError: "invalid_response_mode");
                 }
             }
 
@@ -479,7 +479,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (!request.Client.AllowedGrantTypes.Contains(request.GrantType))
             {
                 LogError("Invalid grant type for client", request.GrantType, request);
-                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "Invalid grant type for client");
+                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "invalid_grant_type_for_client");
             }
 
             //////////////////////////////////////////////////////////
@@ -492,7 +492,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (!request.Client.AllowAccessTokensViaBrowser)
                 {
                     LogError("Client requested access token - but client is not configured to receive access tokens via browser", request);
-                    return Invalid(request, description: "Client not configured to receive access tokens via browser");
+                    return Invalid(request, subError: "browser_access_tokens_disabled_for_client");
                 }
             }
 
@@ -509,7 +509,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (request.Client.RequirePkce)
                 {
                     LogError("code_challenge is missing", request);
-                    fail.ErrorDescription = "code challenge required";
+                    fail.SubError = "code_challenge_required";
                 }
                 else
                 {
@@ -524,7 +524,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 codeChallenge.Length > _options.InputLengthRestrictions.CodeChallengeMaxLength)
             {
                 LogError("code_challenge is either too short or too long", request);
-                fail.ErrorDescription = "Invalid code_challenge";
+                fail.SubError = "invalid_code_challenge";
                 return fail;
             }
 
@@ -540,7 +540,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (!Constants.SupportedCodeChallengeMethods.Contains(codeChallengeMethod))
             {
                 LogError("Unsupported code_challenge_method", codeChallengeMethod, request);
-                fail.ErrorDescription = "Transform algorithm not supported";
+                fail.SubError = "transform_algorithm_not_supported";
                 return fail;
             }
 
@@ -550,7 +550,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (!request.Client.AllowPlainTextPkce)
                 {
                     LogError("code_challenge_method of plain is not allowed", request);
-                    fail.ErrorDescription = "Transform algorithm not supported";
+                    fail.SubError = "transform_algorithm_not_supported";
                     return fail;
                 }
             }
@@ -569,13 +569,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (scope.IsMissing())
             {
                 LogError("scope is missing", request);
-                return Invalid(request, description: "Invalid scope");
+                return Invalid(request, subError: "invalid_scope");
             }
 
             if (scope.Length > _options.InputLengthRestrictions.Scope)
             {
                 LogError("scopes too long.", request);
-                return Invalid(request, description: "Invalid scope");
+                return Invalid(request, subError: "invalid_scope");
             }
 
             request.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
@@ -595,7 +595,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (request.IsOpenIdRequest == false)
                 {
                     LogError("response_type requires the openid scope", request);
-                    return Invalid(request, description: "Missing openid scope");
+                    return Invalid(request, subError: "missing_openid_scope");
                 }
             }
 
@@ -617,7 +617,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (validatedResources.Resources.IdentityResources.Any() && !request.IsOpenIdRequest)
             {
                 LogError("Identity related scope requests, but no openid scope", request);
-                return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope, "Identity scopes requested, but openid scope is missing");
+                return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope, "missing_openid_scope");
             }
 
             if (validatedResources.Resources.ApiScopes.Any())
@@ -656,7 +656,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             if (!responseTypeValidationCheck)
             {
-                return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope, "Invalid scope for response type");
+                return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope, "invalid_scope_for_response_type");
             }
 
             request.ValidatedResources = validatedResources;
@@ -675,7 +675,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (nonce.Length > _options.InputLengthRestrictions.Nonce)
                 {
                     LogError("Nonce too long", request);
-                    return Invalid(request, description: "Invalid nonce");
+                    return Invalid(request, subError: "invalid_nonce");
                 }
 
                 request.Nonce = nonce;
@@ -689,7 +689,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     if (request.IsOpenIdRequest)
                     {
                         LogError("Nonce required for implicit and hybrid flow with openid scope", request);
-                        return Invalid(request, description: "Invalid nonce");
+                        return Invalid(request, subError: "invalid_nonce");
                     }
                 }
             }
@@ -707,7 +707,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     if (prompts.Contains(OidcConstants.PromptModes.None) && prompts.Length > 1)
                     {
                         LogError("prompt contains 'none' and other values. 'none' should be used by itself.", request);
-                        return Invalid(request, description: "Invalid prompt");
+                        return Invalid(request, subError: "invalid_prompt");
                     }
 
                     request.PromptModes = prompts;
@@ -727,7 +727,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (uilocales.Length > _options.InputLengthRestrictions.UiLocale)
                 {
                     LogError("UI locale too long", request);
-                    return Invalid(request, description: "Invalid ui_locales");
+                    return Invalid(request, subError: "invalid_ui_locales");
                 }
 
                 request.UiLocales = uilocales;
@@ -762,13 +762,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     else
                     {
                         LogError("Invalid max_age.", request);
-                        return Invalid(request, description: "Invalid max_age");
+                        return Invalid(request, subError: "invalid_max_age");
                     }
                 }
                 else
                 {
                     LogError("Invalid max_age.", request);
-                    return Invalid(request, description: "Invalid max_age");
+                    return Invalid(request, subError: "invalid_max_age");
                 }
             }
 
@@ -781,7 +781,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (loginHint.Length > _options.InputLengthRestrictions.LoginHint)
                 {
                     LogError("Login hint too long", request);
-                    return Invalid(request, description: "Invalid login_hint");
+                    return Invalid(request, subError: "invalid_login_hint");
                 }
 
                 request.LoginHint = loginHint;
@@ -796,7 +796,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (acrValues.Length > _options.InputLengthRestrictions.AcrValues)
                 {
                     LogError("Acr values too long", request);
-                    return Invalid(request, description: "Invalid acr_values");
+                    return Invalid(request, subError: "invalid_acr_values");
                 }
 
                 request.AuthenticationContextReferenceClasses = acrValues.FromSpaceSeparatedString().Distinct().ToList();
@@ -845,9 +845,9 @@ namespace Bornlogic.IdentityServer.Validation.Default
             return Valid(request);
         }
 
-        private AuthorizeRequestValidationResult Invalid(ValidatedAuthorizeRequest request, string error = OidcConstants.AuthorizeErrors.InvalidRequest, string description = null)
+        private AuthorizeRequestValidationResult Invalid(ValidatedAuthorizeRequest request, string error = OidcConstants.AuthorizeErrors.InvalidRequest, string subError = null)
         {
-            return new AuthorizeRequestValidationResult(request, error, description);
+            return new AuthorizeRequestValidationResult(request, error, subError);
         }
 
         private AuthorizeRequestValidationResult Valid(ValidatedAuthorizeRequest request)

@@ -102,7 +102,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             if (!isAuthenticated && Options.Authentication.RequireAuthenticatedUserForSignOutMessage)
             {
-                return Invalid("User is anonymous. Ignoring end session parameters");
+                return Invalid("user_is_anonymous_ignore_parameters");
             }
 
             var validatedRequest = new ValidatedEndSessionRequest
@@ -117,7 +117,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 var tokenValidationResult = await TokenValidator.ValidateIdentityTokenAsync(idTokenHint, null, false);
                 if (tokenValidationResult.IsError)
                 {
-                    return Invalid("Error validating id token hint", validatedRequest);
+                    return Invalid("error_validating_id_token_hint", validatedRequest);
                 }
 
                 validatedRequest.Client = tokenValidationResult.Client;
@@ -128,7 +128,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 {
                     if (subject.GetSubjectId() != subClaim.Value)
                     {
-                        return Invalid("Current user does not match identity token", validatedRequest);
+                        return Invalid("current_user_does_not_match_identity_token", validatedRequest);
                     }
 
                     validatedRequest.Subject = subject;
@@ -178,27 +178,27 @@ namespace Bornlogic.IdentityServer.Validation.Default
         /// <summary>
         /// Creates a result that indicates an error.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="subError"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        protected virtual EndSessionValidationResult Invalid(string message, ValidatedEndSessionRequest request = null)
+        protected virtual EndSessionValidationResult Invalid(string subError, ValidatedEndSessionRequest request = null)
         {
-            message = "End session request validation failure: " + message;
+            subError = "end_sessions_" + subError;
             if (request != null)
             {
                 var log = new EndSessionRequestValidationLog(request);
-                Logger.LogInformation(message + Environment.NewLine + "{@details}", log);
+                Logger.LogInformation(subError + Environment.NewLine + "{@details}", log);
             }
             else
             {
-                Logger.LogInformation(message);
+                Logger.LogInformation(subError);
             }
 
             return new EndSessionValidationResult
             {
                 IsError = true,
-                Error = "Invalid request",
-                ErrorDescription = message
+                Error = "invalid_request",
+                SubError = subError
             };
         }
 

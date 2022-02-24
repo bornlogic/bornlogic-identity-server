@@ -86,7 +86,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 return new InteractionResponse
                 {
                     Error = error,
-                    ErrorDescription = consent.ErrorDescription
+                    SubError = consent.SubError
                 };
             }
 
@@ -298,7 +298,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                         };
                         
                         response.Error = error;
-                        response.ErrorDescription = consent.ErrorDescription;
+                        response.SubError = consent.SubError;
                     }
                     else
                     {
