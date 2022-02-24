@@ -231,7 +231,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (client == null)
             {
                 LogError("Unknown client or not enabled", request.ClientId, request);
-                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "Unknown client or client not enabled");
+                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "unknown_or_not_enabled");
             }
 
             request.SetClient(client);
