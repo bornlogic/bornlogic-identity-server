@@ -177,7 +177,7 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
             {
                 RequestId = context.TraceIdentifier,
                 Error = Response.Error,
-                ErrorDescription = Response.ErrorDescription,
+                SubError = Response.SubError,
                 UiLocales = Response.Request?.UiLocales,
                 DisplayMode = Response.Request?.DisplayMode,
                 ClientId = Response.Request?.ClientId

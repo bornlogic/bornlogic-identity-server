@@ -19,9 +19,9 @@ namespace Bornlogic.IdentityServer.Extensions
                 {
                     collection.Add("error", response.Error);
                 }
-                if (response.ErrorDescription.IsPresent())
+                if (response.SubError.IsPresent())
                 {
-                    collection.Add("error_description", response.ErrorDescription);
+                    collection.Add("sub_error", response.SubError);
                 }
             }
             else

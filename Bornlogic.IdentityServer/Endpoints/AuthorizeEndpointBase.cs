@@ -75,7 +75,7 @@ namespace Bornlogic.IdentityServer.Endpoints
                     "Request validation failed",
                     result.ValidatedRequest,
                     result.Error,
-                    result.ErrorDescription);
+                    result.SubError);
             }
 
             var request = result.ValidatedRequest;
@@ -86,7 +86,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             var interactionResult = await _interactionGenerator.ProcessInteractionAsync(request, consent);
             if (interactionResult.IsError)
             {
-                return await CreateErrorResultAsync("Interaction generator error", request, interactionResult.Error, interactionResult.ErrorDescription, false);
+                return await CreateErrorResultAsync("Interaction generator error", request, interactionResult.Error, interactionResult.SubError, false);
             }
             if (interactionResult.IsLogin)
             {
@@ -114,7 +114,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             string logMessage,
             ValidatedAuthorizeRequest request = null,
             string error = OidcConstants.AuthorizeErrors.ServerError,
-            string errorDescription = null,
+            string subError = null,
             bool logError = true)
         {
             if (logError)
@@ -129,13 +129,13 @@ namespace Bornlogic.IdentityServer.Endpoints
             }
 
             // TODO: should we raise a token failure event for all errors to the authorize endpoint?
-            await RaiseFailureEventAsync(request, error, errorDescription);
+            await RaiseFailureEventAsync(request, error, subError);
 
             return new AuthorizeResult(new AuthorizeResponse
             {
                 Request = request,
                 Error = error,
-                ErrorDescription = errorDescription,
+                SubError = subError,
                 SessionState = request?.GenerateSessionStateValue()
             });
         }
@@ -171,9 +171,9 @@ namespace Bornlogic.IdentityServer.Endpoints
             }
         }
 
-        private Task RaiseFailureEventAsync(ValidatedAuthorizeRequest request, string error, string errorDescription)
+        private Task RaiseFailureEventAsync(ValidatedAuthorizeRequest request, string error, string subError)
         {
-            return _events.RaiseAsync(new TokenIssuedFailureEvent(request, error, errorDescription));
+            return _events.RaiseAsync(new TokenIssuedFailureEvent(request, error, subError));
         }
 
         private Task RaiseResponseEventAsync(AuthorizeResponse response)
@@ -184,7 +184,7 @@ namespace Bornlogic.IdentityServer.Endpoints
                 return _events.RaiseAsync(new TokenIssuedSuccessEvent(response));
             }
 
-            return RaiseFailureEventAsync(response.Request, response.Error, response.ErrorDescription);
+            return RaiseFailureEventAsync(response.Request, response.Error, response.SubError);
         }
     }
 }

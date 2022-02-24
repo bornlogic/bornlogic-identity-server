@@ -25,7 +25,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Models
         /// <value>
         /// The error description.
         /// </value>
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
 
         /// <summary>
         /// Gets or sets the custom entries.

@@ -31,7 +31,7 @@ namespace Bornlogic.IdentityServer.Events
 
             Endpoint = Constants.EndpointNames.DeviceAuthorization;
             Error = result.Error;
-            ErrorDescription = result.ErrorDescription;
+            SubError = result.SubError;
         }
 
         /// <summary>
@@ -86,11 +86,11 @@ namespace Bornlogic.IdentityServer.Events
         public string Error { get; set; }
 
         /// <summary>
-        /// Gets or sets the error description.
+        /// Gets or sets the sub error.
         /// </summary>
         /// <value>
-        /// The error description.
+        /// The sub error.
         /// </value>
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
     }
 }

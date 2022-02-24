@@ -21,7 +21,7 @@ namespace Bornlogic.IdentityServer.Events
         /// <param name="request">The request.</param>
         /// <param name="error">The error.</param>
         /// <param name="description">The description.</param>
-        public TokenIssuedFailureEvent(ValidatedAuthorizeRequest request, string error, string description)
+        public TokenIssuedFailureEvent(ValidatedAuthorizeRequest request, string error, string subError)
             : this()
         {
             if (request != null)
@@ -40,7 +40,7 @@ namespace Bornlogic.IdentityServer.Events
 
             Endpoint = EndpointNames.Authorize;
             Error = error;
-            ErrorDescription = description;
+            SubError = subError;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Bornlogic.IdentityServer.Events
 
             Endpoint = EndpointNames.Token;
             Error = result.Error;
-            ErrorDescription = result.ErrorDescription;
+            SubError = result.SubError;
         }
 
         /// <summary>
@@ -149,6 +149,6 @@ namespace Bornlogic.IdentityServer.Events
         /// <value>
         /// The error description.
         /// </value>
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
     }
 }

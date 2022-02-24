@@ -27,14 +27,14 @@ namespace Bornlogic.IdentityServer.Validation.Models
         /// </summary>
         /// <param name="validatedRequest">The validated request.</param>
         /// <param name="error">The error.</param>
-        /// <param name="errorDescription">The error description.</param>
+        /// <param name="subError">The error description.</param>
         /// <param name="customResponse">The custom response.</param>
-        public TokenRequestValidationResult(ValidatedTokenRequest validatedRequest, string error, string errorDescription = null, Dictionary<string, object> customResponse = null)
+        public TokenRequestValidationResult(ValidatedTokenRequest validatedRequest, string error, string subError = null, Dictionary<string, object> customResponse = null)
         {
             IsError = true;
 
             Error = error;
-            ErrorDescription = errorDescription;
+            SubError = subError;
             ValidatedRequest = validatedRequest;
             CustomResponse = customResponse;
         }

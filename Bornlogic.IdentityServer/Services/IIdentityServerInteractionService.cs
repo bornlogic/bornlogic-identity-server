@@ -56,8 +56,8 @@ namespace Bornlogic.IdentityServer.Services
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="error"></param>
-        /// <param name="errorDescription"></param>
-        Task DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, string errorDescription = null);
+        /// <param name="subError"></param>
+        Task DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, string subError = null);
 
         /// <summary>
         /// Returns a collection representing all of the user's consents and grants.

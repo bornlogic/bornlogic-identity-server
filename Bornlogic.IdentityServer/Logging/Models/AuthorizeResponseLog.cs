@@ -16,7 +16,7 @@ namespace Bornlogic.IdentityServer.Logging.Models
 
         public string Scope { get; set; }
         public string Error { get; set; }
-        public string ErrorDescription { get; set; }
+        public string SubError { get; set; }
 
 
         public AuthorizeResponseLog(AuthorizeResponse response)
@@ -27,7 +27,7 @@ namespace Bornlogic.IdentityServer.Logging.Models
             State = response.State;
             Scope = response.Scope;
             Error = response.Error;
-            ErrorDescription = response.ErrorDescription;
+            SubError = response.SubError;
         }
 
         public override string ToString()

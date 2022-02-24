@@ -78,7 +78,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             if (requestResult.IsError)
             {
                 await _events.RaiseAsync(new DeviceAuthorizationFailureEvent(requestResult));
-                return Error(requestResult.Error, requestResult.ErrorDescription);
+                return Error(requestResult.Error, requestResult.SubError);
             }
 
             var baseUrl = context.GetIdentityServerBaseUrl().EnsureTrailingSlash();
@@ -94,16 +94,16 @@ namespace Bornlogic.IdentityServer.Endpoints
             return new DeviceAuthorizationResult(response);
         }
 
-        private TokenErrorResult Error(string error, string errorDescription = null, Dictionary<string, object> custom = null)
+        private TokenErrorResult Error(string error, string subError = null, Dictionary<string, object> custom = null)
         {
             var response = new TokenErrorResponse
             {
                 Error = error,
-                ErrorDescription = errorDescription,
+                SubError = subError,
                 Custom = custom
             };
 
-            _logger.LogError("Device authorization error: {error}:{errorDescriptions}", error, error ?? "-no message-");
+            _logger.LogError("Device authorization error: {error}:{subError}", error, error ?? "unknown_error");
 
             return new TokenErrorResult(response);
         }

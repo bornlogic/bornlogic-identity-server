@@ -14,12 +14,12 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
     internal class ProtectedResourceErrorResult : IEndpointResult
     {
         public string Error;
-        public string ErrorDescription;
+        public string SubError;
 
-        public ProtectedResourceErrorResult(string error, string errorDescription = null)
+        public ProtectedResourceErrorResult(string error, string subError = null)
         {
             Error = error;
-            ErrorDescription = errorDescription;
+            SubError = subError;
         }
 
         public Task ExecuteAsync(HttpContext context)
@@ -35,18 +35,18 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
             if (Error == OidcConstants.ProtectedResourceErrors.ExpiredToken)
             {
                 Error = OidcConstants.ProtectedResourceErrors.InvalidToken;
-                ErrorDescription = "The access token expired";
+                SubError = "expired_access_token";
             }
 
             var errorString = string.Format($"error=\"{Error}\"");
-            if (ErrorDescription.IsMissing())
+            if (SubError.IsMissing())
             {
                 context.Response.Headers.Add(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString }).ToString());
             }
             else
             {
-                var errorDescriptionString = string.Format($"error_description=\"{ErrorDescription}\"");
-                context.Response.Headers.Add(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString, errorDescriptionString }).ToString());
+                var subErrorString = string.Format($"sub_error=\"{SubError}\"");
+                context.Response.Headers.Add(HeaderNames.WWWAuthenticate, new StringValues(new[] { "Bearer realm=\"IdentityServer\"", errorString, subErrorString }).ToString());
             }
 
             return Task.CompletedTask;

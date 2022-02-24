@@ -2,7 +2,7 @@
 
 @{
     var error = Model?.Error?.Error;
-    var errorDescription = Model?.Error?.ErrorDescription;
+    var subError = Model?.Error?.SubError;
     var request_id = Model?.Error?.RequestId;
 }
 
@@ -24,9 +24,9 @@
                         </em>
                     </strong>
 
-                    if (errorDescription != null)
+                    if (subError != null)
                     {
-                        <div>@errorDescription</div>
+                        <div>@subError</div>
                     }
                 }
             </div>

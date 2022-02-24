@@ -88,9 +88,9 @@ namespace Bornlogic.IdentityServer.Services.Default
             return new DeviceFlowInteractionResult();
         }
 
-        private DeviceFlowInteractionResult LogAndReturnError(string error, string errorDescription = null)
+        private DeviceFlowInteractionResult LogAndReturnError(string error, string subError = null)
         {
-            _logger.LogError(errorDescription);
+            _logger.LogError(subError);
             return DeviceFlowInteractionResult.Failure(error);
         }
     }

@@ -451,17 +451,17 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     return Invalid(OidcConstants.TokenErrors.UnsupportedGrantType, customResponse: resourceOwnerContext.Result.CustomResponse);
                 }
 
-                var errorDescription = "invalid_username_or_password";
+                var subError = "invalid_username_or_password";
 
-                if (resourceOwnerContext.Result.ErrorDescription.IsPresent())
+                if (resourceOwnerContext.Result.SubError.IsPresent())
                 {
-                    errorDescription = resourceOwnerContext.Result.ErrorDescription;
+                    subError = resourceOwnerContext.Result.SubError;
                 }
 
-                LogInformation("User authentication failed: ", errorDescription ?? resourceOwnerContext.Result.Error);
-                await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, errorDescription, resourceOwnerContext.Request.Client.ClientId);
+                LogInformation("User authentication failed: ", subError ?? resourceOwnerContext.Result.Error);
+                await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, subError, resourceOwnerContext.Request.Client.ClientId);
 
-                return Invalid(resourceOwnerContext.Result.Error, errorDescription, resourceOwnerContext.Result.CustomResponse);
+                return Invalid(resourceOwnerContext.Result.Error, subError, resourceOwnerContext.Result.CustomResponse);
             }
 
             if (resourceOwnerContext.Result.Subject == null)
@@ -618,7 +618,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (result.Error.IsPresent())
                 {
                     LogError("Invalid extension grant", new { error = result.Error });
-                    return Invalid(result.Error, result.ErrorDescription, result.CustomResponse);
+                    return Invalid(result.Error, result.SubError, result.CustomResponse);
                 }
                 else
                 {
@@ -790,9 +790,9 @@ namespace Bornlogic.IdentityServer.Validation.Default
             return new TokenRequestValidationResult(_validatedRequest, customResponse);
         }
 
-        private TokenRequestValidationResult Invalid(string error, string errorDescription = null, Dictionary<string, object> customResponse = null)
+        private TokenRequestValidationResult Invalid(string error, string subError = null, Dictionary<string, object> customResponse = null)
         {
-            return new TokenRequestValidationResult(_validatedRequest, error, errorDescription, customResponse);
+            return new TokenRequestValidationResult(_validatedRequest, error, subError, customResponse);
         }
 
         private void LogError(string message = null, object values = null)
