@@ -27,7 +27,7 @@ namespace Bornlogic.IdentityServer.Validation.Models
         /// </summary>
         /// <param name="validatedRequest">The validated request.</param>
         /// <param name="error">The error.</param>
-        /// <param name="subError">The error description.</param>
+        /// <param name="subError">The sub error.</param>
         /// <param name="customResponse">The custom response.</param>
         public TokenRequestValidationResult(ValidatedTokenRequest validatedRequest, string error, string subError = null, Dictionary<string, object> customResponse = null)
         {

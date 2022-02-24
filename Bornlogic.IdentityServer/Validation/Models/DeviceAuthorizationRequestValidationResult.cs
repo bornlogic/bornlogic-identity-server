@@ -25,7 +25,7 @@ namespace Bornlogic.IdentityServer.Validation.Models
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="error">The error.</param>
-        /// <param name="subError">The error description.</param>
+        /// <param name="subError">The sub error.</param>
         public DeviceAuthorizationRequestValidationResult(ValidatedDeviceAuthorizationRequest request, string error, string subError = null)
         {
             IsError = true;

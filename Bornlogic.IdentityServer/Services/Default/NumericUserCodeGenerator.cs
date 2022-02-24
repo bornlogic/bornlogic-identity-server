@@ -45,7 +45,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             long diff = maxValue - minValue;
 
             var uint32Buffer = new byte[8];
-
+            
             using (var rng = new RNGCryptoServiceProvider())
             {
                 while (true)

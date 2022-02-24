@@ -9,10 +9,10 @@ namespace Bornlogic.IdentityServer.Models
     public class DeviceFlowInteractionResult
     {
         /// <summary>
-        /// Gets or sets the error description.
+        /// Gets or sets the sub error.
         /// </summary>
         /// <value>
-        /// The error description.
+        /// The sub error.
         /// </value>
         public string SubError { get; private set; }
 
@@ -35,7 +35,7 @@ namespace Bornlogic.IdentityServer.Models
         /// <summary>
         /// Create failure result
         /// </summary>
-        /// <param name="subError">The error description.</param>
+        /// <param name="subError">The sub error.</param>
         /// <returns></returns>
         public static DeviceFlowInteractionResult Failure(string subError = null)
         {
