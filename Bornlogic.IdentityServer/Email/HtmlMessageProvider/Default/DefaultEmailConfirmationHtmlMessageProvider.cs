@@ -9,7 +9,7 @@ namespace Bornlogic.IdentityServer.Email.HtmlMessageProvider.Default
         private const string EMAIL_CONFIRMATION_SUBJECT_KEY = "Email_Confirmation_Subject";
         private const string EMAIL_CONFIRMATION_SUBJECT_USERNAME_KEY = "Email_Confirmation_Subject_Username";
         private const string EMAIL_CONFIRMATION_MESSAGE_KEY = "Email_Confirmation_Message";
-        private const string EMAIL_CONFIRMATION_MESSAGE_USERNAME_KEY = "Email_Confirmation_Message";
+        private const string EMAIL_CONFIRMATION_MESSAGE_USERNAME_KEY = "Email_Confirmation_Message_Username";
 
         private readonly IEmailResourceProvider _emailResourceProvider;
 
