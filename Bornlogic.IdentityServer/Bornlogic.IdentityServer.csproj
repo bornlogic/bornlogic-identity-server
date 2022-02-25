@@ -23,6 +23,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Bornlogic.IdentityServer.Culture\Bornlogic.IdentityServer.Culture.csproj" />
 		<ProjectReference Include="..\Bornlogic.IdentityServer.Storage\Bornlogic.IdentityServer.Storage.csproj" />
 	</ItemGroup>
 

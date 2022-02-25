@@ -69,6 +69,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bornlogic.IdentityServer.AspNetIdentity\Bornlogic.IdentityServer.AspNetIdentity.csproj" />
+    <ProjectReference Include="..\Bornlogic.IdentityServer.Host.Culture\Bornlogic.IdentityServer.Host.Culture.csproj" />
     <ProjectReference Include="..\Bornlogic.IdentityServer\Bornlogic.IdentityServer.csproj" />
   </ItemGroup>
 

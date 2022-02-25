@@ -6,6 +6,8 @@ using Bornlogic.IdentityServer.AspNetIdentity;
 using Bornlogic.IdentityServer.Configuration;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExtensions;
+using Bornlogic.IdentityServer.Culture.Contracts;
+using Bornlogic.IdentityServer.Host.Culture;
 using Bornlogic.IdentityServer.Host.Repositories.Extensions;
 using Bornlogic.IdentityServer.Host.Services;
 using Bornlogic.IdentityServer.Host.Stores;
@@ -69,6 +71,8 @@ namespace Bornlogic.IdentityServer.Host
 
             services
                 .RegisterStoreRepositories();
+
+            services.AddTransient<IEmailResourceProvider, EmailResourceProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
