@@ -33,7 +33,8 @@ namespace Bornlogic.IdentityServer.Host.Repositories
                 RequirePkce = true,
                 RedirectUris = new List<string>
                 {
-                    "http://localhost:8080"
+                    "https://*.gerentesdigitais.com",
+                    "https://teste.bornlogic.com"
                 },
                 PostLogoutRedirectUris = new List<string>
                 {
