@@ -37,6 +37,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// </summary>
         protected readonly IRefreshTokenService RefreshTokenService;
 
+        protected readonly IRefreshTokenIssuanceService RefreshTokenIssuanceService;
+
         /// <summary>
         /// The scope parser
         /// </summary>
@@ -67,11 +69,12 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// <param name="resources">The resources.</param>
         /// <param name="clients">The clients.</param>
         /// <param name="logger">The logger.</param>
-        public TokenResponseGenerator(ISystemClock clock, ITokenService tokenService, IRefreshTokenService refreshTokenService, IScopeParser scopeParser, IResourceStore resources, IClientStore clients, ILogger<TokenResponseGenerator> logger)
+        public TokenResponseGenerator(ISystemClock clock, ITokenService tokenService, IRefreshTokenService refreshTokenService, IRefreshTokenIssuanceService refreshTokenIssuanceService, IScopeParser scopeParser, IResourceStore resources, IClientStore clients, ILogger<TokenResponseGenerator> logger)
         {
             Clock = clock;
             TokenService = tokenService;
             RefreshTokenService = refreshTokenService;
+            RefreshTokenIssuanceService = refreshTokenIssuanceService;
             ScopeParser = scopeParser;
             Resources = resources;
             Clients = clients;
@@ -423,7 +426,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             var at = await TokenService.CreateAccessTokenAsync(tokenRequest);
             var accessToken = await TokenService.CreateSecurityTokenAsync(at);
 
-            if (createRefreshToken)
+            if (createRefreshToken && await RefreshTokenIssuanceService.CanIssueRefreshToken(request.Subject, request.Client))
             {
                 var refreshToken = await RefreshTokenService.CreateRefreshTokenAsync(tokenRequest.Subject, at, request.Client);
                 return (accessToken, refreshToken);
