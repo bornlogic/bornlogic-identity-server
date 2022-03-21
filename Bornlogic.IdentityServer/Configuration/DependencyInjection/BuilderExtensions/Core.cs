@@ -165,6 +165,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
             builder.Services.TryAddTransient<ITokenCreationService, DefaultTokenCreationService>();
             builder.Services.TryAddTransient<IClaimsService, DefaultClaimsService>();
             builder.Services.TryAddTransient<IRefreshTokenService, DefaultRefreshTokenService>();
+            builder.Services.TryAddTransient<IRefreshTokenIssuanceService, DefaultRefreshTokenIssuanceService>();
             builder.Services.TryAddTransient<IDeviceFlowCodeService, DefaultDeviceFlowCodeService>();
             builder.Services.TryAddTransient<IConsentService, DefaultConsentService>();
             builder.Services.TryAddTransient<ICorsPolicyService, DefaultCorsPolicyService>();
