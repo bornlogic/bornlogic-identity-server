@@ -24,7 +24,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options
         /// <summary>
         /// Max length for scope
         /// </summary>
-        public int Scope { get; set; } = 300;
+        public int Scope { get; set; } = 600;
 
         /// <summary>
         /// Max length for redirect_uri
