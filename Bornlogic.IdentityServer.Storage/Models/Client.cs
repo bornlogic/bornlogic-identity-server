@@ -185,6 +185,11 @@ namespace Bornlogic.IdentityServer.Storage.Models
         public int AbsoluteRefreshTokenLifetime { get; set; } = 2592000;
 
         /// <summary>
+        /// Maximum lifetime of a refresh token in seconds for SSO external logins. Defaults to 2592000 seconds / 30 days
+        /// </summary>
+        public int AbsoluteSsoExternalIdpRefreshTokenLifetime { get; set; } = 2592000;
+
+        /// <summary>
         /// Sliding lifetime of a refresh token in seconds. Defaults to 1296000 seconds / 15 days
         /// </summary>
         public int SlidingRefreshTokenLifetime { get; set; } = 1296000;
