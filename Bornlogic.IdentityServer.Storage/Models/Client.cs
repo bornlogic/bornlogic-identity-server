@@ -195,6 +195,11 @@ namespace Bornlogic.IdentityServer.Storage.Models
         public int SlidingRefreshTokenLifetime { get; set; } = 1296000;
 
         /// <summary>
+        /// Sliding lifetime of a refresh token in seconds for SSO external logins. Defaults to 1296000 seconds / 15 days
+        /// </summary>
+        public int SlidingSsoExternalIdpRefreshTokenLifetime { get; set; } = 1296000;
+
+        /// <summary>
         /// Lifetime of a user consent in seconds. Defaults to null (no expiration)
         /// </summary>
         public int? ConsentLifetime { get; set; } = null;

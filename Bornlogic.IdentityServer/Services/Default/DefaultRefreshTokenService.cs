@@ -24,6 +24,8 @@ namespace Bornlogic.IdentityServer.Services.Default
         /// </summary>
         protected readonly ILogger Logger;
 
+        protected IRefreshTokenIssuanceService RefreshTokenIssuanceService;
+
         /// <summary>
         /// The refresh token store
         /// </summary>
@@ -46,15 +48,21 @@ namespace Bornlogic.IdentityServer.Services.Default
         /// <param name="profile"></param>
         /// <param name="clock">The clock</param>
         /// <param name="logger">The logger</param>
-        public DefaultRefreshTokenService(IRefreshTokenStore refreshTokenStore, IProfileService profile,
+        public DefaultRefreshTokenService
+        (
+            IRefreshTokenStore refreshTokenStore, 
+            IProfileService profile,
             ISystemClock clock,
-            ILogger<DefaultRefreshTokenService> logger)
+            ILogger<DefaultRefreshTokenService> logger,
+            IRefreshTokenIssuanceService refreshTokenIssuanceService
+            )
         {
             RefreshTokenStore = refreshTokenStore;
             Profile = profile;
             Clock = clock;
 
             Logger = logger;
+            RefreshTokenIssuanceService = refreshTokenIssuanceService;
         }
 
         /// <summary>
@@ -172,24 +180,26 @@ namespace Bornlogic.IdentityServer.Services.Default
         {
             Logger.LogDebug("Creating refresh token");
 
+            var refreshTokenLifetimeResult = await RefreshTokenIssuanceService.GetRefreshTokenLifetimeInSeconds(subject, client);
+
             int lifetime;
             if (client.RefreshTokenExpiration == TokenExpiration.Absolute)
             {
                 Logger.LogDebug("Setting an absolute lifetime: {absoluteLifetime}",
-                    client.AbsoluteRefreshTokenLifetime);
-                lifetime = client.AbsoluteRefreshTokenLifetime;
+                    refreshTokenLifetimeResult.AbsoluteLifetime);
+                lifetime = refreshTokenLifetimeResult.AbsoluteLifetime;
             }
             else
             {
-                lifetime = client.SlidingRefreshTokenLifetime;
-                if (client.AbsoluteRefreshTokenLifetime > 0 && lifetime > client.AbsoluteRefreshTokenLifetime)
+                lifetime = refreshTokenLifetimeResult.SlidingLifetime;
+                if (refreshTokenLifetimeResult.AbsoluteLifetime > 0 && lifetime > refreshTokenLifetimeResult.AbsoluteLifetime)
                 {
                     Logger.LogWarning(
-                        "Client {clientId}'s configured " + nameof(client.SlidingRefreshTokenLifetime) +
-                        " of {slidingLifetime} exceeds its " + nameof(client.AbsoluteRefreshTokenLifetime) +
+                        "Client {clientId}'s configured " + nameof(refreshTokenLifetimeResult.SlidingLifetime) +
+                        " of {slidingLifetime} exceeds its " + nameof(refreshTokenLifetimeResult.AbsoluteLifetime) +
                         " of {absoluteLifetime}. The refresh_token's sliding lifetime will be capped to the absolute lifetime",
-                        client.ClientId, lifetime, client.AbsoluteRefreshTokenLifetime);
-                    lifetime = client.AbsoluteRefreshTokenLifetime;
+                        client.ClientId, lifetime, refreshTokenLifetimeResult.AbsoluteLifetime);
+                    lifetime = refreshTokenLifetimeResult.AbsoluteLifetime;
                 }
 
                 Logger.LogDebug("Setting a sliding lifetime: {slidingLifetime}", lifetime);
@@ -236,6 +246,8 @@ namespace Bornlogic.IdentityServer.Services.Default
                 needsCreate = true;
             }
 
+            var refreshTokenLifetimeResult = await RefreshTokenIssuanceService.GetRefreshTokenLifetimeInSeconds(refreshToken.Subject, client);
+
             if (client.RefreshTokenExpiration == TokenExpiration.Sliding)
             {
                 Logger.LogDebug("Refresh token expiration is sliding - extending lifetime");
@@ -245,14 +257,14 @@ namespace Bornlogic.IdentityServer.Services.Default
                 var currentLifetime = refreshToken.CreationTime.GetLifetimeInSeconds(Clock.UtcNow.UtcDateTime);
                 Logger.LogDebug("Current lifetime: {currentLifetime}", currentLifetime.ToString());
 
-                var newLifetime = currentLifetime + client.SlidingRefreshTokenLifetime;
+                var newLifetime = currentLifetime + refreshTokenLifetimeResult.SlidingLifetime;
                 Logger.LogDebug("New lifetime: {slidingLifetime}", newLifetime.ToString());
 
                 // zero absolute refresh token lifetime represents unbounded absolute lifetime
                 // if absolute lifetime > 0, cap at absolute lifetime
-                if (client.AbsoluteRefreshTokenLifetime > 0 && newLifetime > client.AbsoluteRefreshTokenLifetime)
+                if (refreshTokenLifetimeResult.AbsoluteLifetime > 0 && newLifetime > refreshTokenLifetimeResult.AbsoluteLifetime)
                 {
-                    newLifetime = client.AbsoluteRefreshTokenLifetime;
+                    newLifetime = refreshTokenLifetimeResult.AbsoluteLifetime;
                     Logger.LogDebug("New lifetime exceeds absolute lifetime, capping it to {newLifetime}",
                         newLifetime.ToString());
                 }

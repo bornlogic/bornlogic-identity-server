@@ -99,10 +99,24 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 return Task.CompletedTask;
             }
 
+            // 0 means unlimited lifetime
+            if (context.Client.AbsoluteSsoExternalIdpRefreshTokenLifetime < 0)
+            {
+                context.SetError("absolute sso external idp refresh token lifetime is negative");
+                return Task.CompletedTask;
+            }
+
             // 0 might mean that sliding is disabled
             if (context.Client.SlidingRefreshTokenLifetime < 0)
             {
                 context.SetError("sliding refresh token lifetime is negative");
+                return Task.CompletedTask;
+            }
+
+            // 0 might mean that sliding is disabled
+            if (context.Client.SlidingSsoExternalIdpRefreshTokenLifetime < 0)
+            {
+                context.SetError("sliding sso external idp refresh token lifetime is negative");
                 return Task.CompletedTask;
             }
 
