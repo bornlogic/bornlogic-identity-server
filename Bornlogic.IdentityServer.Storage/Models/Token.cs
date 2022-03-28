@@ -141,5 +141,7 @@ namespace Bornlogic.IdentityServer.Storage.Models
         /// The scopes.
         /// </value>
         public IEnumerable<string> Scopes => Claims.Where(x => x.Type == JwtClaimTypes.Scope).Select(x => x.Value);
+
+        public bool IgnoreLifetimeValidation { get; set; }
     }
 }

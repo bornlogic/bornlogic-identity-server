@@ -84,6 +84,8 @@ namespace Bornlogic.IdentityServer.Models
         /// </value>
         public string Description { get; set; }
 
+        public bool IgnoreLifetimeValidation { get; set; }
+
         /// <summary>
         /// Called to validate the <see cref="TokenCreationRequest"/> before it is processed.
         /// </summary>

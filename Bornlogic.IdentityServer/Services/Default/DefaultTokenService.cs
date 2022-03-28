@@ -214,7 +214,8 @@ namespace Bornlogic.IdentityServer.Services.Default
                 ClientId = request.ValidatedRequest.Client.ClientId,
                 Description = request.Description,
                 AccessTokenType = request.ValidatedRequest.AccessTokenType,
-                AllowedSigningAlgorithms = request.ValidatedResources.Resources.ApiResources.FindMatchingSigningAlgorithms()
+                AllowedSigningAlgorithms = request.ValidatedResources.Resources.ApiResources.FindMatchingSigningAlgorithms(),
+                IgnoreLifetimeValidation = request.IgnoreLifetimeValidation
             };
 
             // add aud based on ApiResources in the validated request
