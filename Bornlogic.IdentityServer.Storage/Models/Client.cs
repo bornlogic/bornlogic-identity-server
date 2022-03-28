@@ -185,9 +185,9 @@ namespace Bornlogic.IdentityServer.Storage.Models
         public int AbsoluteRefreshTokenLifetime { get; set; } = 2592000;
 
         /// <summary>
-        /// Maximum lifetime of a refresh token in seconds for SSO external logins. Defaults to 2592000 seconds / 30 days
+        /// Maximum lifetime of a refresh token in seconds for SSO external logins. Defaults to 86400 seconds / 24 hours
         /// </summary>
-        public int AbsoluteSsoExternalIdpRefreshTokenLifetime { get; set; } = 2592000;
+        public int AbsoluteSsoExternalIdpRefreshTokenLifetime { get; set; } = 86400;
 
         /// <summary>
         /// Sliding lifetime of a refresh token in seconds. Defaults to 1296000 seconds / 15 days
@@ -195,9 +195,9 @@ namespace Bornlogic.IdentityServer.Storage.Models
         public int SlidingRefreshTokenLifetime { get; set; } = 1296000;
 
         /// <summary>
-        /// Sliding lifetime of a refresh token in seconds for SSO external logins. Defaults to 1296000 seconds / 15 days
+        /// Sliding lifetime of a refresh token in seconds for SSO external logins. Defaults to 43200 seconds / 12 hours
         /// </summary>
-        public int SlidingSsoExternalIdpRefreshTokenLifetime { get; set; } = 1296000;
+        public int SlidingSsoExternalIdpRefreshTokenLifetime { get; set; } = 43200;
 
         /// <summary>
         /// Lifetime of a user consent in seconds. Defaults to null (no expiration)
@@ -287,9 +287,9 @@ namespace Bornlogic.IdentityServer.Storage.Models
         public int? UserSsoLifetime { get; set; }
 
         /// <summary>
-        /// The maximum duration (in seconds) since the last time the user authenticated in a external Idp.
+        /// The maximum duration (in seconds) since the last time the user authenticated in a external Idp. Defaults to 3600 seconds / 1 hour
         /// </summary>
-        public int? UserSsoExternalIdpLifetime { get; set; }
+        public int? UserSsoExternalIdpLifetime { get; set; } = 3600;
 
         /// <summary>
         /// Gets or sets the type of the device flow user code.
