@@ -358,7 +358,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 return Invalid(OidcConstants.ProtectedResourceErrors.InvalidToken);
             }
 
-            if (token.CreationTime.HasExceeded(token.Lifetime, _clock.UtcNow.UtcDateTime))
+            if (!token.IgnoreLifetimeValidation && token.CreationTime.HasExceeded(token.Lifetime, _clock.UtcNow.UtcDateTime))
             {
                 LogError("Token expired.");
 

@@ -38,7 +38,7 @@ namespace Bornlogic.IdentityServer.Stores.Default
         /// <returns></returns>
         public Task<string> StoreReferenceTokenAsync(Token token)
         {
-            return CreateItemAsync(token, token.ClientId, token.SubjectId, token.SessionId, token.Description, token.CreationTime, token.Lifetime);
+            return CreateItemAsync(token, token.ClientId, token.SubjectId, token.SessionId, token.Description, token.CreationTime, token.IgnoreLifetimeValidation ? null : token.Lifetime);
         }
 
         /// <summary>
