@@ -108,6 +108,15 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
             return builder;
         }
 
+        public static IIdentityServerBuilder AddDefaultIntrospectionEndpoint(this IIdentityServerBuilder builder)
+        {
+            builder.Services.AddTransient<IEndpointRouter, EndpointRouter>();
+
+            builder.AddEndpoint<IntrospectionEndpoint>(EndpointNames.Introspection, ProtocolRoutePaths.Introspection.EnsureLeadingSlash());
+
+            return builder;
+        }
+
         /// <summary>
         /// Adds the endpoint.
         /// </summary>
