@@ -74,14 +74,43 @@ namespace Bornlogic.IdentityServer.Stores
             return null;
         }
 
-        public Task UpdateClient(Client client)
+        public async Task UpdateClient(Client client)
         {
-            return Task.CompletedTask;
+            var existingClient = await _inner.FindClientByIdAsync(client.ClientId);
+
+            if (existingClient != null)
+            {
+                _logger.LogTrace("Calling into client configuration validator: {validatorType}", _validatorType);
+
+                var context = new ClientConfigurationValidationContext(client);
+                await _validator.ValidateAsync(context);
+
+                if (context.IsValid)
+                {
+                    _logger.LogDebug("client configuration validation for client {clientId} succeeded.", client.ClientId);
+                    await _inner.UpdateClient(client);
+                }
+
+                _logger.LogError("Invalid client configuration for client {clientId}: {errorMessage}", client.ClientId, context.ErrorMessage);
+                await _events.RaiseAsync(new InvalidClientConfigurationEvent(client, context.ErrorMessage));
+            }
         }
 
-        public Task InsertClient(Client client)
+        public async Task InsertClient(Client client)
         {
-            return Task.CompletedTask;
+            _logger.LogTrace("Calling into client configuration validator: {validatorType}", _validatorType);
+
+            var context = new ClientConfigurationValidationContext(client);
+            await _validator.ValidateAsync(context);
+
+            if (context.IsValid)
+            {
+                _logger.LogDebug("client configuration validation for client {clientId} succeeded.", client.ClientId);
+                await _inner.InsertClient(client);
+            }
+
+            _logger.LogError("Invalid client configuration for client {clientId}: {errorMessage}", client.ClientId, context.ErrorMessage);
+            await _events.RaiseAsync(new InvalidClientConfigurationEvent(client, context.ErrorMessage));
         }
     }
 }
