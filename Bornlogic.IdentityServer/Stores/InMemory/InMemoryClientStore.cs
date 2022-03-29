@@ -13,13 +13,13 @@ namespace Bornlogic.IdentityServer.Stores.InMemory
     /// </summary>
     public class InMemoryClientStore : IClientStore
     {
-        private readonly IEnumerable<Client> _clients;
+        private IList<Client> _clients;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryClientStore"/> class.
         /// </summary>
         /// <param name="clients">The clients.</param>
-        public InMemoryClientStore(IEnumerable<Client> clients)
+        public InMemoryClientStore(IList<Client> clients)
         {
             if (clients.HasDuplicates(m => m.ClientId))
             {
@@ -43,6 +43,20 @@ namespace Bornlogic.IdentityServer.Stores.InMemory
                 select client;
             
             return Task.FromResult(query.SingleOrDefault());
+        }
+
+        public Task UpdateClient(Client client)
+        {
+            _clients = _clients.Where(a => a.ClientId != client.ClientId).ToList();
+            _clients.Add(client);
+
+            return Task.CompletedTask;
+        }
+
+        public Task InsertClient(Client client)
+        {
+            _clients.Add(client);
+            return Task.CompletedTask;
         }
     }
 }

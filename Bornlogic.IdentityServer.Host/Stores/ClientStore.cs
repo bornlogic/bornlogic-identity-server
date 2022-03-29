@@ -17,5 +17,15 @@ namespace Bornlogic.IdentityServer.Host.Stores
         {
             return _clientStoreRepository.GetByID(clientId);
         }
+
+        public Task UpdateClient(Client client)
+        {
+            return _clientStoreRepository.Update(client);
+        }
+
+        public Task InsertClient(Client client)
+        {
+            return _clientStoreRepository.Insert(client);
+        }
     }
 }

@@ -73,5 +73,15 @@ namespace Bornlogic.IdentityServer.Stores
 
             return null;
         }
+
+        public Task UpdateClient(Client client)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task InsertClient(Client client)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

@@ -55,5 +55,19 @@ namespace Bornlogic.IdentityServer.Stores.Caching
 
             return client;
         }
+
+        public async Task UpdateClient(Client client)
+        {
+            await _inner.UpdateClient(client);
+
+            await _cache.SetAsync(client.ClientId, client, _options.Caching.ClientStoreExpiration);
+        }
+
+        public async Task InsertClient(Client client)
+        {
+            await _inner.InsertClient(client);
+
+            await _cache.SetAsync(client.ClientId, client, _options.Caching.ClientStoreExpiration);
+        }
     }
 }

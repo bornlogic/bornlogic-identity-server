@@ -71,5 +71,15 @@ namespace Bornlogic.IdentityServer.Host.Repositories
         {
             return ClientsMemoryRepository.Clients.FirstOrDefault(a => a.ClientId == id);
         }
+
+        public Task Update(Client client)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task Insert(Client client)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
