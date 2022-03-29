@@ -60,9 +60,9 @@ namespace Bornlogic.IdentityServer.Validation.Default
             return new DeviceAuthorizationRequestValidationResult(request);
         }
 
-        private DeviceAuthorizationRequestValidationResult Invalid(ValidatedDeviceAuthorizationRequest request, string error = OidcConstants.AuthorizeErrors.InvalidRequest, string description = null)
+        private DeviceAuthorizationRequestValidationResult Invalid(ValidatedDeviceAuthorizationRequest request, string error = OidcConstants.AuthorizeErrors.InvalidRequest, string subError = null)
         {
-            return new DeviceAuthorizationRequestValidationResult(request, error, description);
+            return new DeviceAuthorizationRequestValidationResult(request, error, subError);
         }
 
         private void LogError(string message, ValidatedDeviceAuthorizationRequest request)
@@ -91,7 +91,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (request.Client.ProtocolType != IdentityServerConstants.ProtocolTypes.OpenIdConnect)
             {
                 LogError("Invalid protocol type for OIDC authorize endpoint", request.Client.ProtocolType, request);
-                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "Invalid protocol");
+                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "invalid_protocol");
             }
 
             //////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (scope.Length > _options.InputLengthRestrictions.Scope)
             {
                 LogError("scopes too long.", request);
-                return Invalid(request, description: "Invalid scope");
+                return Invalid(request, subError: "scope_too_long");
             }
 
             request.RequestedScopes = scope.FromSpaceSeparatedString().Distinct().ToList();
@@ -161,7 +161,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope);
                 }
                 
-                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "Invalid scope");
+                return Invalid(request, OidcConstants.AuthorizeErrors.UnauthorizedClient, "invalid_scope");
             }
 
             if (validatedResources.Resources.IdentityResources.Any() && !request.IsOpenIdRequest)

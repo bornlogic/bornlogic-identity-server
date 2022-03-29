@@ -611,7 +611,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             if (!validatedResources.Succeeded)
             {
-                return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope, "Invalid scope");
+                return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope);
             }
 
             if (validatedResources.Resources.IdentityResources.Any() && !request.IsOpenIdRequest)
