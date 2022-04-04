@@ -159,7 +159,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 {
                     var fail = true;
 
-                    if (!string.IsNullOrWhiteSpace(origin) && Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+                    if (!string.IsNullOrWhiteSpace(origin) && Uri.TryCreate(origin.Replace("*","wild"), UriKind.Absolute, out var uri))
                     {
                         if (uri.AbsolutePath == "/" && !origin.EndsWith("/"))
                         {
