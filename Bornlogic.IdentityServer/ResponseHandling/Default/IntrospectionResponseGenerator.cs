@@ -25,6 +25,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// </value>
         protected readonly IEventService Events;
 
+        private readonly IIntrospectionResponseEnricher _introspectionResponseEnricher;
+
         /// <summary>
         /// The logger
         /// </summary>
@@ -35,9 +37,10 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// </summary>
         /// <param name="events">The events.</param>
         /// <param name="logger">The logger.</param>
-        public IntrospectionResponseGenerator(IEventService events, ILogger<IntrospectionResponseGenerator> logger)
+        public IntrospectionResponseGenerator(IEventService events, IIntrospectionResponseEnricher introspectionResponseEnricher, ILogger<IntrospectionResponseGenerator> logger)
         {
             Events = events;
+            _introspectionResponseEnricher = introspectionResponseEnricher;
             Logger = logger;
         }
 
@@ -84,6 +87,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             var scopes = validationResult.Claims.Where(c => c.Type == JwtClaimTypes.Scope).Select(x => x.Value);
 
             response.Add("given_scopes", scopes.ToSpaceSeparatedString());
+
+            await _introspectionResponseEnricher.Enrich(response, validationResult);
 
             scopes = scopes.Where(x => allowedScopes.Contains(x));
             response.Add("scope", scopes.ToSpaceSeparatedString());
