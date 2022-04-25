@@ -217,7 +217,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 }
             }
 
-            if (request.Client.UserSsoExternalIdpLifetime.HasValue && currentIdp != IdentityServerConstants.LocalIdentityProvider)
+            if (request.Client.UserSsoExternalIdpLifetime.HasValue && (currentIdp != IdentityServerConstants.LocalIdentityProvider || request.Subject.GetAuthenticationMethod() == Constants.ExternalAuthenticationMethod))
             {
                 var authTimeEpoch = request.Subject.GetAuthenticationTimeEpoch();
                 var nowEpoch = Clock.UtcNow.ToUnixTimeSeconds();
