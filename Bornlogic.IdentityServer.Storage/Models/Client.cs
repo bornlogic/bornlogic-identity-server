@@ -328,6 +328,8 @@ namespace Bornlogic.IdentityServer.Storage.Models
         /// </summary>
         public bool AcceptVerifiedUsersOnly { get; set; }
 
+        public bool IsNativeMobile { get; set; }
+
         /// <summary>
         /// Validates the grant types.
         /// </summary>
