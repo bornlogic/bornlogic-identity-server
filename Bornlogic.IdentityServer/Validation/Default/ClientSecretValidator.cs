@@ -18,6 +18,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
     public class ClientSecretValidator : IClientSecretValidator
     {
         private readonly ILogger _logger;
+        private readonly IClientUserRoleService _clientUserRoleService;
         private readonly IClientStore _clients;
         private readonly IEventService _events;
         private readonly ISecretsListValidator _validator;
@@ -31,13 +32,14 @@ namespace Bornlogic.IdentityServer.Validation.Default
         /// <param name="validator">The validator.</param>
         /// <param name="events">The events.</param>
         /// <param name="logger">The logger.</param>
-        public ClientSecretValidator(IClientStore clients, ISecretsListParser parser, ISecretsListValidator validator, IEventService events, ILogger<ClientSecretValidator> logger)
+        public ClientSecretValidator(IClientStore clients, ISecretsListParser parser, ISecretsListValidator validator, IEventService events, ILogger<ClientSecretValidator> logger, IClientUserRoleService clientUserRoleService)
         {
             _clients = clients;
             _parser = parser;
             _validator = validator;
             _events = events;
             _logger = logger;
+            _clientUserRoleService = clientUserRoleService;
         }
 
         /// <summary>
@@ -64,7 +66,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             }
 
             // load client
-            var client = await _clients.FindEnabledClientByIdAsync(parsedSecret.Id);
+            var client = await _clients.FindEnabledClientByIdAsync(parsedSecret.Id, _clientUserRoleService, context.User?.GetSubjectId());
             if (client == null)
             {
                 await RaiseFailureEventAsync(parsedSecret.Id, "Unknown client");

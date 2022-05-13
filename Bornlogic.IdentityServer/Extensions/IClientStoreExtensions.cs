@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Security.Claims;
+using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Storage.Stores;
 
@@ -18,10 +20,27 @@ namespace Bornlogic.IdentityServer.Extensions
         /// <param name="store">The store.</param>
         /// <param name="clientId">The client identifier.</param>
         /// <returns></returns>
-        public static async Task<Client> FindEnabledClientByIdAsync(this IClientStore store, string clientId)
+        public static async Task<Client> FindEnabledClientByIdAsync(this IClientStore store, string clientId, IClientUserRoleService clientUserRoleService, string userID)
         {
             var client = await store.FindClientByIdAsync(clientId);
-            if (client != null && client.Enabled) return client;
+
+            if (client != null)
+            {
+                if (client.Enabled)
+                {
+                    return client;
+                }
+                
+                if (clientUserRoleService != null && !string.IsNullOrEmpty(userID))
+                {
+                    var userHasLoginByPassRoleInClient = await clientUserRoleService.UserHasLoginByPassRoleInClient(userID, client);
+
+                    if (userHasLoginByPassRoleInClient)
+                    {
+                        return client;
+                    }
+                }
+            }
 
             return null;
         }

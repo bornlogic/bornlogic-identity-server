@@ -31,6 +31,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
         private readonly ILogger _logger;
         private readonly IUserEmailStore _userEmailStore;
         private readonly IUserManagerService _userManagerService;
+        private readonly IClientUserRoleService _clientUserRoleService;
 
         private readonly ResponseTypeEqualityComparer
             _responseTypeEqualityComparer = new ResponseTypeEqualityComparer();
@@ -46,7 +47,8 @@ namespace Bornlogic.IdentityServer.Validation.Default
             IJwtRequestUriHttpClient jwtRequestUriHttpClient,
             ILogger<AuthorizeRequestValidator> logger,
             IUserEmailStore userEmailStore,
-            IUserManagerService userManagerService
+            IUserManagerService userManagerService,
+            IClientUserRoleService clientUserRoleService
             )
         {
             _options = options;
@@ -60,6 +62,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             _logger = logger;
             _userEmailStore = userEmailStore;
             _userManagerService = userManagerService;
+            _clientUserRoleService = clientUserRoleService;
         }
 
         public async Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject = null)
@@ -227,7 +230,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             //////////////////////////////////////////////////////////
             // check for valid client
             //////////////////////////////////////////////////////////
-            var client = await _clients.FindEnabledClientByIdAsync(request.ClientId);
+            var client = await _clients.FindEnabledClientByIdAsync(request.ClientId, _clientUserRoleService, request.Subject?.GetSubjectId());
             if (client == null)
             {
                 LogError("Unknown client or not enabled", request.ClientId, request);

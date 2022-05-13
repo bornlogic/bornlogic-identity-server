@@ -27,6 +27,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// </summary>
         protected readonly ILogger Logger;
 
+        private readonly IClientUserRoleService _clientUserRoleService;
+
         /// <summary>
         /// The token service
         /// </summary>
@@ -69,7 +71,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// <param name="resources">The resources.</param>
         /// <param name="clients">The clients.</param>
         /// <param name="logger">The logger.</param>
-        public TokenResponseGenerator(ISystemClock clock, ITokenService tokenService, IRefreshTokenService refreshTokenService, IRefreshTokenIssuanceService refreshTokenIssuanceService, IScopeParser scopeParser, IResourceStore resources, IClientStore clients, ILogger<TokenResponseGenerator> logger)
+        public TokenResponseGenerator(ISystemClock clock, ITokenService tokenService, IRefreshTokenService refreshTokenService, IRefreshTokenIssuanceService refreshTokenIssuanceService, IScopeParser scopeParser, IResourceStore resources, IClientStore clients, ILogger<TokenResponseGenerator> logger, IClientUserRoleService clientUserRoleService)
         {
             Clock = clock;
             TokenService = tokenService;
@@ -79,6 +81,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             Resources = resources;
             Clients = clients;
             Logger = logger;
+            _clientUserRoleService = clientUserRoleService;
         }
 
         /// <summary>
@@ -168,7 +171,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Client client = null;
                 if (request.ValidatedRequest.AuthorizationCode.ClientId != null)
                 {
-                    client = await Clients.FindEnabledClientByIdAsync(request.ValidatedRequest.AuthorizationCode.ClientId);
+                    client = await Clients.FindEnabledClientByIdAsync(request.ValidatedRequest.AuthorizationCode.ClientId, _clientUserRoleService, request.ValidatedRequest.Subject?.GetSubjectId());
                 }
                 if (client == null)
                 {
@@ -287,7 +290,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Client client = null;
                 if (request.ValidatedRequest.DeviceCode.ClientId != null)
                 {
-                    client = await Clients.FindEnabledClientByIdAsync(request.ValidatedRequest.DeviceCode.ClientId);
+                    client = await Clients.FindEnabledClientByIdAsync(request.ValidatedRequest.DeviceCode.ClientId, _clientUserRoleService, request.ValidatedRequest.Subject?.GetSubjectId());
                 }
                 if (client == null)
                 {
@@ -368,7 +371,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Client client = null;
                 if (request.AuthorizationCode.ClientId != null)
                 {
-                    client = await Clients.FindEnabledClientByIdAsync(request.AuthorizationCode.ClientId);
+                    client = await Clients.FindEnabledClientByIdAsync(request.AuthorizationCode.ClientId, _clientUserRoleService, request.Subject?.GetSubjectId());
                 }
                 if (client == null)
                 {
@@ -393,7 +396,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Client client = null;
                 if (request.DeviceCode.ClientId != null)
                 {
-                    client = await Clients.FindEnabledClientByIdAsync(request.DeviceCode.ClientId);
+                    client = await Clients.FindEnabledClientByIdAsync(request.DeviceCode.ClientId, _clientUserRoleService, request.Subject?.GetSubjectId());
                 }
                 if (client == null)
                 {
