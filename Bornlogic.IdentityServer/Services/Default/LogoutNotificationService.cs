@@ -18,6 +18,7 @@ namespace Bornlogic.IdentityServer.Services.Default
         private readonly IClientStore _clientStore;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<LogoutNotificationService> _logger;
+        private readonly IClientUserRoleService _clientUserRoleService;
 
 
         /// <summary>
@@ -26,11 +27,13 @@ namespace Bornlogic.IdentityServer.Services.Default
         public LogoutNotificationService(
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor, 
-            ILogger<LogoutNotificationService> logger)
+            ILogger<LogoutNotificationService> logger,
+            IClientUserRoleService clientUserRoleService)
         {
             _clientStore = clientStore;
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
+            _clientUserRoleService = clientUserRoleService;
         }
 
         /// <inheritdoc/>
@@ -39,7 +42,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             var frontChannelUrls = new List<string>();
             foreach (var clientId in context.ClientIds)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(clientId, null, null);
+                var client = await _clientStore.FindEnabledClientByIdAsync(clientId, _clientUserRoleService, context.SubjectId);
                 if (client != null)
                 {
                     if (client.FrontChannelLogoutUri.IsPresent())
@@ -84,7 +87,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             var backChannelLogouts = new List<BackChannelLogoutRequest>();
             foreach (var clientId in context.ClientIds)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(clientId, null, null);
+                var client = await _clientStore.FindEnabledClientByIdAsync(clientId, _clientUserRoleService, context.SubjectId);
                 if (client != null)
                 {
                     if (client.BackChannelLogoutUri.IsPresent())
