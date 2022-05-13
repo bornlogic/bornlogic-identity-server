@@ -87,10 +87,10 @@ namespace Bornlogic.IdentityServer.Validation.Default
             _log.ClientId = clientId;
             _log.ValidateLifetime = validateLifetime;
 
-            var client = await _clients.FindEnabledClientByIdAsync(clientId, null, null);
+            var client = await _clients.FindClientByIdAsync(clientId);
             if (client == null)
             {
-                _logger.LogError("Unknown or disabled client: {clientId}.", clientId);
+                _logger.LogError("Unknown client: {clientId}.", clientId);
                 return Invalid(OidcConstants.ProtectedResourceErrors.InvalidToken);
             }
 
@@ -99,6 +99,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             var keys = await _keys.GetValidationKeysAsync();
             var result = await ValidateJwtAsync(token, keys, audience: clientId, validateLifetime: validateLifetime);
+
+            client = await _clients.FindEnabledClientByIdAsync(clientId, _clientUserRoleService, result?.Claims?.FirstOrDefault(c => c.Type == JwtClaimTypes.Subject)?.Value);
+            if (client == null)
+            {
+                _logger.LogError("Disabled client: {clientId}.", clientId);
+                return Invalid(OidcConstants.ProtectedResourceErrors.InvalidToken);
+            }
 
             result.Client = client;
 
@@ -180,7 +187,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             var clientClaim = result.Claims.FirstOrDefault(c => c.Type == JwtClaimTypes.ClientId);
             if (clientClaim != null)
             {
-                var client = await _clients.FindEnabledClientByIdAsync(clientClaim.Value, _clientUserRoleService, result.ReferenceToken.SubjectId);
+                var client = await _clients.FindEnabledClientByIdAsync(clientClaim.Value, _clientUserRoleService, result.ReferenceToken?.SubjectId);
                 if (client == null)
                 {
                     _logger.LogError("Client deleted or disabled: {clientId}", clientClaim.Value);
