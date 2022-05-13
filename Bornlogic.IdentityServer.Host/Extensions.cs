@@ -15,7 +15,7 @@ namespace Bornlogic.IdentityServer.Host
         {
             if (!string.IsNullOrWhiteSpace(client_id))
             {
-                var client = await store.FindEnabledClientByIdAsync(client_id);
+                var client = await store.FindEnabledClientByIdAsync(client_id, null, null);
                 return client?.RequirePkce == true;
             }
 

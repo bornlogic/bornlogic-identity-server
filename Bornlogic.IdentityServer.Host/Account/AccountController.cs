@@ -262,7 +262,7 @@ namespace Bornlogic.IdentityServer.Host.Account
             var allowLocal = true;
             if (context?.Client.ClientId != null)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
+                var client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId, null, null);
                 if (client != null)
                 {
                     allowLocal = client.EnableLocalLogin;

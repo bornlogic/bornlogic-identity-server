@@ -142,7 +142,7 @@ namespace Bornlogic.IdentityServer.Host.Device
             var request = await _interaction.GetAuthorizationContextAsync(userCode);
             if (request != null)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(request.Client.ClientId);
+                var client = await _clientStore.FindEnabledClientByIdAsync(request.Client.ClientId, null, null);
                 if (client != null)
                 {
                     var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.Client.AllowedScopes.Select(a => a.Name));

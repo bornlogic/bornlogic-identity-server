@@ -24,6 +24,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
     internal class TokenValidator : ITokenValidator
     {
         private readonly ILogger _logger;
+        private readonly IClientUserRoleService _clientUserRoleService;
         private readonly IdentityServerOptions _options;
         private readonly IHttpContextAccessor _context;
         private readonly IReferenceTokenStore _referenceTokenStore;
@@ -44,7 +45,9 @@ namespace Bornlogic.IdentityServer.Validation.Default
             ICustomTokenValidator customValidator,
             IKeyMaterialService keys,
             ISystemClock clock,
-            ILogger<TokenValidator> logger)
+            ILogger<TokenValidator> logger,
+            IClientUserRoleService clientUserRoleService
+                )
         {
             _options = options;
             _context = context;
@@ -55,6 +58,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             _keys = keys;
             _clock = clock;
             _logger = logger;
+            _clientUserRoleService = clientUserRoleService;
 
             _log = new TokenValidationLog();
         }
@@ -83,7 +87,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             _log.ClientId = clientId;
             _log.ValidateLifetime = validateLifetime;
 
-            var client = await _clients.FindEnabledClientByIdAsync(clientId);
+            var client = await _clients.FindEnabledClientByIdAsync(clientId, null, null);
             if (client == null)
             {
                 _logger.LogError("Unknown or disabled client: {clientId}.", clientId);
@@ -176,7 +180,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             var clientClaim = result.Claims.FirstOrDefault(c => c.Type == JwtClaimTypes.ClientId);
             if (clientClaim != null)
             {
-                var client = await _clients.FindEnabledClientByIdAsync(clientClaim.Value);
+                var client = await _clients.FindEnabledClientByIdAsync(clientClaim.Value, _clientUserRoleService, result.ReferenceToken.SubjectId);
                 if (client == null)
                 {
                     _logger.LogError("Client deleted or disabled: {clientId}", clientClaim.Value);
@@ -298,7 +302,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 var clientId = id.FindFirst(JwtClaimTypes.ClientId);
                 if (clientId != null)
                 {
-                    client = await _clients.FindEnabledClientByIdAsync(clientId.Value);
+                    client = await _clients.FindEnabledClientByIdAsync(clientId.Value, _clientUserRoleService, id.GetSubjectId());
                     if (client == null)
                     {
                         throw new InvalidOperationException("Client does not exist anymore.");
@@ -370,7 +374,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             Client client = null;
             if (token.ClientId != null)
             {
-                client = await _clients.FindEnabledClientByIdAsync(token.ClientId);
+                client = await _clients.FindEnabledClientByIdAsync(token.ClientId, _clientUserRoleService, token.SubjectId);
             }
 
             if (client == null)

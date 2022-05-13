@@ -39,7 +39,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             var frontChannelUrls = new List<string>();
             foreach (var clientId in context.ClientIds)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(clientId);
+                var client = await _clientStore.FindEnabledClientByIdAsync(clientId, null, null);
                 if (client != null)
                 {
                     if (client.FrontChannelLogoutUri.IsPresent())
@@ -84,7 +84,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             var backChannelLogouts = new List<BackChannelLogoutRequest>();
             foreach (var clientId in context.ClientIds)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(clientId);
+                var client = await _clientStore.FindEnabledClientByIdAsync(clientId, null, null);
                 if (client != null)
                 {
                     if (client.BackChannelLogoutUri.IsPresent())
