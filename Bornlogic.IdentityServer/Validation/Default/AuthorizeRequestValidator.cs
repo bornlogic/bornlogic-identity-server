@@ -230,7 +230,14 @@ namespace Bornlogic.IdentityServer.Validation.Default
             //////////////////////////////////////////////////////////
             // check for valid client
             //////////////////////////////////////////////////////////
-            var client = await _clients.FindEnabledClientByIdAsync(request.ClientId, _clientUserRoleService, request.Subject?.GetSubjectIdOrDefault());
+            
+            var subjectIdOrDefault = request.Subject?.GetSubjectIdOrDefault();
+
+            var client = string.IsNullOrEmpty(subjectIdOrDefault)
+                ? await _clients.FindClientByIdAsync(request.ClientId)
+                : await _clients.FindEnabledClientByIdAsync(request.ClientId, _clientUserRoleService,
+                    subjectIdOrDefault);
+
             if (client == null)
             {
                 LogError("Unknown client or not enabled", request.ClientId, request);
