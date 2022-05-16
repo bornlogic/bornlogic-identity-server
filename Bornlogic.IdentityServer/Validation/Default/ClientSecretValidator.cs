@@ -66,7 +66,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             }
 
             // load client
-            var client = await _clients.FindEnabledClientByIdAsync(parsedSecret.Id, _clientUserRoleService, context.User?.GetSubjectId());
+            var client = await _clients.FindClientByIdAsync(parsedSecret.Id);
             if (client == null)
             {
                 await RaiseFailureEventAsync(parsedSecret.Id, "Unknown client");
