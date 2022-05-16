@@ -63,6 +63,11 @@ namespace Bornlogic.IdentityServer.Extensions
             return principal.Identity.GetSubjectId();
         }
 
+        public static string GetSubjectIdOrDefault(this IPrincipal principal)
+        {
+            return principal.Identity.GetSubjectIdOrDefault();
+        }
+
         /// <summary>
         /// Gets the subject identifier.
         /// </summary>
@@ -77,6 +82,14 @@ namespace Bornlogic.IdentityServer.Extensions
 
             if (claim == null) throw new InvalidOperationException("sub claim is missing");
             return claim.Value;
+        }
+
+        public static string GetSubjectIdOrDefault(this IIdentity identity)
+        {
+            var id = identity as ClaimsIdentity;
+            var claim = id.FindFirst(JwtClaimTypes.Subject);
+            
+            return claim?.Value;
         }
 
         /// <summary>

@@ -171,7 +171,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Client client = null;
                 if (request.ValidatedRequest.AuthorizationCode.ClientId != null)
                 {
-                    client = await Clients.FindEnabledClientByIdAsync(request.ValidatedRequest.AuthorizationCode.ClientId, _clientUserRoleService, request.ValidatedRequest.Subject?.GetSubjectId());
+                    client = await Clients.FindEnabledClientByIdAsync(request.ValidatedRequest.AuthorizationCode.ClientId, _clientUserRoleService, request.ValidatedRequest.Subject?.GetSubjectIdOrDefault());
                 }
                 if (client == null)
                 {
@@ -290,7 +290,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Client client = null;
                 if (request.ValidatedRequest.DeviceCode.ClientId != null)
                 {
-                    client = await Clients.FindEnabledClientByIdAsync(request.ValidatedRequest.DeviceCode.ClientId, _clientUserRoleService, request.ValidatedRequest.Subject?.GetSubjectId());
+                    client = await Clients.FindEnabledClientByIdAsync(request.ValidatedRequest.DeviceCode.ClientId, _clientUserRoleService, request.ValidatedRequest.Subject?.GetSubjectIdOrDefault());
                 }
                 if (client == null)
                 {
@@ -371,7 +371,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Client client = null;
                 if (request.AuthorizationCode.ClientId != null)
                 {
-                    client = await Clients.FindEnabledClientByIdAsync(request.AuthorizationCode.ClientId, _clientUserRoleService, request.Subject?.GetSubjectId());
+                    client = await Clients.FindEnabledClientByIdAsync(request.AuthorizationCode.ClientId, _clientUserRoleService, request.Subject?.GetSubjectIdOrDefault());
                 }
                 if (client == null)
                 {
@@ -396,7 +396,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Client client = null;
                 if (request.DeviceCode.ClientId != null)
                 {
-                    client = await Clients.FindEnabledClientByIdAsync(request.DeviceCode.ClientId, _clientUserRoleService, request.Subject?.GetSubjectId());
+                    client = await Clients.FindEnabledClientByIdAsync(request.DeviceCode.ClientId, _clientUserRoleService, request.Subject?.GetSubjectIdOrDefault());
                 }
                 if (client == null)
                 {

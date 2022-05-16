@@ -309,7 +309,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 var clientId = id.FindFirst(JwtClaimTypes.ClientId);
                 if (clientId != null)
                 {
-                    client = await _clients.FindEnabledClientByIdAsync(clientId.Value, _clientUserRoleService, id.GetSubjectId());
+                    client = await _clients.FindEnabledClientByIdAsync(clientId.Value, _clientUserRoleService, id.GetSubjectIdOrDefault());
                     if (client == null)
                     {
                         throw new InvalidOperationException("Client does not exist anymore.");
