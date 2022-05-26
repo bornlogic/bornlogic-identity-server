@@ -128,7 +128,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 // we won't think we need to force a prompt again
                 request.RemovePrompt();
                 
-                return new InteractionResponse { IsLogin = true };
+                return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "prompt_required" } } };
             }
 
             // unauthenticated user
@@ -156,7 +156,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                     Logger.LogInformation("Showing login: User is not active");
                 }
 
-                return new InteractionResponse { IsLogin = true };
+                return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "user_inactive" } } };
             }
 
             // check current idp
@@ -169,7 +169,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 if (idp != currentIdp)
                 {
                     Logger.LogInformation("Showing login: Current IdP ({currentIdp}) is not the requested IdP ({idp})", currentIdp, idp);
-                    return new InteractionResponse { IsLogin = true };
+                    return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "idp_mismatch" } } };
                 }
             }
 
@@ -181,7 +181,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 {
                     Logger.LogInformation("Showing login: Requested MaxAge exceeded.");
 
-                    return new InteractionResponse { IsLogin = true };
+                    return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "auth_max_age_reached" } } };
                 }
             }
 
@@ -191,7 +191,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 if (!request.Client.EnableLocalLogin)
                 {
                     Logger.LogInformation("Showing login: User logged in locally, but client does not allow local logins");
-                    return new InteractionResponse { IsLogin = true };
+                    return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "client_local_logins_disabled" } } };
                 }
             }
             // check external idp restrictions if user not using local idp
@@ -200,7 +200,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 !request.Client.IdentityProviderRestrictions.Contains(currentIdp))
             {
                 Logger.LogInformation("Showing login: User is logged in with idp: {idp}, but idp not in client restriction list.", currentIdp);
-                return new InteractionResponse { IsLogin = true };
+                return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "idp_on_restriction_list" } } };
             }
 
             // check client's user SSO timeout
@@ -213,7 +213,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 if (diff > request.Client.UserSsoLifetime.Value)
                 {
                     Logger.LogInformation("Showing login: User's auth session duration: {sessionDuration} exceeds client's user SSO lifetime: {userSsoLifetime}.", diff, request.Client.UserSsoLifetime);
-                    return new InteractionResponse { IsLogin = true };
+                    return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "user_sso_lifetime_reached" } } };
                 }
             }
 
@@ -226,7 +226,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 if (diff > request.Client.UserSsoExternalIdpLifetime.Value)
                 {
                     Logger.LogInformation("Showing login: User's external auth session duration: {sessionDuration} exceeds client's user SSO lifetime: {userSsoLifetime}.", diff, request.Client.UserSsoExternalIdpLifetime);
-                    return new InteractionResponse { IsLogin = true };
+                    return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string>{{"login_redirect_reason", "user_sso_external_idp_lifetime_reached"}}};
                 }
             }
 

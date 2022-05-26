@@ -66,5 +66,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Models
         /// The redirect URL.
         /// </value>
         public string RedirectUrl { get; set; }
+
+        public IDictionary<string, string> AdditionalQueryParameters { get; set; }
     }
 }

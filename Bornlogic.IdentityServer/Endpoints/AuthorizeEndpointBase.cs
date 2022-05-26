@@ -90,7 +90,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             }
             if (interactionResult.IsLogin)
             {
-                return new LoginPageResult(request);
+                return new LoginPageResult(request, interactionResult.AdditionalQueryParameters);
             }
             if (interactionResult.IsConsent)
             {
