@@ -20,22 +20,25 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
     public class LoginPageResult : IEndpointResult
     {
         private readonly ValidatedAuthorizeRequest _request;
+        private readonly IDictionary<string, string> _additionalQueryParameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginPageResult"/> class.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <exception cref="System.ArgumentNullException">request</exception>
-        public LoginPageResult(ValidatedAuthorizeRequest request)
+        public LoginPageResult(ValidatedAuthorizeRequest request, IDictionary<string, string> additionalQueryParameters)
         {
             _request = request ?? throw new ArgumentNullException(nameof(request));
+            _additionalQueryParameters = additionalQueryParameters;
         }
 
         internal LoginPageResult(
             ValidatedAuthorizeRequest request,
             IdentityServerOptions options,
-            IAuthorizationParametersMessageStore authorizationParametersMessageStore = null) 
-            : this(request)
+            IAuthorizationParametersMessageStore authorizationParametersMessageStore = null,
+            IDictionary<string, string> additionalQueryParameters = null) 
+            : this(request, additionalQueryParameters)
         {
             _options = options;
             _authorizationParametersMessageStore = authorizationParametersMessageStore;
@@ -80,6 +83,12 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
             }
 
             var url = loginUrl.AddQueryString(_options.UserInteraction.LoginReturnUrlParameter, returnUrl);
+
+            foreach (var additionalQueryParameter in _additionalQueryParameters ?? new Dictionary<string, string>())
+            {
+                url = url.AddQueryString(additionalQueryParameter.Key, additionalQueryParameter.Value);
+            }
+
             context.Response.RedirectToAbsoluteUrl(url);
         }
     }
