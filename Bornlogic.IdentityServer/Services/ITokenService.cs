@@ -24,7 +24,7 @@ namespace Bornlogic.IdentityServer.Services
         /// </summary>
         /// <param name="request">The token creation request.</param>
         /// <returns>An access token</returns>
-        Task<Token> CreateAccessTokenAsync(TokenCreationRequest request, string issuer = null);
+        Task<Token> CreateAccessTokenAsync(TokenCreationRequest request);
 
         /// <summary>
         /// Creates a serialized and protected security token.
