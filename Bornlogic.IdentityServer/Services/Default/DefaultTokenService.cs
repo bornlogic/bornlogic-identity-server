@@ -179,7 +179,7 @@ namespace Bornlogic.IdentityServer.Services.Default
         /// <returns>
         /// An access token
         /// </returns>
-        public virtual async Task<Token> CreateAccessTokenAsync(TokenCreationRequest request)
+        public virtual async Task<Token> CreateAccessTokenAsync(TokenCreationRequest request, string issuer = null)
         {
             Logger.LogTrace("Creating access token");
             request.Validate();
@@ -204,7 +204,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             claims.Add(new Claim(JwtClaimTypes.IssuedAt, Clock.UtcNow.ToUnixTimeSeconds().ToString(),
                 ClaimValueTypes.Integer64));
 
-            var issuer = ContextAccessor.HttpContext.GetIdentityServerIssuerUri();
+            issuer ??= ContextAccessor.HttpContext.GetIdentityServerIssuerUri();
             var token = new Token(OidcConstants.TokenTypes.AccessToken)
             {
                 CreationTime = Clock.UtcNow.UtcDateTime,
