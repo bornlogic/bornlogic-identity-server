@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,20 +13,17 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        private readonly IEmailConfirmationHtmlMessageProvider _emailConfirmationProvider;
 
         public EmailModel
         (
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender,
-            IEmailConfirmationHtmlMessageProvider emailConfirmationProvider
+            IEmailSender emailSender
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
-            _emailConfirmationProvider = emailConfirmationProvider;
         }
 
         public string Username { get; set; }
@@ -100,7 +96,7 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account.Manage
                     values: new { userId = userId, email = Input.NewEmail, code = code },
                     protocol: Request.Scheme);
 
-                var (emailSubject, emailHtmlMessage) = await _emailConfirmationProvider.GetSubjectAndHtmlMessage(null, callbackUrl);
+                var (emailSubject, emailHtmlMessage) = new System.Collections.Generic.KeyValuePair<string, string>("", "");
 
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
@@ -139,7 +135,7 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account.Manage
                 values: new { area = "Identity", userId = userId, code = code },
                 protocol: Request.Scheme);
 
-            var (emailSubject, emailHtmlMessage) = await _emailConfirmationProvider.GetSubjectAndHtmlMessage(null, callbackUrl);
+            var (emailSubject, emailHtmlMessage) = new System.Collections.Generic.KeyValuePair<string, string>("", "");
 
             await _emailSender.SendEmailAsync(
                 email,

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,22 +17,19 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IEmailConfirmationHtmlMessageProvider _emailConfirmationHtmlMessageProvider;
 
         public RegisterModel
         (
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
-            IEmailConfirmationHtmlMessageProvider emailConfirmationHtmlMessageProvider
+            IEmailSender emailSender
         )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _emailConfirmationHtmlMessageProvider = emailConfirmationHtmlMessageProvider;
         }
 
         [BindProperty]
@@ -88,7 +84,7 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-                    var (emailSubject, emailHtmlMessage) = await _emailConfirmationHtmlMessageProvider.GetSubjectAndHtmlMessage(null, callbackUrl);
+                    var (emailSubject, emailHtmlMessage) = new System.Collections.Generic.KeyValuePair<string, string>("", "");
 
                     await _emailSender.SendEmailAsync(Input.Email, emailSubject, emailHtmlMessage);
 

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -15,18 +14,15 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
-        private readonly IForgotPasswordEmailHtmlMessageProvider _forgotPasswordEmailHtmlMessageProvider;
 
         public ForgotPasswordModel
             (
                 UserManager<ApplicationUser> userManager, 
-                IEmailSender emailSender,
-                IForgotPasswordEmailHtmlMessageProvider forgotPasswordEmailHtmlMessageProvider
+                IEmailSender emailSender
                 )
         {
             _userManager = userManager;
             _emailSender = emailSender;
-            _forgotPasswordEmailHtmlMessageProvider = forgotPasswordEmailHtmlMessageProvider;
         }
 
         [BindProperty]
@@ -60,7 +56,7 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                var (emailSubject, emailHtmlMessage) = await _forgotPasswordEmailHtmlMessageProvider.GetSubjectAndHtmlMessage(null, callbackUrl);
+                var (emailSubject, emailHtmlMessage) = new System.Collections.Generic.KeyValuePair<string, string>("", "");
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,

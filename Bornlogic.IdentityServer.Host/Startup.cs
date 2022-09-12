@@ -57,8 +57,7 @@ namespace Bornlogic.IdentityServer.Host
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddProfileService<ProfileService>()
                 .AddResourceOwnerValidator<MyResourceOwnerPasswordValidator>()
-                .AddDeveloperSigningCredential()
-                .AddDefaultEmailProviders();
+                .AddDeveloperSigningCredential();
 
             services.AddTransient(typeof(IRoleStore<>), typeof(RoleStore<>));
             services.AddTransient<IApplicationUserStore, UserStore<ApplicationUser>>();
