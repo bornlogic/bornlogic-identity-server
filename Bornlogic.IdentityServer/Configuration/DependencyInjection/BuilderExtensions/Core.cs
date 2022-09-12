@@ -3,8 +3,6 @@
 
 
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
-using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Contracts;
-using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Default;
 using Bornlogic.IdentityServer.Endpoints;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Hosting;
@@ -74,15 +72,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
 
             return builder;
         }
-
-        public static IIdentityServerBuilder AddDefaultEmailProviders(this IIdentityServerBuilder builder)
-        {
-            builder.Services.AddSingleton<IEmailConfirmationHtmlMessageProvider, DefaultEmailConfirmationProvider>();
-            builder.Services.AddScoped<IForgotPasswordEmailHtmlMessageProvider, DefaultForgotPasswordEmailHtmlMessageProvider>();
-
-            return builder;
-        }
-
+        
         /// <summary>
         /// Adds the default endpoints.
         /// </summary>

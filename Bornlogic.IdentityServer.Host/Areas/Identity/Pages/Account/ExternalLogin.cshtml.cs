@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
-using Bornlogic.IdentityServer.Email.HtmlMessageProvider.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -17,7 +16,6 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
-        private readonly IEmailConfirmationHtmlMessageProvider _emailConfirmationProvider;
         private readonly ILogger<ExternalLoginModel> _logger;
 
 
@@ -26,15 +24,13 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender,
-            IEmailConfirmationHtmlMessageProvider emailConfirmationProvider
+            IEmailSender emailSender
         )
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
-            _emailConfirmationProvider = emailConfirmationProvider;
         }
 
         [BindProperty]
@@ -147,8 +143,8 @@ namespace Bornlogic.IdentityServer.Host.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId = userId, code = code },
                             protocol: Request.Scheme);
 
-                        var (emailSubject, emailHtmlMessage) = await _emailConfirmationProvider.GetSubjectAndHtmlMessage(null, callbackUrl);
-                        
+                        var (emailSubject, emailHtmlMessage) = new System.Collections.Generic.KeyValuePair<string, string>("", "");
+
                         await _emailSender.SendEmailAsync(
                             Input.Email,
                             emailSubject,
