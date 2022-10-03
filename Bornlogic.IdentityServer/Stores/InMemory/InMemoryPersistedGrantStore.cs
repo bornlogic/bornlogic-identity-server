@@ -25,7 +25,7 @@ namespace Bornlogic.IdentityServer.Stores.InMemory
         }
 
         /// <inheritdoc/>
-        public Task<PersistedGrant> GetAsync(string key)
+        public Task<PersistedGrant> GetAsync(string key, string type = null)
         {
             if (_repository.TryGetValue(key, out PersistedGrant token))
             {

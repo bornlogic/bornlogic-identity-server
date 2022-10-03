@@ -23,7 +23,7 @@ namespace Bornlogic.IdentityServer.Storage.Stores
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        Task<PersistedGrant> GetAsync(string key);
+        Task<PersistedGrant> GetAsync(string key, string type = null);
 
         /// <summary>
         /// Gets all grants based on the filter.

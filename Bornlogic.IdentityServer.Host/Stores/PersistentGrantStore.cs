@@ -18,7 +18,7 @@ namespace Bornlogic.IdentityServer.Host.Stores
             return _persistentGrantStoreRepository.Insert(grant);
         }
 
-        public Task<PersistedGrant> GetAsync(string key)
+        public Task<PersistedGrant> GetAsync(string key, string type = null)
         {
             return _persistentGrantStoreRepository.GetByKey(key);
         }

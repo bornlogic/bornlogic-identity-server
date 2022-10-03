@@ -87,7 +87,7 @@ namespace Bornlogic.IdentityServer.Stores.Default
         {
             var hashedKey = GetHashedKey(key);
 
-            var grant = await Store.GetAsync(hashedKey);
+            var grant = await Store.GetAsync(hashedKey, GrantType);
             if (grant != null && grant.Type == GrantType)
             {
                 try
