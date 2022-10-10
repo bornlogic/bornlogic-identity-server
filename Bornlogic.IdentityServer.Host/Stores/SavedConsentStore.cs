@@ -10,6 +10,11 @@ namespace Bornlogic.IdentityServer.Host.Stores
             return default;
         }
 
+        public Task<IEnumerable<UserSavedConsent>> GetFromFilters(string userID, string clientID)
+        {
+            return default;
+        }
+
         public async Task DeleteFromFilters(string userID, string clientID)
         {
         }
