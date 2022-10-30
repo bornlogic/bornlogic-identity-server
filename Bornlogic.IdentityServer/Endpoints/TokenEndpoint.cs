@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Diagnostics;
 using Bornlogic.IdentityServer.Endpoints.Results;
 using Bornlogic.IdentityServer.Events;
 using Bornlogic.IdentityServer.Extensions;
@@ -59,7 +60,7 @@ namespace Bornlogic.IdentityServer.Endpoints
         public async Task<IEndpointResult> ProcessAsync(HttpContext context)
         {
             _logger.LogTrace("Processing token request.");
-
+            
             // validate HTTP
             if (!HttpMethods.IsPost(context.Request.Method) || !context.Request.HasApplicationFormContentType())
             {
@@ -72,6 +73,10 @@ namespace Bornlogic.IdentityServer.Endpoints
 
         private async Task<IEndpointResult> ProcessTokenRequestAsync(HttpContext context)
         {
+            var st = new Stopwatch();
+
+            st.Start();
+
             _logger.LogDebug("Start token request.");
 
             // validate client
@@ -102,7 +107,14 @@ namespace Bornlogic.IdentityServer.Endpoints
 
             // return result
             _logger.LogDebug("Token request success.");
-            return new TokenResult(response);
+
+            var @return = new TokenResult(response);
+
+            st.Stop();
+
+            _logger.LogInformation($"Token Endpoint finished in {st.ElapsedMilliseconds} ms");
+
+            return @return;
         }
 
         private TokenErrorResult Error(string error, string subError = null, Dictionary<string, object> custom = null)
