@@ -1,4 +1,7 @@
 # Change Log\n\nAll notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.\n
+<a name="2.2.14"></a>
+## 2.2.14 (2022-11-22)
+
 <a name="2.2.13"></a>
 ## 2.2.13 (2022-11-7)
 
