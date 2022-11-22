@@ -125,7 +125,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                         actualProtocolType = _validatedRequest.Client.ProtocolType
                     });
 
-                return Invalid(OidcConstants.TokenErrors.InvalidClient);
+                return Invalid(OidcConstants.TokenErrors.InvalidClient, "Invalid protocol type for client");
             }
 
             /////////////////////////////////////////////
@@ -135,13 +135,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (grantType.IsMissing())
             {
                 LogError("Grant type is missing");
-                return Invalid(OidcConstants.TokenErrors.UnsupportedGrantType);
+                return Invalid(OidcConstants.TokenErrors.UnsupportedGrantType, "Grant type is missing");
             }
 
             if (grantType.Length > _options.InputLengthRestrictions.GrantType)
             {
                 LogError("Grant type is too long");
-                return Invalid(OidcConstants.TokenErrors.UnsupportedGrantType);
+                return Invalid(OidcConstants.TokenErrors.UnsupportedGrantType, "Grant type is too long");
             }
 
             _validatedRequest.GrantType = grantType;
@@ -207,7 +207,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 !_validatedRequest.Client.AllowedGrantTypes.ToList().Contains(GrantType.Hybrid))
             {
                 LogError("Client not authorized for code flow");
-                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient);
+                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient, "Client not authorized for code flow");
             }
 
             /////////////////////////////////////////////
@@ -217,13 +217,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (code.IsMissing())
             {
                 LogError("Authorization code is missing");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Authorization code is missing");
             }
 
             if (code.Length > _options.InputLengthRestrictions.AuthorizationCode)
             {
                 LogError("Authorization code is too long");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Authorization code is too long");
             }
 
             _validatedRequest.AuthorizationCodeHandle = code;
@@ -232,7 +232,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (authZcode == null)
             {
                 LogError("Invalid authorization code", new { code });
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Invalid authorization code");
             }
             
             /////////////////////////////////////////////
@@ -241,7 +241,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (authZcode.ClientId != _validatedRequest.Client.ClientId)
             {
                 LogError("Client is trying to use a code from a different client", new { clientId = _validatedRequest.Client.ClientId, codeClient = authZcode.ClientId });
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Client is trying to use a code from a different client");
             }
 
             // remove code from store
@@ -251,7 +251,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (authZcode.CreationTime.HasExceeded(authZcode.Lifetime, _clock.UtcNow.UtcDateTime))
             {
                 LogError("Authorization code expired", new { code });
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Authorization code expired");
             }
 
             /////////////////////////////////////////////
@@ -268,7 +268,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (authZcode.CreationTime.HasExceeded(_validatedRequest.Client.AuthorizationCodeLifetime, _clock.UtcNow.UtcDateTime))
             {
                 LogError("Authorization code is expired");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Authorization code is expired");
             }
 
             _validatedRequest.AuthorizationCode = authZcode;
@@ -281,13 +281,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (redirectUri.IsMissing())
             {
                 LogError("Redirect URI is missing");
-                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient);
+                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient, "Redirect URI is missing");
             }
 
             if (redirectUri.Equals(_validatedRequest.AuthorizationCode.RedirectUri, StringComparison.Ordinal) == false)
             {
                 LogError("Invalid redirect_uri", new { redirectUri, expectedRedirectUri = _validatedRequest.AuthorizationCode.RedirectUri });
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Invalid redirect_uri");
             }
 
             /////////////////////////////////////////////
@@ -297,7 +297,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 !_validatedRequest.AuthorizationCode.RequestedScopes.Any())
             {
                 LogError("Authorization code has no associated scopes");
-                return Invalid(OidcConstants.TokenErrors.InvalidRequest);
+                return Invalid(OidcConstants.TokenErrors.InvalidRequest, "Authorization code has no associated scopes");
             }
 
             /////////////////////////////////////////////
@@ -321,7 +321,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (codeVerifier.IsPresent())
                 {
                     LogError("Unexpected code_verifier: {codeVerifier}. This happens when the client is trying to use PKCE, but it is not enabled. Set RequirePkce to true.", codeVerifier);
-                    return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                    return Invalid(OidcConstants.TokenErrors.InvalidGrant, "PKCE not enabled for client");
                 }
             }
 
@@ -334,7 +334,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (isActiveCtx.IsActive == false)
             {
                 LogError("User has been disabled", new { subjectId = _validatedRequest.AuthorizationCode.Subject.GetSubjectId() });
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "User has been disabled");
             }
 
             _logger.LogDebug("Validation of authorization code token request success");
@@ -352,7 +352,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (!_validatedRequest.Client.AllowedGrantTypes.ToList().Contains(GrantType.ClientCredentials))
             {
                 LogError("Client not authorized for client credentials flow, check the AllowedGrantTypes setting", new { clientId = _validatedRequest.Client.ClientId });
-                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient);
+                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient, "Client not authorized for client credentials flow, check the AllowedGrantTypes setting");
             }
 
             /////////////////////////////////////////////
@@ -366,13 +366,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (_validatedRequest.ValidatedResources.Resources.IdentityResources.Any())
             {
                 LogError("Client cannot request OpenID scopes in client credentials flow", new { clientId = _validatedRequest.Client.ClientId });
-                return Invalid(OidcConstants.TokenErrors.InvalidScope);
+                return Invalid(OidcConstants.TokenErrors.InvalidScope, "Client cannot request OpenID scopes in client credentials flow");
             }
 
             if (_validatedRequest.ValidatedResources.Resources.OfflineAccess)
             {
                 LogError("Client cannot request a refresh token in client credentials flow", new { clientId = _validatedRequest.Client.ClientId });
-                return Invalid(OidcConstants.TokenErrors.InvalidScope);
+                return Invalid(OidcConstants.TokenErrors.InvalidScope, "Client cannot request a refresh token in client credentials flow");
             }
 
             _logger.LogDebug("{clientId} credentials token request validation success", _validatedRequest.Client.ClientId);
@@ -389,7 +389,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (!_validatedRequest.Client.AllowedGrantTypes.Contains(GrantType.ResourceOwnerPassword))
             {
                 LogError("Client not authorized for resource owner flow, check the AllowedGrantTypes setting", new { client_id = _validatedRequest.Client.ClientId });
-                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient);
+                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient, "Client not authorized for resource owner flow, check the AllowedGrantTypes setting");
             }
 
             /////////////////////////////////////////////
@@ -409,7 +409,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (userName.IsMissing())
             {
                 LogError("Username is missing");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Username is missing");
             }
 
             if (password.IsMissing())
@@ -421,7 +421,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 password.Length > _options.InputLengthRestrictions.Password)
             {
                 LogError("Username or password too long");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Username or password too long");
             }
 
             _validatedRequest.UserName = userName;
@@ -448,7 +448,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     LogError("Resource owner password credential grant type not supported");
                     await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, "password grant type not supported", resourceOwnerContext.Request.Client.ClientId);
 
-                    return Invalid(OidcConstants.TokenErrors.UnsupportedGrantType, customResponse: resourceOwnerContext.Result.CustomResponse);
+                    return Invalid(OidcConstants.TokenErrors.UnsupportedGrantType, "Resource owner password credential grant type not supported", customResponse: resourceOwnerContext.Result.CustomResponse);
                 }
 
                 var subError = "invalid_username_or_password";
@@ -470,7 +470,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 LogError(error);
                 await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, error, resourceOwnerContext.Request.Client.ClientId);
 
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "User authentication failed: no principal returned");
             }
 
             /////////////////////////////////////////////
@@ -484,7 +484,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 LogError("User has been disabled", new { subjectId = resourceOwnerContext.Result.Subject.GetSubjectId() });
                 await RaiseFailedResourceOwnerAuthenticationEventAsync(userName, "user is inactive", resourceOwnerContext.Request.Client.ClientId);
 
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "User has been disabled");
             }
 
             _validatedRequest.UserName = userName;
@@ -503,13 +503,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (refreshTokenHandle.IsMissing())
             {
                 LogError("Refresh token is missing");
-                return Invalid(OidcConstants.TokenErrors.InvalidRequest);
+                return Invalid(OidcConstants.TokenErrors.InvalidRequest, "Refresh token is missing");
             }
 
             if (refreshTokenHandle.Length > _options.InputLengthRestrictions.RefreshToken)
             {
                 LogError("Refresh token too long");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Refresh token too long");
             }
 
             var result = await _refreshTokenService.ValidateRefreshTokenAsync(refreshTokenHandle, _validatedRequest.Client);
@@ -517,7 +517,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (result.IsError)
             {
                 LogWarning("Refresh token validation failed. aborting");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Refresh token validation failed.");
             }
 
             _validatedRequest.RefreshToken = result.RefreshToken;
@@ -540,7 +540,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (!_validatedRequest.Client.AllowedGrantTypes.ToList().Contains(GrantType.DeviceFlow))
             {
                 LogError("Client not authorized for device flow");
-                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient);
+                return Invalid(OidcConstants.TokenErrors.UnauthorizedClient, "Client not authorized for device flow");
             }
 
             /////////////////////////////////////////////
@@ -550,13 +550,13 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (deviceCode.IsMissing())
             {
                 LogError("Device code is missing");
-                return Invalid(OidcConstants.TokenErrors.InvalidRequest);
+                return Invalid(OidcConstants.TokenErrors.InvalidRequest, "Device code is missing");
             }
 
             if (deviceCode.Length > _options.InputLengthRestrictions.DeviceCode)
             {
                 LogError("Device code too long");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Device code too long");
             }
 
             /////////////////////////////////////////////
@@ -610,7 +610,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (result == null)
             {
                 LogError("Invalid extension grant");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Invalid extension grant");
             }
 
             if (result.IsError)
@@ -740,32 +740,32 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (authZcode.CodeChallenge.IsMissing() || authZcode.CodeChallengeMethod.IsMissing())
             {
                 LogError("Client is missing code challenge or code challenge method", new { clientId = _validatedRequest.Client.ClientId });
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Client is missing code challenge or code challenge method");
             }
 
             if (codeVerifier.IsMissing())
             {
                 LogError("Missing code_verifier");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Missing code_verifier");
             }
 
             if (codeVerifier.Length < _options.InputLengthRestrictions.CodeVerifierMinLength ||
                 codeVerifier.Length > _options.InputLengthRestrictions.CodeVerifierMaxLength)
             {
                 LogError("code_verifier is too short or too long");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "code_verifier is too short or too long");
             }
 
             if (Constants.SupportedCodeChallengeMethods.Contains(authZcode.CodeChallengeMethod) == false)
             {
                 LogError("Unsupported code challenge method", new { codeChallengeMethod = authZcode.CodeChallengeMethod });
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Unsupported code challenge method");
             }
 
             if (ValidateCodeVerifierAgainstCodeChallenge(codeVerifier, authZcode.CodeChallenge, authZcode.CodeChallengeMethod) == false)
             {
                 LogError("Transformed code verifier does not match code challenge");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant);
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Transformed code verifier does not match code challenge");
             }
 
             return Valid();
