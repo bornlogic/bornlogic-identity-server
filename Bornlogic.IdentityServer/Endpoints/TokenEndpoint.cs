@@ -65,7 +65,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             if (!HttpMethods.IsPost(context.Request.Method) || !context.Request.HasApplicationFormContentType())
             {
                 _logger.LogWarning("Invalid HTTP request for token endpoint");
-                return Error(OidcConstants.TokenErrors.InvalidRequest);
+                return Error(OidcConstants.TokenErrors.InvalidRequest, "Request's HTTP method must be POST and content-type application/x-www-form-urlencoded");
             }
 
             return await ProcessTokenRequestAsync(context);
