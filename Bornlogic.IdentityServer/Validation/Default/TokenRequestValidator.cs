@@ -523,7 +523,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 if (_validatedRequest?.Client != null)
                 {
                     subError =
-                        $"{subError} For client '{_validatedRequest.Client.ClientId}', local IDP refresh tokens have a lifetime of {(_validatedRequest.Client.AbsoluteRefreshTokenLifetime / 3600)} hours, and external IDP refresh tokens have a lifetime of {(_validatedRequest.Client.AbsoluteRefreshTokenLifetime / 3600)} hours.";
+                        $"{subError} For client '{_validatedRequest.Client.ClientId}', local IDP refresh tokens have a lifetime of {(_validatedRequest.Client.AbsoluteRefreshTokenLifetime / 3600)} hours, and external IDP refresh tokens have a lifetime of {(_validatedRequest.Client.AbsoluteSsoExternalIdpRefreshTokenLifetime / 3600)} hours.";
                 }
 
                 return Invalid(OidcConstants.TokenErrors.InvalidGrant, subError);
