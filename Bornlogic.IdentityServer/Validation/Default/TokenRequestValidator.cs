@@ -517,7 +517,16 @@ namespace Bornlogic.IdentityServer.Validation.Default
             if (result.IsError)
             {
                 LogWarning("Refresh token validation failed. aborting");
-                return Invalid(OidcConstants.TokenErrors.InvalidGrant, "Refresh token validation failed.");
+                
+                var subError = "Refresh token validation failed. It has expired or never existed.";
+
+                if (_validatedRequest?.Client != null)
+                {
+                    subError =
+                        $"{subError} For client '{_validatedRequest.Client.ClientId}', local IDP refresh tokens have a lifetime of {(_validatedRequest.Client.AbsoluteRefreshTokenLifetime / 3600)} hours, and external IDP refresh tokens have a lifetime of {(_validatedRequest.Client.AbsoluteRefreshTokenLifetime / 3600)} hours.";
+                }
+
+                return Invalid(OidcConstants.TokenErrors.InvalidGrant, subError);
             }
 
             _validatedRequest.RefreshToken = result.RefreshToken;
