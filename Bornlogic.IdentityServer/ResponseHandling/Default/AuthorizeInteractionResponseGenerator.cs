@@ -8,7 +8,6 @@ using Bornlogic.IdentityServer.Models.Messages;
 using Bornlogic.IdentityServer.Models.Messages.Enums;
 using Bornlogic.IdentityServer.ResponseHandling.Models;
 using Bornlogic.IdentityServer.Services;
-using Bornlogic.IdentityServer.Stores;
 using Bornlogic.IdentityServer.Validation.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
@@ -26,7 +25,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// The logger.
         /// </summary>
         protected readonly ILogger Logger;
-        
+
         /// <summary>
         /// The consent service.
         /// </summary>
@@ -294,17 +293,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                         // no need to show consent screen again
                         // build error to return to client
                         Logger.LogInformation("Error: User consent result: {error}", consent.Error);
-
-                        var error = consent.Error switch
-                        {
-                            AuthorizationError.AccountSelectionRequired => OidcConstants.AuthorizeErrors.AccountSelectionRequired,
-                            AuthorizationError.ConsentRequired => OidcConstants.AuthorizeErrors.ConsentRequired,
-                            AuthorizationError.InteractionRequired => OidcConstants.AuthorizeErrors.InteractionRequired,
-                            AuthorizationError.LoginRequired => OidcConstants.AuthorizeErrors.LoginRequired,
-                            _ => OidcConstants.AuthorizeErrors.AccessDenied
-                        };
-
-                        response.Error = error;
+                        
+                        response.Error = GetError(consent.Error ?? default);
                         response.SubError = consent.SubError;
                     }
                     else
@@ -352,11 +342,29 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
+            if (businessSelect?.Error != null)
+            {
+                return new InteractionResponse { Error = GetError(businessSelect.Error.Value) };
+            }
+
             request.WasConsentShown = consent != null;
 
             var requiresBusinessSelect = request.Client.RequiresBusinessSelection && string.IsNullOrEmpty(businessSelect?.BusinessId) && string.IsNullOrEmpty(businessSelect?.SubjectBusinessScopedId);
 
             return new InteractionResponse { IsBusinessSelect = requiresBusinessSelect };
+        }
+
+        private static string GetError(AuthorizationError authorizationError)
+        {
+            return authorizationError switch
+            {
+                AuthorizationError.AccountSelectionRequired => OidcConstants.AuthorizeErrors.AccountSelectionRequired,
+                AuthorizationError.ConsentRequired => OidcConstants.AuthorizeErrors.ConsentRequired,
+                AuthorizationError.BusinessSelectRequired => CustomOIDCConstants.AuthorizeErrors.BusinessSelectionRequired,
+                AuthorizationError.InteractionRequired => OidcConstants.AuthorizeErrors.InteractionRequired,
+                AuthorizationError.LoginRequired => OidcConstants.AuthorizeErrors.LoginRequired,
+                _ => OidcConstants.AuthorizeErrors.AccessDenied
+            };
         }
     }
 }
