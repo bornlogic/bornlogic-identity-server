@@ -101,7 +101,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
 
             if (!result.IsLogin && !result.IsConsent && !result.IsError && !result.IsRedirect)
             {
-                result = await ProcessBusinessSelectAsync(request, businessSelect);
+                result = await ProcessBusinessSelectAsync(request, consent, businessSelect);
             }
 
             if ((result.IsLogin || result.IsConsent || result.IsRedirect) && request.PromptModes.Contains(OidcConstants.PromptModes.None))
@@ -347,12 +347,14 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             return new InteractionResponse();
         }
 
-        protected internal virtual async Task<InteractionResponse> ProcessBusinessSelectAsync(ValidatedAuthorizeRequest request, BusinessSelectResponse businessSelect = null)
+        protected internal virtual async Task<InteractionResponse> ProcessBusinessSelectAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null, BusinessSelectResponse businessSelect = null)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
-            
-            var requiresBusinessSelect = request.Client.RequiresBusinessSelection && string.IsNullOrEmpty(businessSelect?.BusinessId) && string.IsNullOrEmpty(businessSelect?.UserBusinessScopedId);
+
+            request.WasConsentShown = consent != null;
+
+            var requiresBusinessSelect = !request.Client.RequiresBusinessSelection && string.IsNullOrEmpty(businessSelect?.BusinessId) && string.IsNullOrEmpty(businessSelect?.UserBusinessScopedId);
 
             return new InteractionResponse { IsBusinessSelect = requiresBusinessSelect };
         }
