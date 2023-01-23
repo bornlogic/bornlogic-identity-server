@@ -215,7 +215,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             claims.Add(new Claim(JwtClaimTypes.IssuedAt, Clock.UtcNow.ToUnixTimeSeconds().ToString(),
                 ClaimValueTypes.Integer64));
 
-            var issuer = ContextAccessor.HttpContext.GetIdentityServerIssuerUri();
+            var issuer = !string.IsNullOrEmpty(request.Issuer) ? request.Issuer : ContextAccessor.HttpContext.GetIdentityServerIssuerUri();
             var token = new Token(OidcConstants.TokenTypes.AccessToken)
             {
                 CreationTime = Clock.UtcNow.UtcDateTime,
