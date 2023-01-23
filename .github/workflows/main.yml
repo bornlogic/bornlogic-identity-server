@@ -40,9 +40,9 @@ jobs:
     needs: test
     env:
       LAST_COMMITTER_EMAIL: $(git log -1 --pretty=format:'%ae')
-      BOT_NAME: ${{ secrets.BOT_NAME }}
-      BOT_EMAIL: ${{ secrets.BOT_EMAIL }}
-      BOT_TOKEN: ${{ secrets.BOT_ACCESS_TOKEN }}
+      BOT_NAME: Bornlogic Bot
+      BOT_EMAIL: victor@bornlogic.com
+      BOT_TOKEN: secrets.BOT_ACCESS_TOKEN
 
     steps:
     - name: Checkout
@@ -74,6 +74,7 @@ jobs:
         git checkout "${GITHUB_REF:11}"
         dotnet tool install --global Versionize --version 1.8.0
         versionize --skip-dirty && git push --follow-tags origin "${GITHUB_REF:11}"
+
     - name: Pack
       if: ${{ success() }}
       run: dotnet pack --configuration Release -o output
