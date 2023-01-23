@@ -187,7 +187,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             var clientClaim = result.Claims.FirstOrDefault(c => c.Type == JwtClaimTypes.ClientId);
             if (clientClaim != null)
             {
-                var client = await _clients.FindEnabledClientByIdAsync(clientClaim.Value, _clientUserRoleService, result.ReferenceToken?.SubjectId);
+                var client = await _clients.FindEnabledClientByIdAsync(clientClaim.Value, _clientUserRoleService, result.ReferenceToken?.SubjectId ?? result.Claims.FirstOrDefault(a => a.Type == JwtClaimTypes.Subject)?.Value);
                 if (client == null)
                 {
                     _logger.LogError("Client deleted or disabled: {clientId}", clientClaim.Value);
