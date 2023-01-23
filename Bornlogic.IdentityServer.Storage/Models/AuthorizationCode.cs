@@ -29,7 +29,7 @@ namespace Bornlogic.IdentityServer.Storage.Models
 
         public string BusinessId { get; set; }
 
-        public string UserBusinessScopedId { get; set; }
+        public string SubjectBusinessScopedId { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the client.

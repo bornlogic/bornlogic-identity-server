@@ -7,8 +7,10 @@ using Bornlogic.IdentityServer.Configuration;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models;
+using Bornlogic.IdentityServer.Models.Messages.Enums;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Storage.Stores;
+using Bornlogic.IdentityServer.Validation.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -190,6 +192,15 @@ namespace Bornlogic.IdentityServer.Services.Default
                 request.ValidatedResources,
                 request.ValidatedRequest));
 
+            if (request.ValidatedRequest is ValidatedTokenRequest tokenRequest && tokenRequest.AuthorizationCode != null)
+            {
+                if (!string.IsNullOrEmpty(tokenRequest.AuthorizationCode.BusinessId))
+                    claims.Add(new Claim(BusinessScopedClaims.BusinessId, tokenRequest.AuthorizationCode.BusinessId));
+
+                if (!string.IsNullOrEmpty(tokenRequest.AuthorizationCode.SubjectBusinessScopedId))
+                    claims.Add(new Claim(BusinessScopedClaims.SubjectBusinessScopedId, tokenRequest.AuthorizationCode.SubjectBusinessScopedId));
+            }
+
             if (request.ValidatedRequest.Client.IncludeJwtId)
             {
                 claims.Add(new Claim(JwtClaimTypes.JwtId, CryptoRandom.CreateUniqueId(16, CryptoRandom.OutputFormat.Hex)));
@@ -199,7 +210,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             {
                 claims.Add(new Claim(JwtClaimTypes.SessionId, request.ValidatedRequest.SessionId));
             }
-            
+
             // iat claim as required by JWT profile
             claims.Add(new Claim(JwtClaimTypes.IssuedAt, Clock.UtcNow.ToUnixTimeSeconds().ToString(),
                 ClaimValueTypes.Integer64));
@@ -245,7 +256,7 @@ namespace Bornlogic.IdentityServer.Services.Default
                     }
                 }
             }
-            
+
             return token;
         }
 

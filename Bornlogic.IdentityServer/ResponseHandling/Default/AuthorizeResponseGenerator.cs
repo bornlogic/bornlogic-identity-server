@@ -267,7 +267,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 WasConsentShown = request.WasConsentShown,
 
                 BusinessId = businessSelect?.Data?.BusinessId,
-                UserBusinessScopedId = businessSelect?.Data?.UserBusinessScopedId
+                SubjectBusinessScopedId = businessSelect?.Data?.SubjectBusinessScopedId
             };
 
             return code;

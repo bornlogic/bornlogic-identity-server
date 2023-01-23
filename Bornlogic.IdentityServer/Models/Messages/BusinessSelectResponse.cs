@@ -11,7 +11,7 @@ namespace Bornlogic.IdentityServer.Models.Messages
     {
         public AuthorizationError? Error { get; set; }
         public string BusinessId { get; set; }
-        public string UserBusinessScopedId { get; set; }
+        public string SubjectBusinessScopedId { get; set; }
     }
 
 }
