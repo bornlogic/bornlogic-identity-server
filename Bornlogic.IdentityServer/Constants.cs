@@ -188,7 +188,7 @@ namespace Bornlogic.IdentityServer
                 public const string Login = "/account/login";
                 public const string Logout = "/account/logout";
                 public const string Consent = "/consent";
-                public const string BusinessSelect = "/businessselect";
+                public const string BusinessSelect = "/business/select";
                 public const string Error = "/home/error";
                 public const string DeviceVerification = "/device";
             }
