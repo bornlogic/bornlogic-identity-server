@@ -172,6 +172,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
             builder.Services.TryAddTransient<ICorsPolicyService, DefaultCorsPolicyService>();
             builder.Services.TryAddTransient<IProfileService, DefaultProfileService>();
             builder.Services.TryAddTransient<IConsentMessageStore, ConsentMessageStore>();
+            builder.Services.TryAddTransient<IBusinessSelectMessageStore, BusinessSelectMessageStore>();
             builder.Services.TryAddTransient<IMessageStore<LogoutMessage>, ProtectedDataMessageStore<LogoutMessage>>();
             builder.Services.TryAddTransient<IMessageStore<LogoutNotificationContext>, ProtectedDataMessageStore<LogoutNotificationContext>>();
             builder.Services.TryAddTransient<IMessageStore<ErrorMessage>, ProtectedDataMessageStore<ErrorMessage>>();

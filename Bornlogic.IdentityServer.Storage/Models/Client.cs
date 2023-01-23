@@ -330,6 +330,8 @@ namespace Bornlogic.IdentityServer.Storage.Models
 
         public bool IsNativeMobile { get; set; }
 
+        public bool RequiresBusinessSelection { get; set; }
+
         /// <summary>
         /// Validates the grant types.
         /// </summary>

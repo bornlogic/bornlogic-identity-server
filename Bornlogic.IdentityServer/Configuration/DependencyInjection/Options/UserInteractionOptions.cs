@@ -51,6 +51,8 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options
         /// </value>
         public string ConsentUrl { get; set; } = Constants.UIConstants.DefaultRoutePaths.Consent.EnsureLeadingSlash();
 
+        public string BusinessSelect { get; set; } = Constants.UIConstants.DefaultRoutePaths.BusinessSelect.EnsureLeadingSlash();
+
         /// <summary>
         /// Gets or sets the consent return URL parameter.
         /// </summary>

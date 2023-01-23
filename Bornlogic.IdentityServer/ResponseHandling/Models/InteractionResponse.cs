@@ -27,6 +27,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Models
         /// </value>
         public bool IsConsent { get; set; }
 
+        public bool IsBusinessSelect { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether the result is an error.
         /// </summary>

@@ -5,8 +5,10 @@
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models.Contexts;
 using Bornlogic.IdentityServer.Models.Messages;
+using Bornlogic.IdentityServer.Models.Messages.Enums;
 using Bornlogic.IdentityServer.ResponseHandling.Models;
 using Bornlogic.IdentityServer.Services;
+using Bornlogic.IdentityServer.Stores;
 using Bornlogic.IdentityServer.Validation.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
@@ -24,7 +26,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// The logger.
         /// </summary>
         protected readonly ILogger Logger;
-
+        
         /// <summary>
         /// The consent service.
         /// </summary>
@@ -50,7 +52,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         public AuthorizeInteractionResponseGenerator(
             ISystemClock clock,
             ILogger<AuthorizeInteractionResponseGenerator> logger,
-            IConsentService consent, 
+            IConsentService consent,
             IProfileService profile)
         {
             Clock = clock;
@@ -65,7 +67,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// <param name="request">The request.</param>
         /// <param name="consent">The consent.</param>
         /// <returns></returns>
-        public virtual async Task<InteractionResponse> ProcessInteractionAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null)
+        public virtual async Task<InteractionResponse> ProcessInteractionAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null, BusinessSelectResponse businessSelect = null)
         {
             Logger.LogTrace("ProcessInteractionAsync");
 
@@ -82,7 +84,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                     AuthorizationError.LoginRequired => OidcConstants.AuthorizeErrors.LoginRequired,
                     _ => OidcConstants.AuthorizeErrors.AccessDenied
                 };
-                
+
                 return new InteractionResponse
                 {
                     Error = error,
@@ -91,10 +93,15 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             }
 
             var result = await ProcessLoginAsync(request);
-            
-            if (!result.IsLogin && !result.IsError && !result.IsRedirect)
+
+            if (!result.IsLogin && !result.IsError && !result.IsRedirect && businessSelect == null)
             {
                 result = await ProcessConsentAsync(request, consent);
+            }
+
+            if (!result.IsLogin && !result.IsConsent && !result.IsError && !result.IsRedirect)
+            {
+                result = await ProcessBusinessSelectAsync(request, businessSelect);
             }
 
             if ((result.IsLogin || result.IsConsent || result.IsRedirect) && request.PromptModes.Contains(OidcConstants.PromptModes.None))
@@ -104,7 +111,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 result = new InteractionResponse
                 {
                     Error = result.IsLogin ? OidcConstants.AuthorizeErrors.LoginRequired :
-                                result.IsConsent ? OidcConstants.AuthorizeErrors.ConsentRequired : 
+                                result.IsConsent ? OidcConstants.AuthorizeErrors.ConsentRequired :
                                     OidcConstants.AuthorizeErrors.InteractionRequired
                 };
             }
@@ -127,13 +134,13 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 // remove prompt so when we redirect back in from login page
                 // we won't think we need to force a prompt again
                 request.RemovePrompt();
-                
+
                 return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "prompt_required" } } };
             }
 
             // unauthenticated user
             var isAuthenticated = request.Subject.IsAuthenticated();
-            
+
             // user de-activated
             bool isActive = false;
 
@@ -141,7 +148,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             {
                 var isActiveCtx = new IsActiveContext(request.Subject, request.Client, IdentityServerConstants.ProfileIsActiveCallers.AuthorizeEndpoint);
                 await Profile.IsActiveAsync(isActiveCtx);
-                
+
                 isActive = isActiveCtx.IsActive;
             }
 
@@ -195,7 +202,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 }
             }
             // check external idp restrictions if user not using local idp
-            else if (request.Client.IdentityProviderRestrictions != null && 
+            else if (request.Client.IdentityProviderRestrictions != null &&
                 request.Client.IdentityProviderRestrictions.Any() &&
                 !request.Client.IdentityProviderRestrictions.Contains(currentIdp))
             {
@@ -226,7 +233,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 if (diff > request.Client.UserSsoExternalIdpLifetime.Value)
                 {
                     Logger.LogInformation("Showing login: User's external auth session duration: {sessionDuration} exceeds client's user SSO lifetime: {userSsoLifetime}.", diff, request.Client.UserSsoExternalIdpLifetime);
-                    return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string>{{"login_redirect_reason", "user_sso_external_idp_lifetime_reached"}}};
+                    return new InteractionResponse { IsLogin = true, AdditionalQueryParameters = new Dictionary<string, string> { { "login_redirect_reason", "user_sso_external_idp_lifetime_reached" } } };
                 }
             }
 
@@ -296,7 +303,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                             AuthorizationError.LoginRequired => OidcConstants.AuthorizeErrors.LoginRequired,
                             _ => OidcConstants.AuthorizeErrors.AccessDenied
                         };
-                        
+
                         response.Error = error;
                         response.SubError = consent.SubError;
                     }
@@ -338,6 +345,18 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             }
 
             return new InteractionResponse();
+        }
+
+        protected internal virtual async Task<InteractionResponse> ProcessBusinessSelectAsync(ValidatedAuthorizeRequest request, BusinessSelectResponse businessSelect = null)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            request.Client.RequiresBusinessSelection = true;
+
+            var requiresBusinessSelect = request.Client.RequiresBusinessSelection && string.IsNullOrEmpty(businessSelect?.BusinessId) && string.IsNullOrEmpty(businessSelect?.UserBusinessScopedId);
+
+            return new InteractionResponse { IsBusinessSelect = requiresBusinessSelect };
         }
     }
 }

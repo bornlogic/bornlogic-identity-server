@@ -27,6 +27,10 @@ namespace Bornlogic.IdentityServer.Storage.Models
         /// </value>
         public int Lifetime { get; set; }
 
+        public string BusinessId { get; set; }
+
+        public string UserBusinessScopedId { get; set; }
+
         /// <summary>
         /// Gets or sets the ID of the client.
         /// </summary>

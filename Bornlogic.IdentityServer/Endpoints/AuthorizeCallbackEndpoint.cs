@@ -20,6 +20,7 @@ namespace Bornlogic.IdentityServer.Endpoints
     internal class AuthorizeCallbackEndpoint : AuthorizeEndpointBase
     {
         private readonly IConsentMessageStore _consentResponseStore;
+        private readonly IBusinessSelectMessageStore _businessSelectMessageStore;
         private readonly IAuthorizationParametersMessageStore _authorizationParametersMessageStore;
 
         public AuthorizeCallbackEndpoint(
@@ -31,10 +32,12 @@ namespace Bornlogic.IdentityServer.Endpoints
             IAuthorizeResponseGenerator authorizeResponseGenerator,
             IUserSession userSession,
             IConsentMessageStore consentResponseStore,
+            IBusinessSelectMessageStore businessSelectMessageStore,
             IAuthorizationParametersMessageStore authorizationParametersMessageStore = null)
             : base(events, logger, options, validator, interactionGenerator, authorizeResponseGenerator, userSession)
         {
             _consentResponseStore = consentResponseStore;
+            _businessSelectMessageStore = businessSelectMessageStore;
             _authorizationParametersMessageStore = authorizationParametersMessageStore;
         }
 
@@ -61,15 +64,22 @@ namespace Bornlogic.IdentityServer.Endpoints
             var user = await UserSession.GetUserAsync();
             var consentRequest = new ConsentRequest(parameters, user?.GetSubjectId());
             var consent = await _consentResponseStore.ReadAsync(consentRequest.Id);
-
+            
             if (consent != null && consent.Data == null)
             {
                 return await CreateErrorResultAsync("consent message is missing data");
             }
 
+            var businessSelectRequest = new BusinessSelectRequest(parameters, user?.GetSubjectId());
+            var businessSelect= await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
+
+            var clearSessionValues = false;
+
             try
             {
-                var result = await ProcessAuthorizeRequestAsync(parameters, user, consent?.Data);
+                var result = await ProcessAuthorizeRequestAsync(parameters, user, consent?.Data, businessSelect?.Data);
+
+                clearSessionValues = result is AuthorizeResult;
 
                 Logger.LogTrace("End Authorize Request. Result type: {0}", result?.GetType().ToString() ?? "-none-");
 
@@ -77,9 +87,14 @@ namespace Bornlogic.IdentityServer.Endpoints
             }
             finally
             {
-                if (consent != null)
+                if (consent != null && clearSessionValues)
                 {
                     await _consentResponseStore.DeleteAsync(consentRequest.Id);
+                }
+
+                if (businessSelect != null && clearSessionValues)
+                {
+                    await _businessSelectMessageStore.DeleteAsync(businessSelectRequest.Id);
                 }
             }
         }
