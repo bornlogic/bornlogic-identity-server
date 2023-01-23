@@ -352,7 +352,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            request.Client.RequiresBusinessSelection = true;
+            //request.Client.RequiresBusinessSelection = true;
 
             var requiresBusinessSelect = request.Client.RequiresBusinessSelection && string.IsNullOrEmpty(businessSelect?.BusinessId) && string.IsNullOrEmpty(businessSelect?.UserBusinessScopedId);
 
