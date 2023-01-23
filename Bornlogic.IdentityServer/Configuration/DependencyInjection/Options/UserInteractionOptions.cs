@@ -61,6 +61,8 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options
         /// </value>
         public string ConsentReturnUrlParameter { get; set; } = Constants.UIConstants.DefaultRoutePathParams.Consent;
 
+        public string BusinessSelectReturnUrlParameter { get; set; } = Constants.UIConstants.DefaultRoutePathParams.BusinessSelect;
+
         /// <summary>
         /// Gets or sets the error URL. If a local URL, the value must start with a leading slash.
         /// </summary>

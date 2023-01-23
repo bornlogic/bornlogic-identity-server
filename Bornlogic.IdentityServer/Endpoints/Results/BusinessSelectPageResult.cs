@@ -19,7 +19,7 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
         private readonly ValidatedAuthorizeRequest _request;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConsentPageResult"/> class.
+        /// Initializes a new instance of the <see cref="BusinessSelectPageResult"/> class.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <exception cref="System.ArgumentNullException">request</exception>
@@ -76,7 +76,7 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
                 returnUrl = context.GetIdentityServerHost().EnsureTrailingSlash() + returnUrl.RemoveLeadingSlash();
             }
 
-            var url = businessSelectUrl.AddQueryString(_options.UserInteraction.ConsentReturnUrlParameter, returnUrl);
+            var url = businessSelectUrl.AddQueryString(_options.UserInteraction.BusinessSelectReturnUrlParameter, returnUrl);
             context.Response.RedirectToAbsoluteUrl(url);
         }
     }
