@@ -354,7 +354,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
 
             request.WasConsentShown = consent != null;
 
-            var requiresBusinessSelect = !request.Client.RequiresBusinessSelection && string.IsNullOrEmpty(businessSelect?.BusinessId) && string.IsNullOrEmpty(businessSelect?.UserBusinessScopedId);
+            var requiresBusinessSelect = request.Client.RequiresBusinessSelection && string.IsNullOrEmpty(businessSelect?.BusinessId) && string.IsNullOrEmpty(businessSelect?.UserBusinessScopedId);
 
             return new InteractionResponse { IsBusinessSelect = requiresBusinessSelect };
         }
