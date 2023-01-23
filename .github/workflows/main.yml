@@ -40,9 +40,9 @@ jobs:
     needs: test
     env:
       LAST_COMMITTER_EMAIL: $(git log -1 --pretty=format:'%ae')
-      BOT_NAME: secrets.BOT_NAME
-      BOT_EMAIL: secrets.BOT_EMAIL
-      BOT_TOKEN: secrets.BOT_ACCESS_TOKEN
+      BOT_NAME: ${{ secrets.BOT_NAME }}
+      BOT_EMAIL: ${{ secrets.BOT_EMAIL }}
+      BOT_TOKEN: ${{ secrets.BOT_ACCESS_TOKEN }}
 
     steps:
     - name: Checkout
