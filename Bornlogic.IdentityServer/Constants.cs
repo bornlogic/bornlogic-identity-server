@@ -176,6 +176,7 @@ namespace Bornlogic.IdentityServer
                 public const string Error = "errorId";
                 public const string Login = "returnUrl";
                 public const string Consent = "returnUrl";
+                public const string BusinessSelect = "returnUrl";
                 public const string Logout = "logoutId";
                 public const string EndSessionCallback = "endSessionId";
                 public const string Custom = "returnUrl";
@@ -187,6 +188,7 @@ namespace Bornlogic.IdentityServer
                 public const string Login = "/account/login";
                 public const string Logout = "/account/logout";
                 public const string Consent = "/consent";
+                public const string BusinessSelect = "/business/select";
                 public const string Error = "/home/error";
                 public const string DeviceVerification = "/device";
             }

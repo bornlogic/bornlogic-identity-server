@@ -5,6 +5,7 @@
 using Bornlogic.IdentityServer.Events;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models.Messages;
+using Bornlogic.IdentityServer.Models.Messages.Enums;
 using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Validation.Models;

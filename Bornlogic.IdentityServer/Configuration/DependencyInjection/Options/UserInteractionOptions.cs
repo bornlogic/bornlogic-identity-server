@@ -51,6 +51,8 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options
         /// </value>
         public string ConsentUrl { get; set; } = Constants.UIConstants.DefaultRoutePaths.Consent.EnsureLeadingSlash();
 
+        public string BusinessSelect { get; set; } = Constants.UIConstants.DefaultRoutePaths.BusinessSelect.EnsureLeadingSlash();
+
         /// <summary>
         /// Gets or sets the consent return URL parameter.
         /// </summary>
@@ -58,6 +60,8 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options
         /// The consent return URL parameter.
         /// </value>
         public string ConsentReturnUrlParameter { get; set; } = Constants.UIConstants.DefaultRoutePathParams.Consent;
+
+        public string BusinessSelectReturnUrlParameter { get; set; } = Constants.UIConstants.DefaultRoutePathParams.BusinessSelect;
 
         /// <summary>
         /// Gets or sets the error URL. If a local URL, the value must start with a leading slash.

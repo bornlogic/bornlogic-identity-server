@@ -5,10 +5,12 @@
 using Bornlogic.IdentityServer.Configuration;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models;
+using Bornlogic.IdentityServer.Models.Messages;
 using Bornlogic.IdentityServer.ResponseHandling.Models;
 using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Storage.Stores;
+using Bornlogic.IdentityServer.Stores;
 using Bornlogic.IdentityServer.Validation.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
@@ -31,6 +33,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// The authorization code store
         /// </summary>
         protected readonly IAuthorizationCodeStore AuthorizationCodeStore;
+
+        private readonly IBusinessSelectMessageStore BusinessSelectMessageStore;
 
         /// <summary>
         /// The event service
@@ -66,6 +70,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             ITokenService tokenService,
             IKeyMaterialService keyMaterialService,
             IAuthorizationCodeStore authorizationCodeStore,
+            IBusinessSelectMessageStore businessSelectMessageStore,
             ILogger<AuthorizeResponseGenerator> logger,
             IEventService events)
         {
@@ -73,6 +78,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             TokenService = tokenService;
             KeyMaterialService = keyMaterialService;
             AuthorizationCodeStore = authorizationCodeStore;
+            BusinessSelectMessageStore = businessSelectMessageStore;
             Events = events;
             Logger = logger;
         }
@@ -237,6 +243,10 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 stateHash = CryptoHelper.CreateHashClaimValue(request.State, algorithm);
             }
 
+            var businessSelectRequest = new BusinessSelectRequest(request.ClientId, request.Nonce, request.Subject.GetSubjectId());
+
+            var businessSelect = await BusinessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
+
             var code = new AuthorizationCode
             {
                 CreationTime = Clock.UtcNow.UtcDateTime,
@@ -254,7 +264,10 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 Nonce = request.Nonce,
                 StateHash = stateHash,
 
-                WasConsentShown = request.WasConsentShown
+                WasConsentShown = request.WasConsentShown,
+
+                BusinessId = businessSelect?.Data?.BusinessId,
+                SubjectBusinessScopedId = businessSelect?.Data?.SubjectBusinessScopedId
             };
 
             return code;

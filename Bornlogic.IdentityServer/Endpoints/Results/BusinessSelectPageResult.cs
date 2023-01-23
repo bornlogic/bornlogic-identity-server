@@ -1,37 +1,34 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
-using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
-using Bornlogic.IdentityServer.Extensions;
+﻿using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
 using Bornlogic.IdentityServer.Hosting;
 using Bornlogic.IdentityServer.Models.Messages;
 using Bornlogic.IdentityServer.Stores;
 using Bornlogic.IdentityServer.Validation.Models;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Bornlogic.IdentityServer.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Bornlogic.IdentityServer.Endpoints.Results
 {
-    /// <summary>
-    /// Result for consent page
-    /// </summary>
-    /// <seealso cref="IEndpointResult" />
-    public class ConsentPageResult : IEndpointResult
+    public class BusinessSelectPageResult : IEndpointResult
     {
         private readonly ValidatedAuthorizeRequest _request;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConsentPageResult"/> class.
+        /// Initializes a new instance of the <see cref="BusinessSelectPageResult"/> class.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <exception cref="System.ArgumentNullException">request</exception>
-        public ConsentPageResult(ValidatedAuthorizeRequest request)
+        public BusinessSelectPageResult(ValidatedAuthorizeRequest request)
         {
             _request = request ?? throw new ArgumentNullException(nameof(request));
         }
 
-        internal ConsentPageResult(
+        internal BusinessSelectPageResult(
             ValidatedAuthorizeRequest request,
             IdentityServerOptions options,
             IAuthorizationParametersMessageStore authorizationParametersMessageStore = null)
@@ -71,15 +68,15 @@ namespace Bornlogic.IdentityServer.Endpoints.Results
                 returnUrl = returnUrl.AddQueryString(_request.Raw.ToQueryString());
             }
 
-            var consentUrl = _options.UserInteraction.ConsentUrl;
-            if (!consentUrl.IsLocalUrl())
+            var businessSelectUrl = _options.UserInteraction.BusinessSelect;
+            if (!businessSelectUrl.IsLocalUrl())
             {
                 // this converts the relative redirect path to an absolute one if we're 
                 // redirecting to a different server
                 returnUrl = context.GetIdentityServerHost().EnsureTrailingSlash() + returnUrl.RemoveLeadingSlash();
             }
 
-            var url = consentUrl.AddQueryString(_options.UserInteraction.ConsentReturnUrlParameter, returnUrl);
+            var url = businessSelectUrl.AddQueryString(_options.UserInteraction.BusinessSelectReturnUrlParameter, returnUrl);
             context.Response.RedirectToAbsoluteUrl(url);
         }
     }

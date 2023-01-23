@@ -5,6 +5,7 @@
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models;
 using Bornlogic.IdentityServer.Models.Messages;
+using Bornlogic.IdentityServer.Models.Messages.Enums;
 using Bornlogic.IdentityServer.Storage;
 using Bornlogic.IdentityServer.Stores;
 using Microsoft.AspNetCore.Authentication;
@@ -20,6 +21,7 @@ namespace Bornlogic.IdentityServer.Services.Default
         private readonly IMessageStore<LogoutMessage> _logoutMessageStore;
         private readonly IMessageStore<ErrorMessage> _errorMessageStore;
         private readonly IConsentMessageStore _consentMessageStore;
+        private readonly IBusinessSelectMessageStore _businessSelectMessageStore;
         private readonly ISavedConsentStore _savedConsentStore;
         private readonly IPersistedGrantService _grants;
         private readonly IUserSession _userSession;
@@ -32,6 +34,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             IMessageStore<LogoutMessage> logoutMessageStore,
             IMessageStore<ErrorMessage> errorMessageStore,
             IConsentMessageStore consentMessageStore,
+            IBusinessSelectMessageStore businessSelectMessageStore,
             ISavedConsentStore savedConsentStore,
             IPersistedGrantService grants,
             IUserSession userSession,
@@ -43,6 +46,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             _logoutMessageStore = logoutMessageStore;
             _errorMessageStore = errorMessageStore;
             _consentMessageStore = consentMessageStore;
+            _businessSelectMessageStore = businessSelectMessageStore;
             _savedConsentStore = savedConsentStore;
             _grants = grants;
             _userSession = userSession;
@@ -145,6 +149,24 @@ namespace Bornlogic.IdentityServer.Services.Default
             }
         }
 
+        public async Task SaveRequestBusinessAsync(AuthorizationRequest request, BusinessSelectResponse response, string subject = null)
+        {
+            if (subject == null)
+            {
+                var user = await _userSession.GetUserAsync();
+                subject = user?.GetSubjectId();
+            }
+
+            if (subject == null)
+            {
+                throw new ArgumentNullException(nameof(subject), "User is not currently authenticated, and no subject id passed");
+            }
+
+            var businessSelectRequest = new BusinessSelectRequest(request, subject);
+
+            await _businessSelectMessageStore.WriteAsync(businessSelectRequest.Id, new Message<BusinessSelectResponse>(response, _clock.UtcNow.UtcDateTime));
+        }
+        
         public Task DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, string subError = null)
         {
             var response = new ConsentResponse 

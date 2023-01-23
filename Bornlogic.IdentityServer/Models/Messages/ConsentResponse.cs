@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using Bornlogic.IdentityServer.Models.Messages.Enums;
+
 namespace Bornlogic.IdentityServer.Models.Messages
 {
     /// <summary>
@@ -51,36 +53,4 @@ namespace Bornlogic.IdentityServer.Models.Messages
         /// </value>
         public string Description { get; set; }
     }
-
-    /// <summary>
-    /// Enum to model interaction authorization errors.
-    /// </summary>
-    public enum AuthorizationError
-    {
-        /// <summary>
-        /// Access denied
-        /// </summary>
-        AccessDenied,
-
-        /// <summary>
-        /// Interaction required
-        /// </summary>
-        InteractionRequired,
-
-        /// <summary>
-        /// Login required
-        /// </summary>
-        LoginRequired,
-
-        /// <summary>
-        /// Account selection required
-        /// </summary>
-        AccountSelectionRequired,
-
-        /// <summary>
-        /// Consent required
-        /// </summary>
-        ConsentRequired
-    }
-
 }

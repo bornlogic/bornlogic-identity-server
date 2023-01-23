@@ -56,7 +56,7 @@ namespace Bornlogic.IdentityServer.Endpoints
 
         public abstract Task<IEndpointResult> ProcessAsync(HttpContext context);
 
-        internal async Task<IEndpointResult> ProcessAuthorizeRequestAsync(NameValueCollection parameters, ClaimsPrincipal user, ConsentResponse consent)
+        internal async Task<IEndpointResult> ProcessAuthorizeRequestAsync(NameValueCollection parameters, ClaimsPrincipal user, ConsentResponse consent, BusinessSelectResponse businessSelect)
         {
             if (user != null)
             {
@@ -83,7 +83,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             LogRequest(request);
 
             // determine user interaction
-            var interactionResult = await _interactionGenerator.ProcessInteractionAsync(request, consent);
+            var interactionResult = await _interactionGenerator.ProcessInteractionAsync(request, consent, businessSelect);
             if (interactionResult.IsError)
             {
                 return await CreateErrorResultAsync("Interaction generator error", request, interactionResult.Error, interactionResult.SubError, false);
@@ -92,10 +92,17 @@ namespace Bornlogic.IdentityServer.Endpoints
             {
                 return new LoginPageResult(request, interactionResult.AdditionalQueryParameters);
             }
+
+            if (interactionResult.IsBusinessSelect)
+            {
+                return new BusinessSelectPageResult(request);
+            }
+
             if (interactionResult.IsConsent)
             {
                 return new ConsentPageResult(request);
             }
+       
             if (interactionResult.IsRedirect)
             {
                 return new CustomRedirectResult(request, interactionResult.RedirectUrl);
