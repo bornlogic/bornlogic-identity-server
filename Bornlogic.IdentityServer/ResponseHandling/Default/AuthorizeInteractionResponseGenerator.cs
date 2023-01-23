@@ -94,17 +94,17 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
 
             var result = await ProcessLoginAsync(request);
 
-            if (!result.IsLogin && !result.IsError && !result.IsRedirect && businessSelect == null)
-            {
-                result = await ProcessConsentAsync(request, consent);
-            }
-
-            if (!result.IsLogin && !result.IsConsent && !result.IsError && !result.IsRedirect)
+            if (!result.IsLogin && !result.IsError && !result.IsRedirect)
             {
                 result = await ProcessBusinessSelectAsync(request, consent, businessSelect);
             }
 
-            if ((result.IsLogin || result.IsConsent || result.IsRedirect) && request.PromptModes.Contains(OidcConstants.PromptModes.None))
+            if (!result.IsLogin && !result.IsBusinessSelect && !result.IsError && !result.IsRedirect)
+            {
+                result = await ProcessConsentAsync(request, consent);
+            }
+
+            if ((result.IsLogin || result.IsConsent || result.IsBusinessSelect || result.IsRedirect) && request.PromptModes.Contains(OidcConstants.PromptModes.None))
             {
                 // prompt=none means do not show the UI
                 Logger.LogInformation("Changing response to LoginRequired: prompt=none was requested");

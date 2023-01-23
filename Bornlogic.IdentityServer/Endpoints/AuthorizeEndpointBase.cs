@@ -92,14 +92,17 @@ namespace Bornlogic.IdentityServer.Endpoints
             {
                 return new LoginPageResult(request, interactionResult.AdditionalQueryParameters);
             }
-            if (interactionResult.IsConsent)
-            {
-                return new ConsentPageResult(request);
-            }
+
             if (interactionResult.IsBusinessSelect)
             {
                 return new BusinessSelectPageResult(request);
             }
+
+            if (interactionResult.IsConsent)
+            {
+                return new ConsentPageResult(request);
+            }
+       
             if (interactionResult.IsRedirect)
             {
                 return new CustomRedirectResult(request, interactionResult.RedirectUrl);
