@@ -29,7 +29,9 @@
         /// Consent required
         /// </summary>
         ConsentRequired,
+        
+        BusinessRequired,
 
-        BusinessSelectRequired
+        ConfirmedEmailRequired
     }
 }

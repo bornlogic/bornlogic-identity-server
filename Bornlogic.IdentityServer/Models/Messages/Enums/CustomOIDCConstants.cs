@@ -4,7 +4,8 @@
     {
         public static class AuthorizeErrors
         {
-            public const string BusinessSelectionRequired = "business_selection_required";
+            public const string BusinessRequired = "business_required";
+            public const string ConfirmedEmailRequired = "confirmed_email_required";
         }
     }
 }

@@ -360,7 +360,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             {
                 AuthorizationError.AccountSelectionRequired => OidcConstants.AuthorizeErrors.AccountSelectionRequired,
                 AuthorizationError.ConsentRequired => OidcConstants.AuthorizeErrors.ConsentRequired,
-                AuthorizationError.BusinessSelectRequired => CustomOIDCConstants.AuthorizeErrors.BusinessSelectionRequired,
+                AuthorizationError.BusinessRequired => CustomOIDCConstants.AuthorizeErrors.BusinessRequired,
+                AuthorizationError.ConfirmedEmailRequired => CustomOIDCConstants.AuthorizeErrors.ConfirmedEmailRequired,
                 AuthorizationError.InteractionRequired => OidcConstants.AuthorizeErrors.InteractionRequired,
                 AuthorizationError.LoginRequired => OidcConstants.AuthorizeErrors.LoginRequired,
                 _ => OidcConstants.AuthorizeErrors.AccessDenied
