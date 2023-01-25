@@ -12,7 +12,7 @@ namespace Bornlogic.IdentityServer.Models.Messages
     public class BusinessSelectRequest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConsentRequest"/> class.
+        /// Initializes a new instance of the <see cref="BusinessSelectRequest"/> class.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="subject">The subject.</param>
@@ -24,7 +24,7 @@ namespace Bornlogic.IdentityServer.Models.Messages
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConsentRequest"/> class.
+        /// Initializes a new instance of the <see cref="BusinessSelectRequest"/> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <param name="subject">The subject.</param>
