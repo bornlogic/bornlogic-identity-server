@@ -1,4 +1,11 @@
 # Change Log\n\nAll notable changes to this project will be documented in this file. See [versionize](https://github.com/saintedlama/versionize) for commit guidelines.\n
+<a name="2.3.0"></a>
+## 2.3.0 (2023-1-25)
+
+### Bug Fixes
+
+* **Quickstarts:** Docs contained broken links (#3313)
+
 <a name="2.2.18"></a>
 ## 2.2.18 (2023-1-23)
 
