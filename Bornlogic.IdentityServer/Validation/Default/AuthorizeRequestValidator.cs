@@ -7,10 +7,12 @@ using System.Security.Claims;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Logging.Models;
+using Bornlogic.IdentityServer.Models.Messages;
 using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Storage.Services;
 using Bornlogic.IdentityServer.Storage.Stores;
+using Bornlogic.IdentityServer.Stores;
 using Bornlogic.IdentityServer.Validation.Contexts;
 using Bornlogic.IdentityServer.Validation.Models;
 using IdentityModel;
@@ -32,6 +34,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
         private readonly IUserEmailStore _userEmailStore;
         private readonly IUserManagerService _userManagerService;
         private readonly IClientUserRoleService _clientUserRoleService;
+        private readonly IBusinessSelectMessageStore _businessSelectMessageStore;
 
         private readonly ResponseTypeEqualityComparer
             _responseTypeEqualityComparer = new ResponseTypeEqualityComparer();
@@ -48,7 +51,8 @@ namespace Bornlogic.IdentityServer.Validation.Default
             ILogger<AuthorizeRequestValidator> logger,
             IUserEmailStore userEmailStore,
             IUserManagerService userManagerService,
-            IClientUserRoleService clientUserRoleService
+            IClientUserRoleService clientUserRoleService,
+            IBusinessSelectMessageStore businessSelectMessageStore
             )
         {
             _options = options;
@@ -63,6 +67,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
             _userEmailStore = userEmailStore;
             _userManagerService = userManagerService;
             _clientUserRoleService = clientUserRoleService;
+            _businessSelectMessageStore = businessSelectMessageStore;
         }
 
         public async Task<AuthorizeRequestValidationResult> ValidateAsync(NameValueCollection parameters, ClaimsPrincipal subject = null)
@@ -850,6 +855,18 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 {
                     request.SessionId = ""; // empty string for anonymous users
                 }
+            }
+
+            _logger.LogInformation($"Started Business Scoped flow validation. Client ID: {request.ClientId}. Nonce: {request.Nonce}. Subject ID: {request.Subject.GetSubjectId()}");
+
+            var businessSelectRequest = new BusinessSelectRequest(request.ClientId, request.Nonce, request.Subject.GetSubjectId());
+
+            var businessSelect = await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
+
+            if (businessSelect?.Data != null)
+            {
+                request.BusinessID = businessSelect.Data.BusinessId;
+                request.SubjectBusinessScopedID = businessSelect.Data.SubjectBusinessScopedId;
             }
 
             return Valid(request);

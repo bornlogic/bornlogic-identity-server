@@ -179,7 +179,11 @@ namespace Bornlogic.IdentityServer.Validation.Models
         /// The request object
         /// </value>
         public string RequestObject { get; set; }
-        
+
+        public string BusinessID { get; set; }
+
+        public string SubjectBusinessScopedID { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether an access token was requested.
         /// </summary>

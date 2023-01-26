@@ -34,8 +34,6 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// </summary>
         protected readonly IAuthorizationCodeStore AuthorizationCodeStore;
 
-        private readonly IBusinessSelectMessageStore BusinessSelectMessageStore;
-
         /// <summary>
         /// The event service
         /// </summary>
@@ -70,7 +68,6 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             ITokenService tokenService,
             IKeyMaterialService keyMaterialService,
             IAuthorizationCodeStore authorizationCodeStore,
-            IBusinessSelectMessageStore businessSelectMessageStore,
             ILogger<AuthorizeResponseGenerator> logger,
             IEventService events)
         {
@@ -78,7 +75,6 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             TokenService = tokenService;
             KeyMaterialService = keyMaterialService;
             AuthorizationCodeStore = authorizationCodeStore;
-            BusinessSelectMessageStore = businessSelectMessageStore;
             Events = events;
             Logger = logger;
         }
@@ -242,11 +238,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 var algorithm = credential.Algorithm;
                 stateHash = CryptoHelper.CreateHashClaimValue(request.State, algorithm);
             }
-
-            var businessSelectRequest = new BusinessSelectRequest(request.ClientId, request.Nonce, request.Subject.GetSubjectId());
-
-            var businessSelect = await BusinessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
-
+            
             var code = new AuthorizationCode
             {
                 CreationTime = Clock.UtcNow.UtcDateTime,
@@ -266,8 +258,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
 
                 WasConsentShown = request.WasConsentShown,
 
-                BusinessId = businessSelect?.Data?.BusinessId,
-                SubjectBusinessScopedId = businessSelect?.Data?.SubjectBusinessScopedId
+                BusinessId = request.BusinessID,
+                SubjectBusinessScopedId = request.SubjectBusinessScopedID
             };
 
             return code;
