@@ -859,14 +859,17 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             _logger.LogInformation($"Started Business Scoped flow validation. Client ID: {request.ClientId}. Nonce: {request.Nonce}. Subject ID: {request.Subject.GetSubjectId()}");
 
-            var businessSelectRequest = new BusinessSelectRequest(request.ClientId, request.Nonce, request.Subject.GetSubjectId());
-
-            var businessSelect = await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
-
-            if (businessSelect?.Data != null)
+            if (!string.IsNullOrEmpty(request.ClientId) && !string.IsNullOrEmpty(request.Nonce) && !string.IsNullOrEmpty(request.Subject.GetSubjectIdOrDefault()))
             {
-                request.BusinessID = businessSelect.Data.BusinessId;
-                request.SubjectBusinessScopedID = businessSelect.Data.SubjectBusinessScopedId;
+                var businessSelectRequest = new BusinessSelectRequest(request.ClientId, request.Nonce, request.Subject.GetSubjectId());
+
+                var businessSelect = await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
+
+                if (businessSelect?.Data != null)
+                {
+                    request.BusinessID = businessSelect.Data.BusinessId;
+                    request.SubjectBusinessScopedID = businessSelect.Data.SubjectBusinessScopedId;
+                }
             }
 
             return Valid(request);
