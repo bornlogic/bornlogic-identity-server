@@ -40,6 +40,8 @@ jobs:
     needs: test
     env:
       LAST_COMMITTER_EMAIL: $(git log -1 --pretty=format:'%ae')
+      BOT_NAME: Bornlogic Bot
+      BOT_EMAIL: bornlogic-github-bot@bornlogic.com
       BOT_TOKEN: secrets.BOT_ACCESS_TOKEN
 
     steps:
@@ -64,8 +66,10 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Increment Version
-      if: ${{ success() }}
+      if: ${{ success() && env.LAST_COMMITTER_EMAIL != env.BOT_EMAIL }}
       run: |
+        git config --global user.name ${{ env.BOT_NAME }}
+        git config --global user.email ${{ env.BOT_EMAIL }}
         git remote set-url origin https://x-access-token:${{ env.BOT_TOKEN }}@github.com/$GITHUB_REPOSITORY
         git checkout "${GITHUB_REF:11}"
         dotnet tool install --global Versionize --version 1.8.0
