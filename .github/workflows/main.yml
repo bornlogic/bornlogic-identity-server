@@ -1,11 +1,9 @@
 name: Test and Publish
 
 on:
-  pull_request_target:
-    types:
-      - closed
-    branches:    
-      - 'master'
+  push:
+    branches: [ master ]
+
 defaults:
   run:
     shell: bash
@@ -40,16 +38,14 @@ jobs:
     needs: test
     env:
       LAST_COMMITTER_EMAIL: $(git log -1 --pretty=format:'%ae')
-      BOT_NAME: Bornlogic Bot
-      BOT_EMAIL: bornlogic-github-bot@bornlogic.com
-      BOT_TOKEN: secrets.BOT_ACCESS_TOKEN
+      BOT_NAME: Actions
+      BOT_EMAIL: actions@bornlogic.com
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-        token: ${{ env.BOT_TOKEN }}
 
     - name: Install .NET Core for Versionize
       uses: actions/setup-dotnet@v1
@@ -70,11 +66,10 @@ jobs:
       run: |
         git config --global user.name ${{ env.BOT_NAME }}
         git config --global user.email ${{ env.BOT_EMAIL }}
-        git remote set-url origin https://x-access-token:${{ env.BOT_TOKEN }}@github.com/$GITHUB_REPOSITORY
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
         git checkout "${GITHUB_REF:11}"
         dotnet tool install --global Versionize --version 1.8.0
         versionize --skip-dirty && git push --follow-tags origin "${GITHUB_REF:11}"
-
     - name: Pack
       if: ${{ success() }}
       run: dotnet pack --configuration Release -o output
