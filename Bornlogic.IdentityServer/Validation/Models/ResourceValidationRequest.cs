@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Security.Claims;
 using Bornlogic.IdentityServer.Storage.Models;
 
 namespace Bornlogic.IdentityServer.Validation.Models
@@ -15,6 +16,8 @@ namespace Bornlogic.IdentityServer.Validation.Models
         /// The client.
         /// </summary>
         public Client Client { get; set; }
+
+        public ClaimsPrincipal Subject { get; set; }
 
         /// <summary>
         /// The requested scope values.

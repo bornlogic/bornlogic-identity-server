@@ -151,7 +151,8 @@ namespace Bornlogic.IdentityServer.Validation.Default
             //////////////////////////////////////////////////////////
             var validatedResources = await _resourceValidator.ValidateRequestedResourcesAsync(new ResourceValidationRequest{
                 Client = request.Client, 
-                Scopes = request.RequestedScopes
+                Scopes = request.RequestedScopes,
+                Subject = request.Subject
             });
 
             if (!validatedResources.Succeeded)

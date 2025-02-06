@@ -33,7 +33,7 @@ namespace Bornlogic.IdentityServer.Extensions
                 
                 if (clientUserRoleService != null && !string.IsNullOrEmpty(userID))
                 {
-                    var userHasLoginByPassRoleInClient = await clientUserRoleService.UserHasLoginByPassRoleInClient(userID, client);
+                    var userHasLoginByPassRoleInClient = await clientUserRoleService.UserHasLoginByPassRoleInClient(userID, client, null);
 
                     if (userHasLoginByPassRoleInClient)
                     {

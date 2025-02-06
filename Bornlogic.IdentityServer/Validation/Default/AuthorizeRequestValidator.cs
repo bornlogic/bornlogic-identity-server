@@ -621,7 +621,8 @@ namespace Bornlogic.IdentityServer.Validation.Default
             {
                 Client = request.Client,
                 Scopes = request.RequestedScopes,
-                RequiredRequestScopes = request.Raw.Get("required_scope")?.Split(' ') ?? Array.Empty<string>()
+                RequiredRequestScopes = request.Raw.Get("required_scope")?.Split(' ') ?? Array.Empty<string>(),
+                Subject = request.Subject
             });
 
             if (!validatedResources.Succeeded)

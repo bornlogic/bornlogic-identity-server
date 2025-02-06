@@ -6,6 +6,6 @@ namespace Bornlogic.IdentityServer.Services
 {
     public interface IClientUserRoleService
     {
-        Task<bool> UserHasLoginByPassRoleInClient(string userID, Client client);
+        Task<bool> UserHasLoginByPassRoleInClient(string userID, Client client, string[] validRoles);
     }
 }

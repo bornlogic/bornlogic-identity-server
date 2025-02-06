@@ -3,10 +3,13 @@
 
 
 using Bornlogic.IdentityServer.Extensions;
+using Bornlogic.IdentityServer.Models;
+using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Storage.Stores;
 using Bornlogic.IdentityServer.Validation.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Bornlogic.IdentityServer.Validation.Default
 {
@@ -16,6 +19,8 @@ namespace Bornlogic.IdentityServer.Validation.Default
     public class DefaultResourceValidator : IResourceValidator
     {
         private readonly ILogger _logger;
+        private readonly IClientUserRoleService _clientUserRoleService;
+        private readonly IOptions<ClientRoleOptions> _clientRoleOptions;
         private readonly IScopeParser _scopeParser;
         private readonly IResourceStore _store;
 
@@ -25,9 +30,11 @@ namespace Bornlogic.IdentityServer.Validation.Default
         /// <param name="store">The store.</param>
         /// <param name="scopeParser"></param>
         /// <param name="logger">The logger.</param>
-        public DefaultResourceValidator(IResourceStore store, IScopeParser scopeParser, ILogger<DefaultResourceValidator> logger)
+        public DefaultResourceValidator(IResourceStore store, IScopeParser scopeParser, ILogger<DefaultResourceValidator> logger, IClientUserRoleService clientUserRoleService, IOptions<ClientRoleOptions> clientRoleOptions)
         {
             _logger = logger;
+            _clientUserRoleService = clientUserRoleService;
+            _clientRoleOptions = clientRoleOptions;
             _scopeParser = scopeParser;
             _store = store;
         }
@@ -65,20 +72,30 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 return result;
             }
 
-            var scopeNames = parsedScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
-            var resourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(scopeNames);
+            var subjectIdOrDefault = request.Subject?.GetSubjectIdOrDefault();
 
-            foreach (var scope in parsedScopesResult.ParsedScopes)
+            if (!string.IsNullOrEmpty(subjectIdOrDefault))
             {
-                await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes.Any(a => a == scope.ParsedName));
-            }
+                var hasRoleToBypassScopeValidation = await _clientUserRoleService.UserHasLoginByPassRoleInClient(subjectIdOrDefault, request.Client, _clientRoleOptions?.Value?.ValidUserRolesToBypassClientScopeValidation);
 
-            var requiredRequestScopeNames = parsedRequiredRequestScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
-            var requiredRequestResourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(requiredRequestScopeNames);
+                if (!hasRoleToBypassScopeValidation)
+                {
+                    var scopeNames = parsedScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
+                    var resourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(scopeNames);
 
-            foreach (var scope in parsedRequiredRequestScopesResult.ParsedScopes)
-            {
-                await ValidateRequestRequiredScopeAsync(request.Client, requiredRequestResourcesFromStore, scope, result);
+                    foreach (var scope in parsedScopesResult.ParsedScopes)
+                    {
+                        await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes.Any(a => a == scope.ParsedName));
+                    }
+
+                    var requiredRequestScopeNames = parsedRequiredRequestScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
+                    var requiredRequestResourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(requiredRequestScopeNames);
+
+                    foreach (var scope in parsedRequiredRequestScopesResult.ParsedScopes)
+                    {
+                        await ValidateRequestRequiredScopeAsync(request.Client, requiredRequestResourcesFromStore, scope, result);
+                    }
+                }
             }
 
             if (result.InvalidScopes.Count > 0)
