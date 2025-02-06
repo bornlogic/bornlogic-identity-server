@@ -85,7 +85,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             foreach (var scope in parsedScopesResult.ParsedScopes)
             {
-                await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes.Any(a => a == scope.ParsedName));
+                await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes.Any(a => a == scope.ParsedName), userHasLoginByPassRoleInClient);
             }
 
             var requiredRequestScopeNames = parsedRequiredRequestScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
@@ -93,7 +93,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
 
             foreach (var scope in parsedRequiredRequestScopesResult.ParsedScopes)
             {
-                await ValidateRequestRequiredScopeAsync(request.Client, requiredRequestResourcesFromStore, scope, result);
+                await ValidateRequestRequiredScopeAsync(request.Client, requiredRequestResourcesFromStore, scope, result, userHasLoginByPassRoleInClient);
             }
 
             if (result.InvalidScopes.Count > 0)
