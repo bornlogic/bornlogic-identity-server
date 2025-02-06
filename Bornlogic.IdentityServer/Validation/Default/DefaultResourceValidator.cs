@@ -72,6 +72,14 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 return result;
             }
 
+            var subjectIdOrDefault = request.Subject?.GetSubjectIdOrDefault();
+
+            var userHasLoginByPassRoleInClient = !string.IsNullOrEmpty(subjectIdOrDefault) &&
+                                                 await _clientUserRoleService.UserHasLoginByPassRoleInClient(
+                                                     subjectIdOrDefault, request.Client,
+                                                     _clientRoleOptions?.Value
+                                                         ?.ValidUserRolesToBypassClientScopeValidation);
+
             var scopeNames = parsedScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
             var resourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(scopeNames);
 
@@ -86,13 +94,6 @@ namespace Bornlogic.IdentityServer.Validation.Default
             foreach (var scope in parsedRequiredRequestScopesResult.ParsedScopes)
             {
                 await ValidateRequestRequiredScopeAsync(request.Client, requiredRequestResourcesFromStore, scope, result);
-            }
-
-            var subjectIdOrDefault = request.Subject?.GetSubjectIdOrDefault();
-
-            if (!string.IsNullOrEmpty(subjectIdOrDefault) && await _clientUserRoleService.UserHasLoginByPassRoleInClient(subjectIdOrDefault, request.Client, _clientRoleOptions?.Value?.ValidUserRolesToBypassClientScopeValidation))
-            {
-                result.InvalidScopes.Clear();
             }
 
             if (result.InvalidScopes.Count > 0)
@@ -119,11 +120,12 @@ namespace Bornlogic.IdentityServer.Validation.Default
             Resources resourcesFromStore,
             ParsedScopeValue requestedScope,
             ResourceValidationResult result,
-            bool forceRequired)
+            bool forceRequired,
+            bool userHasLoginByPassRoleInClient)
         {
             if (requestedScope.ParsedName == IdentityServerConstants.StandardScopes.OfflineAccess)
             {
-                if (await IsClientAllowedOfflineAccessAsync(client))
+                if (userHasLoginByPassRoleInClient || await IsClientAllowedOfflineAccessAsync(client))
                 {
                     result.Resources.OfflineAccess = true;
                     result.ParsedScopes.Add(new ParsedScopeValue(IdentityServerConstants.StandardScopes.OfflineAccess));
@@ -138,7 +140,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 var identity = resourcesFromStore.FindIdentityResourcesByScope(requestedScope.ParsedName);
                 if (identity != null)
                 {
-                    if (await IsClientAllowedIdentityResourceAsync(client, identity))
+                    if (userHasLoginByPassRoleInClient || await IsClientAllowedIdentityResourceAsync(client, identity))
                     {
                         result.ParsedScopes.Add(requestedScope);
                         result.Resources.IdentityResources.Add(identity);
@@ -153,7 +155,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     var apiScope = resourcesFromStore.FindApiScope(requestedScope.ParsedName);
                     if (apiScope != null)
                     {
-                        if (await IsClientAllowedApiScopeAsync(client, apiScope))
+                        if (userHasLoginByPassRoleInClient || await IsClientAllowedApiScopeAsync(client, apiScope))
                         {
                             result.ParsedScopes.Add(requestedScope);
 
@@ -182,7 +184,8 @@ namespace Bornlogic.IdentityServer.Validation.Default
             }
         }
 
-        protected virtual async Task ValidateRequestRequiredScopeAsync(Client client, Resources resourcesFromStore, ParsedScopeValue requestedScope, ResourceValidationResult result)
+        protected virtual async Task ValidateRequestRequiredScopeAsync(Client client, Resources resourcesFromStore, ParsedScopeValue requestedScope, ResourceValidationResult result,
+            bool userHasLoginByPassRoleInClient)
         {
             if (requestedScope.ParsedName == IdentityServerConstants.StandardScopes.OfflineAccess)
             {
@@ -193,7 +196,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 var identity = resourcesFromStore.FindIdentityResourcesByScope(requestedScope.ParsedName);
                 if (identity != null)
                 {
-                    if (!(await IsClientAllowedIdentityResourceAsync(client, identity)))
+                    if (!userHasLoginByPassRoleInClient && !(await IsClientAllowedIdentityResourceAsync(client, identity)))
                     {
                         result.InvalidScopes.Add(requestedScope.RawValue);
                     }
@@ -203,7 +206,7 @@ namespace Bornlogic.IdentityServer.Validation.Default
                     var apiScope = resourcesFromStore.FindApiScope(requestedScope.ParsedName);
                     if (apiScope != null)
                     {
-                        if (!(await IsClientAllowedApiScopeAsync(client, apiScope)))
+                        if (!userHasLoginByPassRoleInClient && !(await IsClientAllowedApiScopeAsync(client, apiScope)))
                         {
                             result.InvalidScopes.Add(requestedScope.RawValue);
                         }
