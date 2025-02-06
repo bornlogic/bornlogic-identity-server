@@ -72,30 +72,27 @@ namespace Bornlogic.IdentityServer.Validation.Default
                 return result;
             }
 
+            var scopeNames = parsedScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
+            var resourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(scopeNames);
+
+            foreach (var scope in parsedScopesResult.ParsedScopes)
+            {
+                await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes.Any(a => a == scope.ParsedName));
+            }
+
+            var requiredRequestScopeNames = parsedRequiredRequestScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
+            var requiredRequestResourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(requiredRequestScopeNames);
+
+            foreach (var scope in parsedRequiredRequestScopesResult.ParsedScopes)
+            {
+                await ValidateRequestRequiredScopeAsync(request.Client, requiredRequestResourcesFromStore, scope, result);
+            }
+
             var subjectIdOrDefault = request.Subject?.GetSubjectIdOrDefault();
 
-            if (!string.IsNullOrEmpty(subjectIdOrDefault))
+            if (!string.IsNullOrEmpty(subjectIdOrDefault) && await _clientUserRoleService.UserHasLoginByPassRoleInClient(subjectIdOrDefault, request.Client, _clientRoleOptions?.Value?.ValidUserRolesToBypassClientScopeValidation))
             {
-                var hasRoleToBypassScopeValidation = await _clientUserRoleService.UserHasLoginByPassRoleInClient(subjectIdOrDefault, request.Client, _clientRoleOptions?.Value?.ValidUserRolesToBypassClientScopeValidation);
-
-                if (!hasRoleToBypassScopeValidation)
-                {
-                    var scopeNames = parsedScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
-                    var resourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(scopeNames);
-
-                    foreach (var scope in parsedScopesResult.ParsedScopes)
-                    {
-                        await ValidateScopeAsync(request.Client, resourcesFromStore, scope, result, request.RequiredRequestScopes.Any(a => a == scope.ParsedName));
-                    }
-
-                    var requiredRequestScopeNames = parsedRequiredRequestScopesResult.ParsedScopes.Select(x => x.ParsedName).Distinct().ToArray();
-                    var requiredRequestResourcesFromStore = await _store.FindEnabledResourcesByScopeAsync(requiredRequestScopeNames);
-
-                    foreach (var scope in parsedRequiredRequestScopesResult.ParsedScopes)
-                    {
-                        await ValidateRequestRequiredScopeAsync(request.Client, requiredRequestResourcesFromStore, scope, result);
-                    }
-                }
+                result.InvalidScopes.Clear();
             }
 
             if (result.InvalidScopes.Count > 0)
