@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Newtonsoft.Json;
 
 #pragma warning disable 1591

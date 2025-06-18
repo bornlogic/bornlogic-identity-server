@@ -1,6 +1,3 @@
-
-
-
 namespace Bornlogic.IdentityServer.Models.Contexts
 {
     /// <summary>

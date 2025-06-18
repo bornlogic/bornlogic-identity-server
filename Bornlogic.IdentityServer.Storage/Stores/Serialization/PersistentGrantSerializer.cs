@@ -1,7 +1,3 @@
-
-
-
-
 using Newtonsoft.Json;
 
 namespace Bornlogic.IdentityServer.Storage.Stores.Serialization

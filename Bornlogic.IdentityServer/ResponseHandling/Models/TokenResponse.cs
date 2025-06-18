@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.ResponseHandling.Models
+﻿namespace Bornlogic.IdentityServer.ResponseHandling.Models
 {
     /// <summary>
     /// Models a token response

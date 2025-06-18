@@ -1,6 +1,3 @@
-
-
-
 using System.Collections.Specialized;
 using System.Net;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;

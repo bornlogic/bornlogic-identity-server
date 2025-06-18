@@ -1,7 +1,3 @@
-
-
-
-
 using System.Net;
 using System.Text.Encodings.Web;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;

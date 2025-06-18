@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Infrastructure;
+﻿using Bornlogic.IdentityServer.Infrastructure;
 using Bornlogic.IdentityServer.Models.Messages;
 
 namespace Bornlogic.IdentityServer.Stores.Default

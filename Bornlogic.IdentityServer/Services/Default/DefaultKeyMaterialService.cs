@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Extensions;
+﻿using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models;
 using Bornlogic.IdentityServer.Stores;
 using Microsoft.IdentityModel.Tokens;

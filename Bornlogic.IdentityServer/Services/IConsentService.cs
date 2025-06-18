@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Validation.Models;
 

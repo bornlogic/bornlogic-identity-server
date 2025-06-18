@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Validation.Models;
+﻿using Bornlogic.IdentityServer.Validation.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace Bornlogic.IdentityServer.Validation

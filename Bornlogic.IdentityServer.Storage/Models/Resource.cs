@@ -1,7 +1,3 @@
-
-
-
-
 using System.Diagnostics;
 
 namespace Bornlogic.IdentityServer.Storage.Models

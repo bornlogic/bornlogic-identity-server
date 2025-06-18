@@ -1,7 +1,3 @@
-
-
-
-
 #pragma warning disable 1591
 
 namespace Bornlogic.IdentityServer.ResponseHandling.Models

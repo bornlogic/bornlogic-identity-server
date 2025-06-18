@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Storage.Models
+﻿namespace Bornlogic.IdentityServer.Storage.Models
 {
     /// <summary>
     /// Models a client secret with identifier and expiration

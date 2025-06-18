@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Events;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Host.Consent;

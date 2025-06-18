@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExtensions;
+﻿using Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExtensions;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;

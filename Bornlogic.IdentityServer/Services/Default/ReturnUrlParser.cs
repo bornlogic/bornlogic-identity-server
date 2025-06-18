@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Models.Messages;
 
 namespace Bornlogic.IdentityServer.Services.Default

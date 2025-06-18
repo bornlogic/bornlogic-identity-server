@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Events.Infrastructure;
+﻿using Bornlogic.IdentityServer.Events.Infrastructure;
 
 namespace Bornlogic.IdentityServer.Events
 {

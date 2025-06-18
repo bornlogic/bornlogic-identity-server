@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Bornlogic.IdentityServer.Host

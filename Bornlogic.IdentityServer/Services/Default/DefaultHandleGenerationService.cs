@@ -1,7 +1,3 @@
-
-
-
-
 using IdentityModel;
 
 namespace Bornlogic.IdentityServer.Services.Default

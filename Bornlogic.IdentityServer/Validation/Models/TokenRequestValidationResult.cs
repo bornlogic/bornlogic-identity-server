@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Validation.Models
+﻿namespace Bornlogic.IdentityServer.Validation.Models
 {
     /// <summary>
     /// Validation result for token requests

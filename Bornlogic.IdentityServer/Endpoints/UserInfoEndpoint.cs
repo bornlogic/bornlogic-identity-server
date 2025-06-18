@@ -1,7 +1,3 @@
-
-
-
-
 using System.Net;
 using Bornlogic.IdentityServer.Endpoints.Results;
 using Bornlogic.IdentityServer.Hosting;

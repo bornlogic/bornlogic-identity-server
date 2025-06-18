@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Events.Infrastructure
+﻿namespace Bornlogic.IdentityServer.Events.Infrastructure
 {
     /// <summary>
     /// Indicates if the event is a success or fail event.

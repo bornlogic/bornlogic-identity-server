@@ -1,7 +1,3 @@
-
-
-
-
 using Microsoft.Extensions.Logging;
 
 namespace Bornlogic.IdentityServer.Services.Default

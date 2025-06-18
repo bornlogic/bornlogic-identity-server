@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Services.Default;
 using Bornlogic.IdentityServer.Services.InMemory;

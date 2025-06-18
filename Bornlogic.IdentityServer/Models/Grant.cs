@@ -1,7 +1,4 @@
-﻿
-
-
-namespace Bornlogic.IdentityServer.Models
+﻿namespace Bornlogic.IdentityServer.Models
 {
     /// <summary>
     /// Models a grant the user has given.

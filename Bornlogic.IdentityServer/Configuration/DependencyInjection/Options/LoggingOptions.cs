@@ -1,7 +1,3 @@
-
-
-
-
 using IdentityModel;
 
 namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options

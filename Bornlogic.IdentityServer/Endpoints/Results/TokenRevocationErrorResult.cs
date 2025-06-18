@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Net;
+﻿using System.Net;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Hosting;
 using Microsoft.AspNetCore.Http;

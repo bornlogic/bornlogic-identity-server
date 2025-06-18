@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Bornlogic.IdentityServer.Extensions
 {

@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.AspNetIdentity;
+﻿using Bornlogic.IdentityServer.AspNetIdentity;
 using Bornlogic.IdentityServer.Configuration;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExtensions;

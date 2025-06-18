@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Services;
+﻿using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Storage.Stores;
 using Bornlogic.IdentityServer.Storage.Stores.Serialization;

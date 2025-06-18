@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.ResponseHandling.Models;
+﻿using Bornlogic.IdentityServer.ResponseHandling.Models;
 using Bornlogic.IdentityServer.Validation.Models;
 
 namespace Bornlogic.IdentityServer.ResponseHandling

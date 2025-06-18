@@ -1,7 +1,3 @@
-
-
-
-
 using System.Collections.Specialized;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Validation.Models;

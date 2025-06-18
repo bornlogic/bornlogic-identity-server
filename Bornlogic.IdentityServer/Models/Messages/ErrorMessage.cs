@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Models.Messages
+﻿namespace Bornlogic.IdentityServer.Models.Messages
 {
     /// <summary>
     /// Models the data for the error page.

@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Services
+﻿namespace Bornlogic.IdentityServer.Services
 {
     /// <summary>
     /// Interface for the handle generation service

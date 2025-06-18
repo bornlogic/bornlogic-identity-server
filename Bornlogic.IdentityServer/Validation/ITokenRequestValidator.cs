@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using Bornlogic.IdentityServer.Validation.Models;
 
 namespace Bornlogic.IdentityServer.Validation

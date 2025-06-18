@@ -1,7 +1,3 @@
-
-
-
-
 namespace Bornlogic.IdentityServer.Storage
 {
     internal static class Constants

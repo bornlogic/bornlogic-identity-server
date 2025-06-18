@@ -1,7 +1,4 @@
-﻿
-
-
-namespace Bornlogic.IdentityServer.Storage.Stores
+﻿namespace Bornlogic.IdentityServer.Storage.Stores
 {
     /// <summary>
     /// Represents a filter used when accessing the persisted grants store. 

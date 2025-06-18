@@ -1,7 +1,3 @@
-
-
-
-
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Bornlogic.IdentityServer.Validation;

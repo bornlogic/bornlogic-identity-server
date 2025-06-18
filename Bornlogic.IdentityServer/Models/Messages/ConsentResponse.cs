@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Models.Messages.Enums;
+﻿using Bornlogic.IdentityServer.Models.Messages.Enums;
 
 namespace Bornlogic.IdentityServer.Models.Messages
 {

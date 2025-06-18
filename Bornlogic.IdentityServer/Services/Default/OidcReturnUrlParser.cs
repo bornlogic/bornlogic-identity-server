@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models.Messages;
 using Bornlogic.IdentityServer.Stores;

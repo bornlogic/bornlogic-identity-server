@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Extensions;
+﻿using Bornlogic.IdentityServer.Extensions;
 
 namespace Bornlogic.IdentityServer.ResponseHandling.Models
 {

@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Storage.Models;
 
 namespace Bornlogic.IdentityServer.Storage.Stores

@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Events.Infrastructure;
 using Microsoft.Extensions.Logging;
 

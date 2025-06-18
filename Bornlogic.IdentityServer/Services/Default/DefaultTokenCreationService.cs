@@ -1,7 +1,3 @@
-
-
-
-
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;

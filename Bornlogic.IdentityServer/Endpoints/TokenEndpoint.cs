@@ -1,7 +1,3 @@
-
-
-
-
 using System.Diagnostics;
 using Bornlogic.IdentityServer.Endpoints.Results;
 using Bornlogic.IdentityServer.Events;

@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Models
+﻿namespace Bornlogic.IdentityServer.Models
 {
     /// <summary>
     /// Token request errors

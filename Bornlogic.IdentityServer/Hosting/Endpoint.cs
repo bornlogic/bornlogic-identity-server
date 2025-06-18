@@ -1,7 +1,4 @@
-﻿
-
-
-#pragma warning disable 1591
+﻿#pragma warning disable 1591
 
 using Microsoft.AspNetCore.Http;
 

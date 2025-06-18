@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace Bornlogic.IdentityServer.Hosting.FederatedSignOut

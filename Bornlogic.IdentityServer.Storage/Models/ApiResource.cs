@@ -1,7 +1,3 @@
-
-
-
-
 using System.Diagnostics;
 using Bornlogic.IdentityServer.Storage.Extensions;
 

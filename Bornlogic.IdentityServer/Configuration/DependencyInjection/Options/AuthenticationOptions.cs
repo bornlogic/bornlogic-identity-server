@@ -1,7 +1,3 @@
-
-
-
-
 using Microsoft.AspNetCore.Http;
 
 namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options

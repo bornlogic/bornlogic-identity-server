@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Bornlogic.IdentityServer.Storage.Models;
 
 namespace Bornlogic.IdentityServer.Extensions

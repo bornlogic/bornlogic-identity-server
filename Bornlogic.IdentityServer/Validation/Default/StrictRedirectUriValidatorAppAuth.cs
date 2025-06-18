@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Storage.Models;
+﻿using Bornlogic.IdentityServer.Storage.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Bornlogic.IdentityServer.Validation.Default

@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Services
+﻿namespace Bornlogic.IdentityServer.Services
 {
     /// <summary>
     /// Abstract interface to model data caching

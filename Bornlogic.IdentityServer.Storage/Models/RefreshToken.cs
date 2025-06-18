@@ -1,7 +1,3 @@
-
-
-
-
 using System.Security.Claims;
 
 namespace Bornlogic.IdentityServer.Storage.Models

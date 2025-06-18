@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 
 namespace Bornlogic.IdentityServer.Services.Default
 {

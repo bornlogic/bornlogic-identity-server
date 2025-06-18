@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace Bornlogic.IdentityServer.Configuration
 {

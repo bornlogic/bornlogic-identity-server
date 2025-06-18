@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Configuration;
+﻿using Bornlogic.IdentityServer.Configuration;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models;
 using Bornlogic.IdentityServer.Models.Messages;

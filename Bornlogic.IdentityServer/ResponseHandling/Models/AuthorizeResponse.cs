@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Extensions;
+﻿using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Validation.Models;
 
 #pragma warning disable 1591

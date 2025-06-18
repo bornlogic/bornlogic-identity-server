@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Configuration.DependencyInjection
+﻿namespace Bornlogic.IdentityServer.Configuration.DependencyInjection
 {
     internal class Decorator<TService>
     {

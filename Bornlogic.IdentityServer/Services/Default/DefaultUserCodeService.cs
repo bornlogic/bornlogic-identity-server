@@ -1,7 +1,3 @@
-
-
-
-
 namespace Bornlogic.IdentityServer.Services.Default
 {
     /// <summary>

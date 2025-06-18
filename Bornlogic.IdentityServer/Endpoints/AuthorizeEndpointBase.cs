@@ -1,7 +1,4 @@
-﻿
-
-
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Security.Claims;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
 using Bornlogic.IdentityServer.Endpoints.Results;

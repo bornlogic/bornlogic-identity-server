@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
+﻿using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
 using Bornlogic.IdentityServer.Hosting;
 using static Bornlogic.IdentityServer.Constants;
 

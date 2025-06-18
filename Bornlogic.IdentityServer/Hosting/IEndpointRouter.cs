@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Bornlogic.IdentityServer.Hosting
 {

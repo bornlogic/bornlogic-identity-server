@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Host.Account
+﻿namespace Bornlogic.IdentityServer.Host.Account
 {
     public class ExternalProvider
     {

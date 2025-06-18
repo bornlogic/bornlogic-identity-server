@@ -1,7 +1,3 @@
-
-
-
-
 using System.Collections.Concurrent;
 using Bornlogic.IdentityServer.Storage.Extensions;
 using Bornlogic.IdentityServer.Storage.Models;

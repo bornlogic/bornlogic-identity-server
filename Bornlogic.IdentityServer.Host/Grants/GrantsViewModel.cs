@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Host.Grants
+﻿namespace Bornlogic.IdentityServer.Host.Grants
 {
     public class GrantsViewModel
     {

@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Validation.Contexts;
 
 namespace Bornlogic.IdentityServer.Validation

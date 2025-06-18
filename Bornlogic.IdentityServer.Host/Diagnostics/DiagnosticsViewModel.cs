@@ -1,7 +1,3 @@
-
-
-
-
 using System.Text;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;

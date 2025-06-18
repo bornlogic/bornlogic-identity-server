@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 
 namespace Bornlogic.IdentityServer.Stores.InMemory
 {

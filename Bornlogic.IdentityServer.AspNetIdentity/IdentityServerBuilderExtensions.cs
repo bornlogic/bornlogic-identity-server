@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Configuration.DependencyInjection;
+﻿using Bornlogic.IdentityServer.Configuration.DependencyInjection;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExtensions;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;

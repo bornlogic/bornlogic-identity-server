@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options
+﻿namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options
 {
     /// <summary>
     /// Options class to configure discovery endpoint

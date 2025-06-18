@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Models.Messages
+﻿namespace Bornlogic.IdentityServer.Models.Messages
 {
     /// <summary>
     /// Base class for data that needs to be written out as cookies.

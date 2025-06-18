@@ -1,7 +1,3 @@
-
-
-
-
 using System.IdentityModel.Tokens.Jwt;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models;

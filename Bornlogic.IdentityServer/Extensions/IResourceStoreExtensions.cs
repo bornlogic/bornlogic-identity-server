@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Storage.Models;
 using Bornlogic.IdentityServer.Storage.Stores;
 using Bornlogic.IdentityServer.Validation.Models;

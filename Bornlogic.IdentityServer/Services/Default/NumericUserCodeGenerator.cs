@@ -1,7 +1,3 @@
-
-
-
-
 using System.Security.Cryptography;
 
 namespace Bornlogic.IdentityServer.Services.Default

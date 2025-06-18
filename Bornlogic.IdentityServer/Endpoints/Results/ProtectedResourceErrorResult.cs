@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Hosting;
 using IdentityModel;

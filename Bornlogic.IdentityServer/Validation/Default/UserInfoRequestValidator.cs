@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Extensions;
+﻿using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Models.Contexts;
 using Bornlogic.IdentityServer.Services;
 using Bornlogic.IdentityServer.Validation.Models;

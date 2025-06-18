@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 

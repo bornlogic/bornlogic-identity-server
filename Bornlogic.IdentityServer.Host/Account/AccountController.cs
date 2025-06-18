@@ -1,7 +1,3 @@
-
-
-
-
 using System.Web;
 using Bornlogic.IdentityServer.Events;
 using Bornlogic.IdentityServer.Extensions;

@@ -1,5 +1,4 @@
-﻿
-using Bornlogic.IdentityServer.Storage.Models;
+﻿using Bornlogic.IdentityServer.Storage.Models;
 
 namespace Bornlogic.IdentityServer.Host.Repositories
 {

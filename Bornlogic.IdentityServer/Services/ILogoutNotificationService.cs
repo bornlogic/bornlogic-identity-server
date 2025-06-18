@@ -1,7 +1,4 @@
-﻿
-
-
-using Bornlogic.IdentityServer.Models.Contexts;
+﻿using Bornlogic.IdentityServer.Models.Contexts;
 
 namespace Bornlogic.IdentityServer.Services
 {

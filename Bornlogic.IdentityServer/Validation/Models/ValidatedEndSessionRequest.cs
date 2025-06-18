@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Validation.Models
+﻿namespace Bornlogic.IdentityServer.Validation.Models
 {
     /// <summary>
     /// Represents a validated end session (logout) request

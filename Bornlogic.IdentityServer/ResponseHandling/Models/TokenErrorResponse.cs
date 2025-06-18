@@ -1,8 +1,4 @@
-﻿
-
-
-
-using IdentityModel;
+﻿using IdentityModel;
 
 namespace Bornlogic.IdentityServer.ResponseHandling.Models
 {

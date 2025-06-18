@@ -1,7 +1,3 @@
-
-
-
-
 namespace Bornlogic.IdentityServer.Events.Infrastructure
 {
     /// <summary>

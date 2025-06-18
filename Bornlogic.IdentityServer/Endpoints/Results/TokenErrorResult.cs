@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Hosting;
 using Bornlogic.IdentityServer.ResponseHandling.Models;

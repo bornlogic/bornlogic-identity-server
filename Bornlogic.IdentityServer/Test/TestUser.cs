@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using IdentityModel;
 
 namespace Bornlogic.IdentityServer.Test

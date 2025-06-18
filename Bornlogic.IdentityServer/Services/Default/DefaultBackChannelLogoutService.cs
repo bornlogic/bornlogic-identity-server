@@ -1,7 +1,3 @@
-
-
-
-
 using System.Security.Claims;
 using Bornlogic.IdentityServer.Models.Contexts;
 using IdentityModel;

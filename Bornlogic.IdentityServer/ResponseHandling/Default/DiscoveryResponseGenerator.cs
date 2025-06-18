@@ -1,7 +1,3 @@
-
-
-
-
 using System.Security.Cryptography;
 using Bornlogic.IdentityServer.Configuration;
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;

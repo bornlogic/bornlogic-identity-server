@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Validation.Models
+﻿namespace Bornlogic.IdentityServer.Validation.Models
 {
     /// <summary>
     /// Models usage of a bearer token

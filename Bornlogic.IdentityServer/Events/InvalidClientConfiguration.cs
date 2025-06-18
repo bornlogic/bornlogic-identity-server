@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Events.Infrastructure;
 using Bornlogic.IdentityServer.Storage.Models;
 

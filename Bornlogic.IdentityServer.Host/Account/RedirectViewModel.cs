@@ -1,8 +1,3 @@
-
-
-
-
-
 namespace Bornlogic.IdentityServer.Host.Account
 {
     public class RedirectViewModel

@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Storage.Models
+﻿namespace Bornlogic.IdentityServer.Storage.Models
 {
     /// <summary>
     /// Represents the permissions (in terms of scopes) granted to a client by a subject

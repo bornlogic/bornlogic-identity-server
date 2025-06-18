@@ -1,7 +1,3 @@
-
-
-
-
 using System.ComponentModel.DataAnnotations;
 
 namespace Bornlogic.IdentityServer.Host.Account

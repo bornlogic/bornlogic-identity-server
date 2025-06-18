@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Host.Consent;
 
 namespace Bornlogic.IdentityServer.Host.Device

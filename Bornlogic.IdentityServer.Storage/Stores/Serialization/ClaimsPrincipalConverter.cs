@@ -1,7 +1,3 @@
-
-
-
-
 using System.Security.Claims;
 using IdentityModel;
 using Newtonsoft.Json;

@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Extensions;
 
 namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options

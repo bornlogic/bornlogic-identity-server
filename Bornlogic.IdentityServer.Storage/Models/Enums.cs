@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Storage.Models
+﻿namespace Bornlogic.IdentityServer.Storage.Models
 {
     /// <summary>
     /// OpenID Connect subject types.

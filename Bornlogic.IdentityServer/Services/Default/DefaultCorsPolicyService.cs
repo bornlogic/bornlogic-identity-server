@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Storage.Services;
 using Microsoft.AspNetCore.Http;

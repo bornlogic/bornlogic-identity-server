@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Services;
+﻿using Bornlogic.IdentityServer.Services;
 using Microsoft.Extensions.Logging;
 
 namespace Bornlogic.IdentityServer.Extensions

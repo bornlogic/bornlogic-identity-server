@@ -1,7 +1,3 @@
-
-
-
-
 using Microsoft.AspNetCore.Authentication;
 
 namespace Bornlogic.IdentityServer.Hosting.LocalApiAuthentication

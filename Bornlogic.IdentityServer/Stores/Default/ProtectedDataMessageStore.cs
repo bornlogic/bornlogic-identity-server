@@ -1,7 +1,3 @@
-
-
-
-
 using System.Text;
 using Bornlogic.IdentityServer.Infrastructure;
 using Bornlogic.IdentityServer.Models.Messages;

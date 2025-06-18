@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.AspNetIdentity
+﻿namespace Bornlogic.IdentityServer.AspNetIdentity
 {
     internal class Decorator<TService>
     {

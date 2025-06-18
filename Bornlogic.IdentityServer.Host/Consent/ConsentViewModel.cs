@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Host.Consent
+﻿namespace Bornlogic.IdentityServer.Host.Consent
 {
     public class ConsentViewModel : ConsentInputModel
     {

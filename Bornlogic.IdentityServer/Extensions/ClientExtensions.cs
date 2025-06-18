@@ -1,7 +1,3 @@
-
-
-
-
 using System.Security.Cryptography.X509Certificates;
 using Bornlogic.IdentityServer.Storage.Models;
 using Microsoft.IdentityModel.Tokens;

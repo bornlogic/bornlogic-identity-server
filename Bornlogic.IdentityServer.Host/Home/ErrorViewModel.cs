@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Models.Messages;
+﻿using Bornlogic.IdentityServer.Models.Messages;
 
 namespace Bornlogic.IdentityServer.Host.Home
 {

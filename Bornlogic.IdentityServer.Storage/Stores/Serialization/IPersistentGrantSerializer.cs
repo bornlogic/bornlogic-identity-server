@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Storage.Stores.Serialization
+﻿namespace Bornlogic.IdentityServer.Storage.Stores.Serialization
 {
     /// <summary>
     /// Interface for persisted grant serialization

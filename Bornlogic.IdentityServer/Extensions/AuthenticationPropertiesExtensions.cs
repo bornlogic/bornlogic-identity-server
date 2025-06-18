@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Text;
+﻿using System.Text;
 using Bornlogic.IdentityServer.Infrastructure;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;

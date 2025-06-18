@@ -1,8 +1,4 @@
-﻿
-
-
-
-using System.Net;
+﻿using System.Net;
 using Bornlogic.IdentityServer.Endpoints.Results;
 using Bornlogic.IdentityServer.Events;
 using Bornlogic.IdentityServer.Extensions;

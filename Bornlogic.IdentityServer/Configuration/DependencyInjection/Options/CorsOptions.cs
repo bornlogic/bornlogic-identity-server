@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Extensions;
+﻿using Bornlogic.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Http;
 
 namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.Options

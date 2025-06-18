@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Events.Infrastructure;
 
 namespace Bornlogic.IdentityServer.Events

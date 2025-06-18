@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Configuration.DependencyInjection.Options;
 using Bornlogic.IdentityServer.ResponseHandling;
 using Bornlogic.IdentityServer.Services;

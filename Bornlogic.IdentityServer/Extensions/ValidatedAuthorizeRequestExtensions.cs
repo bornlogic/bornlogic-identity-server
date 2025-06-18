@@ -1,7 +1,3 @@
-
-
-
-
 using System.Security.Cryptography;
 using System.Text;
 using Bornlogic.IdentityServer.Validation.Models;

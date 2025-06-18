@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.Models;
+﻿using Bornlogic.IdentityServer.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Bornlogic.IdentityServer.Services

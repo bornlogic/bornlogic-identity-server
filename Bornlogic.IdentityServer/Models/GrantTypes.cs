@@ -1,7 +1,3 @@
-
-
-
-
 using Bornlogic.IdentityServer.Storage.Models;
 
 #pragma warning disable 1591

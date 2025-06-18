@@ -1,7 +1,3 @@
-
-
-
-
 namespace Bornlogic.IdentityServer.Host.Consent
 {
     public class ProcessConsentResult

@@ -1,7 +1,3 @@
-
-
-
-
 using System.Text.RegularExpressions;
 using Bornlogic.IdentityServer.Extensions;
 using Bornlogic.IdentityServer.Storage.Models;

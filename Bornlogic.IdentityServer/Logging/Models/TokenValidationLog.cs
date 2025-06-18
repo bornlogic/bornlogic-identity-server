@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Bornlogic.IdentityServer.Logging.Models
+﻿namespace Bornlogic.IdentityServer.Logging.Models
 {
     internal class TokenValidationLog
     {

@@ -1,8 +1,4 @@
-﻿
-
-
-
-using Bornlogic.IdentityServer.ResponseHandling.Models;
+﻿using Bornlogic.IdentityServer.ResponseHandling.Models;
 using Bornlogic.IdentityServer.Storage.Stores;
 using Bornlogic.IdentityServer.Validation.Models;
 using Microsoft.Extensions.Logging;
