@@ -21,7 +21,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// </summary>
         protected readonly ILogger Logger;
 
-        private readonly IUserClaimsEnricher _userClaimsEnricher;
+        protected readonly IUserClaimsEnricher UserClaimsEnricher;
 
         /// <summary>
         /// The profile service
@@ -50,7 +50,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             Profile = profile;
             Resources = resourceStore;
             Logger = logger;
-            _userClaimsEnricher = userClaimsEnricher;
+            UserClaimsEnricher = userClaimsEnricher;
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
 
             var dictionary = outgoingClaims.ToClaimsDictionary();
 
-            var additionalClaims = await _userClaimsEnricher.GetAdditionalClaims(context?.Subject);
+            var additionalClaims = await UserClaimsEnricher.GetAdditionalClaims(context?.Subject);
 
             foreach (var additionalClaim in additionalClaims ?? [])
             {
