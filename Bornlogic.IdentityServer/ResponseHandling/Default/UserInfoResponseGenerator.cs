@@ -22,6 +22,11 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         protected readonly ILogger Logger;
 
         /// <summary>
+        /// The user claims enricher
+        /// </summary>
+        protected readonly IUserInfoClaimsEnricher UserInfoClaimsEnricher;
+
+        /// <summary>
         /// The profile service
         /// </summary>
         protected readonly IProfileService Profile;
@@ -37,11 +42,18 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// <param name="profile">The profile.</param>
         /// <param name="resourceStore">The resource store.</param>
         /// <param name="logger">The logger.</param>
-        public UserInfoResponseGenerator(IProfileService profile, IResourceStore resourceStore, ILogger<UserInfoResponseGenerator> logger)
+        public UserInfoResponseGenerator
+            (
+                IProfileService profile, 
+                IResourceStore resourceStore, 
+                ILogger<UserInfoResponseGenerator> logger,
+                IUserInfoClaimsEnricher userInfoClaimsEnricher
+            )
         {
             Profile = profile;
             Resources = resourceStore;
             Logger = logger;
+            UserInfoClaimsEnricher = userInfoClaimsEnricher;
         }
 
         /// <summary>
@@ -97,7 +109,19 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 throw new InvalidOperationException("Profile service returned incorrect subject value");
             }
 
-            return outgoingClaims.ToClaimsDictionary();
+            var dictionary = outgoingClaims.ToClaimsDictionary();
+
+            var additionalClaims = await UserInfoClaimsEnricher.GetAdditionalClaims(context?.Subject);
+
+            foreach (var additionalClaim in additionalClaims ?? [])
+            {
+                if(dictionary.ContainsKey(additionalClaim.Type))
+                    dictionary[additionalClaim.Type] = additionalClaim.Value;
+                else 
+                    dictionary.Add(additionalClaim.Type, additionalClaim.Value);
+            }
+
+            return dictionary;
         }
 
         /// <summary>
