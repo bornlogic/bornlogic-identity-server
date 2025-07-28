@@ -2,7 +2,7 @@
 
 namespace Bornlogic.IdentityServer.Services
 {
-    public interface IUserClaimsEnricher
+    public interface IUserInfoClaimsEnricher
     {
         Task<Claim[]> GetAdditionalClaims(ClaimsPrincipal principal);
     }
