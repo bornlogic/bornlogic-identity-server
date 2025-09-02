@@ -102,7 +102,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
 
             if (!result.IsLogin && !result.IsBusinessSelect && !result.IsError && !result.IsRedirect)
             {
-                result = await ProcessAcceptTosAsync(request, consent);
+                result = await ProcessAcceptTosAsync(request, consent, businessSelect, acceptTosResponse);
             }
 
             if (!result.IsLogin && !result.IsBusinessSelect && !result.IsAcceptTos && !result.IsError && !result.IsRedirect)
@@ -362,7 +362,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         }
 
 
-        protected internal virtual async Task<InteractionResponse> ProcessAcceptTosAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null, AcceptTosResponse acceptTos = null)
+        protected internal virtual async Task<InteractionResponse> ProcessAcceptTosAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null, BusinessSelectResponse businessSelect = null, AcceptTosResponse acceptTos = null)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -374,7 +374,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
 
             request.WasConsentShown = consent != null;
 
-            var requiresAcceptTos = await PendingTosService.HasPendingTos(request.Subject, request.Client);
+            var requiresAcceptTos = await PendingTosService.HasPendingTos(request.Subject, request.Client, businessSelect);
 
             return new InteractionResponse { IsAcceptTos = requiresAcceptTos };
         }
