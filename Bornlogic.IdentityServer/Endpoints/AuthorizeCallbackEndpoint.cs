@@ -74,7 +74,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             var businessSelect = await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
 
             var acceptTosRequest = new AcceptTosRequest(parameters, user?.GetSubjectId());
-            var acceptTos = await _acceptTosMessageStore.ReadAsync(businessSelectRequest.Id);
+            var acceptTos = await _acceptTosMessageStore.ReadAsync(acceptTosRequest.Id);
 
             var clearSessionValues = false;
 
