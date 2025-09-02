@@ -32,6 +32,8 @@
         
         BusinessRequired,
 
-        ConfirmedEmailRequired
+        ConfirmedEmailRequired,
+
+        TosAcceptanceRequired
     }
 }

@@ -386,6 +386,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
                 AuthorizationError.AccountSelectionRequired => OidcConstants.AuthorizeErrors.AccountSelectionRequired,
                 AuthorizationError.ConsentRequired => OidcConstants.AuthorizeErrors.ConsentRequired,
                 AuthorizationError.BusinessRequired => CustomOIDCConstants.AuthorizeErrors.BusinessRequired,
+                AuthorizationError.TosAcceptanceRequired => CustomOIDCConstants.AuthorizeErrors.TosAcceptanceRequired,
                 AuthorizationError.ConfirmedEmailRequired => CustomOIDCConstants.AuthorizeErrors.ConfirmedEmailRequired,
                 AuthorizationError.InteractionRequired => OidcConstants.AuthorizeErrors.InteractionRequired,
                 AuthorizationError.LoginRequired => OidcConstants.AuthorizeErrors.LoginRequired,
