@@ -32,6 +32,8 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// </summary>
         protected readonly IProfileService Profile;
 
+        protected readonly IPendingTosService PendingTosService;
+
         /// <summary>
         /// The clock
         /// </summary>
@@ -44,16 +46,20 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// <param name="logger">The logger.</param>
         /// <param name="consent">The consent.</param>
         /// <param name="profile">The profile.</param>
+        /// <param name="pendingTosService">The pending TOS.</param>
         public AuthorizeInteractionResponseGenerator(
             ISystemClock clock,
             ILogger<AuthorizeInteractionResponseGenerator> logger,
             IConsentService consent,
-            IProfileService profile)
+            IProfileService profile,
+            IPendingTosService pendingTosService
+        )
         {
             Clock = clock;
             Logger = logger;
             Consent = consent;
             Profile = profile;
+            PendingTosService = pendingTosService;
         }
 
         /// <summary>
@@ -62,7 +68,7 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
         /// <param name="request">The request.</param>
         /// <param name="consent">The consent.</param>
         /// <returns></returns>
-        public virtual async Task<InteractionResponse> ProcessInteractionAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null, BusinessSelectResponse businessSelect = null)
+        public virtual async Task<InteractionResponse> ProcessInteractionAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null, BusinessSelectResponse businessSelect = null, AcceptTosResponse acceptTosResponse = null)
         {
             Logger.LogTrace("ProcessInteractionAsync");
 
@@ -96,10 +102,15 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
 
             if (!result.IsLogin && !result.IsBusinessSelect && !result.IsError && !result.IsRedirect)
             {
+                result = await ProcessAcceptTosAsync(request, consent);
+            }
+
+            if (!result.IsLogin && !result.IsBusinessSelect && !result.IsAcceptTos && !result.IsError && !result.IsRedirect)
+            {
                 result = await ProcessConsentAsync(request, consent);
             }
 
-            if ((result.IsLogin || result.IsConsent || result.IsBusinessSelect || result.IsRedirect) && request.PromptModes.Contains(OidcConstants.PromptModes.None))
+            if ((result.IsLogin || result.IsConsent || result.IsBusinessSelect || result.IsAcceptTos || result.IsRedirect) && request.PromptModes.Contains(OidcConstants.PromptModes.None))
             {
                 // prompt=none means do not show the UI
                 Logger.LogInformation("Changing response to LoginRequired: prompt=none was requested");
@@ -348,6 +359,24 @@ namespace Bornlogic.IdentityServer.ResponseHandling.Default
             var requiresBusinessSelect = request.Client.RequiresBusinessSelection && string.IsNullOrEmpty(businessSelect?.BusinessId) && string.IsNullOrEmpty(businessSelect?.SubjectBusinessScopedId);
 
             return new InteractionResponse { IsBusinessSelect = requiresBusinessSelect };
+        }
+
+
+        protected internal virtual async Task<InteractionResponse> ProcessAcceptTosAsync(ValidatedAuthorizeRequest request, ConsentResponse consent = null, AcceptTosResponse acceptTos = null)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (acceptTos?.Error != null)
+            {
+                return new InteractionResponse { Error = GetError(acceptTos.Error.Value) };
+            }
+
+            request.WasConsentShown = consent != null;
+
+            var requiresAcceptTos = await PendingTosService.HasPendingTos(request.Subject, request.Client);
+
+            return new InteractionResponse { IsAcceptTos = requiresAcceptTos };
         }
 
         private static string GetError(AuthorizationError authorizationError)

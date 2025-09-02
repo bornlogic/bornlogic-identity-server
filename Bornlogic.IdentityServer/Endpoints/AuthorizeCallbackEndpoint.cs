@@ -18,6 +18,7 @@ namespace Bornlogic.IdentityServer.Endpoints
     {
         private readonly IConsentMessageStore _consentResponseStore;
         private readonly IBusinessSelectMessageStore _businessSelectMessageStore;
+        private readonly IAcceptTosMessageStore _acceptTosMessageStore;
         private readonly IAuthorizationParametersMessageStore _authorizationParametersMessageStore;
 
         public AuthorizeCallbackEndpoint(
@@ -30,11 +31,13 @@ namespace Bornlogic.IdentityServer.Endpoints
             IUserSession userSession,
             IConsentMessageStore consentResponseStore,
             IBusinessSelectMessageStore businessSelectMessageStore,
+            IAcceptTosMessageStore acceptTosMessageStore,
             IAuthorizationParametersMessageStore authorizationParametersMessageStore = null)
             : base(events, logger, options, validator, interactionGenerator, authorizeResponseGenerator, userSession)
         {
             _consentResponseStore = consentResponseStore;
             _businessSelectMessageStore = businessSelectMessageStore;
+            _acceptTosMessageStore = acceptTosMessageStore;
             _authorizationParametersMessageStore = authorizationParametersMessageStore;
         }
 
@@ -68,13 +71,16 @@ namespace Bornlogic.IdentityServer.Endpoints
             }
 
             var businessSelectRequest = new BusinessSelectRequest(parameters, user?.GetSubjectId());
-            var businessSelect= await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
+            var businessSelect = await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
+
+            var acceptTosRequest = new AcceptTosRequest(parameters, user?.GetSubjectId());
+            var acceptTos = await _acceptTosMessageStore.ReadAsync(businessSelectRequest.Id);
 
             var clearSessionValues = false;
 
             try
             {
-                var result = await ProcessAuthorizeRequestAsync(parameters, user, consent?.Data, businessSelect?.Data);
+                var result = await ProcessAuthorizeRequestAsync(parameters, user, consent?.Data, businessSelect?.Data, acceptTos?.Data);
 
                 clearSessionValues = result is AuthorizeResult;
 
@@ -92,6 +98,11 @@ namespace Bornlogic.IdentityServer.Endpoints
                 if (businessSelect != null && clearSessionValues)
                 {
                     await _businessSelectMessageStore.DeleteAsync(businessSelectRequest.Id);
+                }
+
+                if (acceptTos != null && clearSessionValues)
+                {
+                    await _acceptTosMessageStore.DeleteAsync(acceptTosRequest.Id);
                 }
             }
         }

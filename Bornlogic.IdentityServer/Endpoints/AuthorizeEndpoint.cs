@@ -51,7 +51,7 @@ namespace Bornlogic.IdentityServer.Endpoints
             }
 
             var user = await UserSession.GetUserAsync();
-            var result = await ProcessAuthorizeRequestAsync(values, user, null, null);
+            var result = await ProcessAuthorizeRequestAsync(values, user, null, null, null);
 
             Logger.LogTrace("End authorize request. result type: {0}", result?.GetType().ToString() ?? "-none-");
 
