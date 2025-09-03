@@ -95,6 +95,11 @@ namespace Bornlogic.IdentityServer.Endpoints
                 return new BusinessSelectPageResult(request);
             }
 
+            if (interactionResult.IsAcceptTos)
+            {
+                return new AcceptTosPageResult(request);
+            }
+
             if (interactionResult.IsConsent)
             {
                 return new ConsentPageResult(request);
