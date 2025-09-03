@@ -166,6 +166,26 @@ namespace Bornlogic.IdentityServer.Services.Default
             await _businessSelectMessageStore.WriteAsync(businessSelectRequest.Id, new Message<BusinessSelectResponse>(response, _clock.UtcNow.UtcDateTime));
         }
 
+        public async Task<BusinessSelectResponse> GetRequestBusinessAsync(AuthorizationRequest request, string subject = null)
+        {
+            if (subject == null)
+            {
+                var user = await _userSession.GetUserAsync();
+                subject = user?.GetSubjectId();
+            }
+
+            if (subject == null)
+            {
+                throw new ArgumentNullException(nameof(subject), "User is not currently authenticated, and no subject id passed");
+            }
+            
+            var businessSelectRequest = new BusinessSelectRequest(request, subject);
+
+            var message = await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
+
+            return message.Data;
+        }
+
         public async Task SaveRequestAcceptTosAsync(AuthorizationRequest request, AcceptTosResponse response, string subject = null)
         {
             if (subject == null)

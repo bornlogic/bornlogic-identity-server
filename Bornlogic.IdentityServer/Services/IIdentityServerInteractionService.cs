@@ -49,6 +49,8 @@ namespace Bornlogic.IdentityServer.Services
 
         Task SaveRequestBusinessAsync(AuthorizationRequest request, BusinessSelectResponse response, string subject = null);
 
+        Task<BusinessSelectResponse> GetRequestBusinessAsync(AuthorizationRequest request, string subject = null);
+
         Task SaveRequestAcceptTosAsync(AuthorizationRequest request, AcceptTosResponse response, string subject = null);
 
         /// <summary>
