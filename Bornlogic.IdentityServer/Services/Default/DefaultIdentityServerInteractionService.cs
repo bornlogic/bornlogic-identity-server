@@ -183,7 +183,7 @@ namespace Bornlogic.IdentityServer.Services.Default
 
             var message = await _businessSelectMessageStore.ReadAsync(businessSelectRequest.Id);
 
-            return message.Data;
+            return message?.Data;
         }
 
         public async Task SaveRequestAcceptTosAsync(AuthorizationRequest request, AcceptTosResponse response, string subject = null)
