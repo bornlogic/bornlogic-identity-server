@@ -18,6 +18,7 @@ namespace Bornlogic.IdentityServer.Services.Default
         private readonly IMessageStore<ErrorMessage> _errorMessageStore;
         private readonly IConsentMessageStore _consentMessageStore;
         private readonly IBusinessSelectMessageStore _businessSelectMessageStore;
+        private readonly IAcceptTosMessageStore _acceptTosMessageStore;
         private readonly ISavedConsentStore _savedConsentStore;
         private readonly IPersistedGrantService _grants;
         private readonly IUserSession _userSession;
@@ -31,6 +32,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             IMessageStore<ErrorMessage> errorMessageStore,
             IConsentMessageStore consentMessageStore,
             IBusinessSelectMessageStore businessSelectMessageStore,
+            IAcceptTosMessageStore acceptTosMessageStore,
             ISavedConsentStore savedConsentStore,
             IPersistedGrantService grants,
             IUserSession userSession,
@@ -43,6 +45,7 @@ namespace Bornlogic.IdentityServer.Services.Default
             _errorMessageStore = errorMessageStore;
             _consentMessageStore = consentMessageStore;
             _businessSelectMessageStore = businessSelectMessageStore;
+            _acceptTosMessageStore = acceptTosMessageStore;
             _savedConsentStore = savedConsentStore;
             _grants = grants;
             _userSession = userSession;
@@ -162,7 +165,25 @@ namespace Bornlogic.IdentityServer.Services.Default
 
             await _businessSelectMessageStore.WriteAsync(businessSelectRequest.Id, new Message<BusinessSelectResponse>(response, _clock.UtcNow.UtcDateTime));
         }
-        
+
+        public async Task SaveRequestAcceptTosAsync(AuthorizationRequest request, AcceptTosResponse response, string subject = null)
+        {
+            if (subject == null)
+            {
+                var user = await _userSession.GetUserAsync();
+                subject = user?.GetSubjectId();
+            }
+
+            if (subject == null)
+            {
+                throw new ArgumentNullException(nameof(subject), "User is not currently authenticated, and no subject id passed");
+            }
+
+            var acceptTosRequest = new AcceptTosRequest(request, subject);
+
+            await _acceptTosMessageStore.WriteAsync(acceptTosRequest.Id, new Message<AcceptTosResponse>(response, _clock.UtcNow.UtcDateTime));
+        }
+
         public Task DenyAuthorizationAsync(AuthorizationRequest request, AuthorizationError error, string subError = null)
         {
             var response = new ConsentResponse 

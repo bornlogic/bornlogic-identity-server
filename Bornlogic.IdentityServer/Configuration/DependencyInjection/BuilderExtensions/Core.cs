@@ -163,6 +163,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
             builder.Services.TryAddTransient<IRefreshTokenIssuanceService, DefaultRefreshTokenIssuanceService>();
             builder.Services.TryAddTransient<IClientUserRoleService, DefaultClientUserRoleService>();
             builder.Services.TryAddTransient<IIntrospectionResponseEnricher, DefaultIntrospectionResponseEnricher>();
+            builder.Services.TryAddTransient<IPendingTosService, DefaultPendingTosService>();
             builder.Services.TryAddTransient<IUserInfoClaimsEnricher, DefaultUserInfoClaimsEnricher>();
             builder.Services.TryAddTransient<IDeviceFlowCodeService, DefaultDeviceFlowCodeService>();
             builder.Services.TryAddTransient<IConsentService, DefaultConsentService>();
@@ -170,6 +171,7 @@ namespace Bornlogic.IdentityServer.Configuration.DependencyInjection.BuilderExte
             builder.Services.TryAddTransient<IProfileService, DefaultProfileService>();
             builder.Services.TryAddTransient<IConsentMessageStore, ConsentMessageStore>();
             builder.Services.TryAddTransient<IBusinessSelectMessageStore, BusinessSelectMessageStore>();
+            builder.Services.TryAddTransient<IAcceptTosMessageStore, AcceptTosMessageStore>();
             builder.Services.TryAddTransient<IMessageStore<LogoutMessage>, ProtectedDataMessageStore<LogoutMessage>>();
             builder.Services.TryAddTransient<IMessageStore<LogoutNotificationContext>, ProtectedDataMessageStore<LogoutNotificationContext>>();
             builder.Services.TryAddTransient<IMessageStore<ErrorMessage>, ProtectedDataMessageStore<ErrorMessage>>();

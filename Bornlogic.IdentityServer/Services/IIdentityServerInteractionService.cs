@@ -49,6 +49,8 @@ namespace Bornlogic.IdentityServer.Services
 
         Task SaveRequestBusinessAsync(AuthorizationRequest request, BusinessSelectResponse response, string subject = null);
 
+        Task SaveRequestAcceptTosAsync(AuthorizationRequest request, AcceptTosResponse response, string subject = null);
+
         /// <summary>
         /// Triggers error back to the client for the authorization request.
         /// This API is a simpler helper on top of GrantConsentAsync.
