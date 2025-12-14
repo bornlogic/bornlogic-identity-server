@@ -1,9 +1,11 @@
 name: Test and Publish
 
 on:
-  push:
-    branches: [ master ]
-
+  pull_request_target:
+    types:
+      - closed
+    branches:    
+      - 'master'
 defaults:
   run:
     shell: bash
@@ -34,7 +36,7 @@ jobs:
 
   build:
     name: Publish
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: test
     env:
       LAST_COMMITTER_EMAIL: $(git log -1 --pretty=format:'%ae')
@@ -56,6 +58,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Install libssl
+      run: sudo apt-get update && sudo apt-get install -y libssl-dev
 
     - name: Build
       if: ${{ success() }}
