@@ -11,7 +11,7 @@ defaults:
 env:
   GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
   GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
-  DOTNET_VERSION: 8.0.x
+  DOTNET_VERSION: 10.0.x
 
 jobs:
   test:
@@ -34,7 +34,7 @@ jobs:
 
   build:
     name: Publish
-    runs-on: ubuntu-22.04 
+    runs-on: ubuntu-latest
     needs: test
     env:
       LAST_COMMITTER_EMAIL: $(git log -1 --pretty=format:'%ae')
